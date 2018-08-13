@@ -1,0 +1,65 @@
+<html>
+    <style>
+        body{
+            background: #8abeb7;
+        }
+
+        #canvas{
+            margin: 10px;
+            border: true;
+            background: white;
+        }
+        textarea{
+            margin: 10px;
+            resize: none;
+            border : none;
+            width: 600px;
+            background: white;
+        }
+
+
+    </style>
+    <body>
+            <div id="canvas_wrap">
+                <canvas id="canvas" width="600" height="600" ></canvas>
+            </div>
+            <div>
+            <textarea id="stroke-spec" rows="10">
+{
+"pie" : {"stroke":[{"len":3, "ang":120}, {"len":3, "ang":135}, {"len":3, "ang":150}]},
+"na"  : {"stroke":[{"len":3, "ang":60  }, {"len":3, "ang":45  }, {"len":3, "ang":30  }]},
+"heng": {"stroke":[{"len":1, "ang":3   }, {"len":7, "ang":0   }, {"len":1, "ang":3   }]},
+"shu" : {"stroke":[{"len":1, "ang":-93 }, {"len":7, "ang":-90 }, {"len":1, "ang":-93 }]}
+}
+            </textarea></div>
+            <div><textarea id="stroke-list" rows="10">
+[
+{"name":"heng"},
+{"name":"shu",  "conds":[{"stretch":{"ratio":0.8}}, {"cross":{"dest":0, "rdest":0.5, "rself":0.5}}]},
+{"name":"heng", "conds":[{"stretch":{"ratio":2}}, {"cross":{"dest":1, "rdest":0, "rself":0.5}}]},
+{"name":"pie", "conds":[{"stretch":{"ratio":1.7}}, {"rotate":{"angle":10}}, {"cross":{"dest":2, "rdest":0.6, "rself":0.4}}]}
+]
+            </textarea></div>
+     </body>
+    <script src="./vector.js"></script>
+    <script src="./stroke.js"></script>
+    <script src="./radical.js"></script>
+
+    <script>
+        var canvas_size = new Vec(document.getElementById("canvas").width, document.getElementById("canvas").height),
+            canvas = document.getElementById("canvas").getContext("2d");
+
+        var c = document.getElementById("canvas"),
+            ratio = window.devicePixelRatio;
+        c.style.width = c.width + "px";
+        c.style.height = c.height + "px";
+        c.width = c.width * ratio;
+        c.height = c.height * ratio;
+        canvas.scale(ratio, ratio);
+
+        var radicalSet = new RadicalSet();
+
+        radicalSet.draw();
+    </script>
+
+</html>
