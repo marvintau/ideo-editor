@@ -18,6 +18,17 @@ class RadicalSet{
             if ("stroke" in this.char_set[name]){
                 this.char_set[name].stroke = new Stroke(this.char_set[name].stroke);
             }
+            if ("compound-stroke" in this.char_set[name]){
+                var compound_segs = [];
+                for(let simple_stroke of this.char_set[name]['compound-stroke']){
+                    var simple_stroke_instance = this.char_set[simple_stroke.stroke].stroke.copy();
+                    
+                    simple_stroke_instance.stretch(simple_stroke.stretch);                        
+                    simple_stroke_instance.rotate(simple_stroke.rotate);                        
+                    compound_segs = compound_segs.concat(simple_stroke_instance.segs);
+                }
+                this.char_set[name].stroke = new Stroke(compound_segs);
+            }
         }
 
         var radical_list_json = JSON.parse(document.getElementById("stroke-list").value);
@@ -56,11 +67,13 @@ class RadicalSet{
     rotate(cond, next_radical){
         console.log("rotate", cond);
         next_radical.rotate(cond.angle);
+        next_radical.init_points();
     }
 
     stretch(cond, next_radical){
         console.log("stretch", cond);
         next_radical.stretch(cond.ratio);
+        next_radical.init_points();
     }
 
     concat(cond, next_radical){
@@ -118,6 +131,7 @@ class RadicalSet{
             for (let p of r.points){
                 drawp(p, this.ctx);
             }
+            drawp(r.points[0], this.ctx, "rgb(0, 0, 0)");
         }
 
 
@@ -128,7 +142,11 @@ class RadicalSet{
 
 }
 
-function drawp(vec, ctx){
-    ctx.fillStyle = "rgb(200, 0, 0, 0.5)";
+function drawp(vec, ctx, style){
+    if (style===undefined){
+        ctx.fillStyle = "rgb(200, 0, 0, 0.5)";
+    } else {
+        ctx.fillStyle = style;
+    }
     ctx.fillRect(vec.x-5, vec.y-5, 10, 10);
 }

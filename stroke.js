@@ -8,7 +8,9 @@ class Stroke {
     }
 
     stretch(ratio, ith_seg){
-        if (ith_seg === undefined){
+        if(ratio === undefined){
+            return;
+        } else if (ith_seg === undefined){
             for(let i in this.segs){
                 this.segs[i].len *= ratio;
             }
@@ -16,11 +18,12 @@ class Stroke {
             console.log(this.segs[i]);
             this.segs[ith_seg].len *= ratio;
         }
-        this.init_points();
     }    
 
     rotate(angle, ith_seg){
-        if (ith_seg === undefined){
+        if(angle === undefined){
+            return;
+        } else if (ith_seg === undefined){
             for(let i in this.segs){
                 this.segs[i].ang += angle;
             }
@@ -28,7 +31,6 @@ class Stroke {
             this.segs[ith_seg].ang += angle;
         }
 
-        this.init_points();
     }
 
     init_points(){
