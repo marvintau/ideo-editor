@@ -1,0 +1,108 @@
+<html>
+    <style>
+body{
+    background: #8abeb7;
+    text-align: center;
+}
+
+                #canvas{
+                    margin: 10px;
+                    border: true;
+                    background: white;
+                }
+                textarea{
+                    font-family : "TheSansMono Office";
+                margin: 10px;
+                resize: none;
+                    border : none;
+                width: 600px;
+                background: white;
+                }
+
+
+    </style>
+    <body>
+        <div id="canvas_wrap">
+            <canvas id="canvas" width="600" height="600" ></canvas>
+        </div>
+        <div>
+            <div><textarea id="stroke-list" rows="10" spellcheck="false">
+[
+    {"stroke":"piedian"},
+    {"stroke":"pie", "conds":[{"stretch":1.2}, {"rotate":-10},{"cross":{"dest":0, "rdest":0.7, "rself":0.6}}]},
+    {"stroke":"heng", "conds":[{"stretch":1.4}, {"cross":{"dest":1, "rdest":0.2, "rself":0.7}}]}
+]
+                </textarea></div>
+    </body>
+    <script src="./javascripts/vector.js"></script>
+    <script src="./javascripts/stroke.js"></script>
+    <script src="./javascripts/radical.js"></script>
+
+    <script>
+
+function loadJSON (json_filename) {
+
+    return new Promise(function (resolve, reject) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', json_filename, true);
+
+        xhr.onload = function () {
+            if (this.status >= 200 && this.status < 300) {
+                resolve(xhr.response);
+            } else {
+                reject({
+                    status: this.status,
+                    statusText: xhr.statusText
+                });
+            }
+        };
+        xhr.onerror = function () {
+            reject({
+                status: this.status,
+                statusText: xhr.statusText
+            });
+        };
+        xhr.send();
+    });
+}
+
+var canvas_size = new Vec(document.getElementById("canvas").width, document.getElementById("canvas").height),
+    canvas = document.getElementById("canvas").getContext("2d");
+
+var c = document.getElementById("canvas"),
+    ratio = window.devicePixelRatio;
+c.style.width = c.width + "px";
+c.style.height = c.height + "px";
+c.width = c.width * ratio;
+c.height = c.height * ratio;
+canvas.scale(ratio, ratio);
+
+var stroke_input = document.getElementById('stroke-list');
+var radicalSet = new RadicalSet();
+var char_set_json;
+
+function redrawRadical(){
+    var radical_list_json = JSON.parse(stroke_input.value);
+
+    radicalSet.init(char_set_json, radical_list_json);
+    radicalSet.draw();
+}
+
+stroke_input.addEventListener('keypress', function(e){
+    if(e.key=="Enter" && e.ctrlKey){
+        redrawRadical();
+    }
+});
+
+stroke_input.focus();
+
+loadJSON('data/stroke-spec.json').then(function(data){
+    char_set_json = JSON.parse(data);
+    redrawRadical();
+})
+
+
+    </script>
+
+</html>
+
