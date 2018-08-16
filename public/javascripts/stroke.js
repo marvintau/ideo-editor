@@ -3,40 +3,14 @@ class Stroke {
 
     constructor(segs){
         
+        this.init_points(segs);
         this.segs = segs;
-        this.init_points();
     }
 
-    stretch(ratio, ith_seg){
-        if(ratio === undefined){
-            return;
-        } else if (ith_seg === undefined){
-            for(let i in this.segs){
-                this.segs[i].len *= ratio;
-            }
-        } else {
-            console.log(this.segs[i]);
-            this.segs[ith_seg].len *= ratio;
-        }
-    }    
-
-    rotate(angle, ith_seg){
-        if(angle === undefined){
-            return;
-        } else if (ith_seg === undefined){
-            for(let i in this.segs){
-                this.segs[i].ang += angle;
-            }
-        } else {
-            this.segs[ith_seg].ang += angle;
-        }
-
-    }
-
-    init_points(){
+    init_points(segs){
         this.points = [new Vec(0, 0)];
 
-        for(let seg of this.segs){
+        for(let seg of segs){
             var last = this.points[this.points.length-1],
                 nvec = new Vec(Math.cos(2*Math.PI * seg.ang / 360), Math.sin(2*Math.PI * seg.ang / 360)),
                 mult = new Vec(seg.len, seg.len);
@@ -46,28 +20,12 @@ class Stroke {
         this.r = [0];
 
         for(let i = 0; i < this.points.length-1; i++){
-            this.r.push(this.r[i] + this.segs[i].len);
+            this.r.push(this.r[i] + segs[i].len);
         }
         for(let i = 0; i < this.r.length; i++){
             this.r[i] /= this.r[this.r.length-1];
         }
  
-    }
-
-    /**
-     * slice a piece of curve, if start is greater than end, then it slices
-     * beyond the end of the curve. This is useful when treating the curve
-     * as a polygon.
-     */
-    slice(start, end){
-        var actual_start = start % this.points.length,
-            actual_end   = end   % this.points.length;
-
-        if(actual_end > actual_start){
-            return this.points.slice(start, end);
-        } else {
-            return this.points.slice(actual_start).concat(this.segs.slice(0, actual_end));
-        }
     }
 
     /**

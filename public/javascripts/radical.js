@@ -56,24 +56,21 @@ class RadicalSet{
        
     }
 
-    applyCond(cond, next_radical){
-        this.concat(cond, next_radical);
-    }
-
-
     box(radical_list){
         var list = radical_list == undefined ? this.radical_list : radical_list; 
         return list.map(s=>s.box()).reduce((s, b) => s.union(b))
     }
 
     rotate(angle, next_radical){
-        next_radical.rotate(angle);
-        next_radical.init_points();
+        for (let i in next_radical.points){
+            next_radical.points[i].roti(angle * Math.PI / 180);
+        }
     }
 
     stretch(ratio, next_radical){
-        next_radical.stretch(ratio);
-        next_radical.init_points();
+        for (let i in next_radical.points){
+            next_radical.points[i].scalei(ratio);
+        }
     }
 
     concat(cond, next_radical){

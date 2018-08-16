@@ -94,7 +94,8 @@ class Vec {
      * @param {float} theta 
      */
     rot(theta){
-        return new Vec (this.x*Math.cos(theta) - this.y*Math.sin(theta), this.x*Math.sin(theta) + this.y*Math.cos(theta), this.w);
+        return new Vec (this.x*Math.cos(theta) - this.y*Math.sin(theta),
+                        this.x*Math.sin(theta) + this.y*Math.cos(theta), this.w);
     }
     roti(theta){
         var new_x = this.x*Math.cos(theta) - this.y*Math.sin(theta),
@@ -127,6 +128,11 @@ class Vec {
     multi(tensor){
         this.x *= tensor.x;
         this.y *= tensor.y;
+    }
+
+    scalei(f){
+        this.x *= f;
+        this.y *= f;
     }
 
     /**
