@@ -2,9 +2,8 @@
 class Stroke {
 
     constructor(segs){
-        
-        this.init_points(segs);
         this.segs = segs;
+        this.init_points(segs);
     }
 
     init_points(segs){
@@ -89,7 +88,10 @@ class Stroke {
     }
 
     copy(){
-        return new Stroke(JSON.parse(JSON.stringify(this.segs)));
+        var new_stroke = new Stroke(JSON.parse(JSON.stringify(this.segs)));
+        new_stroke.points = this.points.map(p=>p.copy());
+        new_stroke.r = this.r;
+        return new_stroke;
     }
 }
 

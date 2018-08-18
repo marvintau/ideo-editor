@@ -30,8 +30,8 @@ class RadicalSet{
                 break;
 
             case "compound":
-                var compound_segs = this.get_compound_segs(spec, radical_refs);
-                var stroke = new Stroke(compound_segs);
+                var compound_segs = this.get_compound_segs(spec, radical_refs),
+                    stroke = new Stroke(compound_segs);
                 radical_refs[name] = [stroke];
                 break;
 
@@ -39,7 +39,6 @@ class RadicalSet{
                 var sub_radical_set = new RadicalSet();
                 sub_radical_set.init(radical_spec_sofar, spec.components);
                 radical_refs[name] = sub_radical_set.strokes;
-                console.log("initing radical", name, JSON.stringify(radical_refs[name].map(s => s.points[0])));
                 break;
         }
 
@@ -74,19 +73,16 @@ class RadicalSet{
     // list will be specified on cond methods.
     add(conditions, radical){
 
-
         if (conditions !== undefined){
             for (let cond of conditions){
                 var method = Object.keys(cond)[0];
-                radical = this[method](cond[method], radical);
+                this[method](cond[method], radical);
             }
         }
-
+        console.log(radical, "adding");
         for(let stroke of radical){
             this.strokes.push(stroke);
         }
-        
-        console.log("adding", JSON.stringify(radical.map(s=>s.points[0])));
     }
 
     box(strokes){
@@ -98,16 +94,12 @@ class RadicalSet{
         for(let s in radical)
             for (let i in radical[s].points)
                 radical[s].points[i].roti(angle * Math.PI / 180);
-
-        return radical;
     }
 
     stretch(ratio, radical){
         for(let s in radical)
             for (let i in radical[s].points)
                 radical[s].points[i].scalei(ratio);
-
-        return radical;
     }
 
     concat(cond, radical){
@@ -124,12 +116,14 @@ class RadicalSet{
             "top"    : new_size.vert().neg(),
             "bottom" : list_size.vert()
         };
+
     }
 
     // when doing cross, the radical must be a single stroke radical. Add more
     // handling here.
     cross(cond, radical){
 
+        console.log("done cross");
         var dest = cond.dest,
             rself = cond.rself,
             rdest = cond.rdest;
@@ -138,11 +132,9 @@ class RadicalSet{
             self_point = radical[0].getPointAt(rself);
 
         for(let s in radical){
+            console.log('done trans');
             radical[s].trans(dest_point.sub(self_point));
         }
-
-        console.log("cross", JSON.stringify(radical.map(s=>s.points[0])))
-        return radical;
     }
 
     draw(){

@@ -41,9 +41,9 @@
     "xiegou" : {"type":"compound", "simples":[{"stroke":"xie"}, {"stroke":"-gou-up"}]},
     "wogou"  : {"type":"compound", "simples":[{"stroke":"xiegou", "rotate":-30}]},
     "xieshu" : {"type":"compound", "simples":[{"stroke":"shu", "rotate":-30}]},
-    "女":{"type":"radical", "components":[{"stroke":"piedian"},
-                            {"stroke":"pie", "conds":[{"stretch":1.2}, {"rotate":-10},{"cross":{"dest":0, "rdest":0.7, "rself":0.6}}]},
-                            {"stroke":"heng", "conds":[{"stretch":1.4}, {"cross":{"dest":1, "rdest":0.2, "rself":0.7}}]}
+    "女":{"type":"radical", "components":[{"name":"piedian"},
+                            {"name":"pie", "conds":[{"stretch":1.2}, {"rotate":-10},{"cross":{"dest":0, "rdest":0.7, "rself":0.6}}]},
+                            {"name":"heng", "conds":[{"stretch":1.4}, {"cross":{"dest":1, "rdest":0.2, "rself":0.7}}]}
                             ]}
 }
 

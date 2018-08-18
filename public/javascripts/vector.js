@@ -16,7 +16,6 @@ class Vec {
         } else  {
             this.x = x;
             this.y = y;
-            this.w = w == undefined ? 1 : w;
         }
     }
 
@@ -38,7 +37,7 @@ class Vec {
      * @param {Vec} v 
      */
     sub(v){
-        return new Vec(this.x - v.x, this.y - v.y, this.w);
+        return new Vec(this.x - v.x, this.y - v.y);
     }
     subi(v){
         this.x -= v.x;
@@ -51,7 +50,7 @@ class Vec {
      * @param {Vec} v 
      */
     add(v){
-        return new Vec(this.x + v.x, this.y + v.y, this.w);
+        return new Vec(this.x + v.x, this.y + v.y);
     }
     addi(v){
         this.x += v.x;
@@ -65,7 +64,7 @@ class Vec {
      * @param {number} n 
      */
     perp_ccw(n){
-        return new Vec(-this.y * n, this.x * n, this.w);
+        return new Vec(-this.y * n, this.x * n);
     }
     perp_ccwi(n){
         var new_x = -this.y * n,
@@ -80,7 +79,7 @@ class Vec {
      * @param {number} n 
      */
     perp_cw(n){
-        return new Vec(this.y * n, -this.x * n, this.w);
+        return new Vec(this.y * n, -this.x * n);
     }
     perp_cwi(n){
         var new_x = this.y * n,
@@ -95,7 +94,7 @@ class Vec {
      */
     rot(theta){
         return new Vec (this.x*Math.cos(theta) - this.y*Math.sin(theta),
-                        this.x*Math.sin(theta) + this.y*Math.cos(theta), this.w);
+                        this.x*Math.sin(theta) + this.y*Math.cos(theta));
     }
     roti(theta){
         var new_x = this.x*Math.cos(theta) - this.y*Math.sin(theta),
@@ -123,7 +122,7 @@ class Vec {
      * @param {Vec} tensor 
      */
     mult(tensor){
-        return new Vec(this.x * tensor.x, this.y * tensor.y, this.w);
+        return new Vec(this.x * tensor.x, this.y * tensor.y);
     }
     multi(tensor){
         this.x *= tensor.x;
@@ -160,7 +159,7 @@ class Vec {
      * duplicate this vector
      */
     copy(){
-        return new Vec(this.x, this.y, this.w);
+        return new Vec(this.x, this.y);
     }
 
     move(ctx){
