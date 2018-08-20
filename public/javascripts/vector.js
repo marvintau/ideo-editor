@@ -206,6 +206,29 @@ class Box{
     center(){
         return this.rb.add(this.lt).mult(new Vec(0.5, 0.5));
     }
+
+    get(place){
+
+        var width = this.size().hori(),
+            height = this.size().vert(),
+            half_size = this.size().mult(new Vec(0.5, 0.5)),
+            half_width = half_size.hori(),
+            half_height = half_size.vert();
+
+        var map = {
+            'left-top' : this.lt,
+            'right-top' : this.lt.add(width),
+            'left-bottom' : this.lt.add(height),
+            'right-bottom' : this.rb,
+            'left-center' : this.lt.add(half_height),
+            'right-center' : this.rb.sub(half_height),
+            'top-center' : this.lt.add(half_width),
+            'bottom-center' : this.rb.sub(half_width),
+            'center' : this.center()
+        };
+
+        return map[place];
+    }
 }
 
 
