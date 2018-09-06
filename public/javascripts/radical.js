@@ -1,15 +1,21 @@
 
+/**
+ * GLOBAL RADICAL REFERENCE
+ * The global data structure that holds all stroke & radical objects.
+ */
+var RADICAL_REFS={};
+
 class RadicalSet{
 
     constructor(){
     }
 
-    get_compound_segs(spec, radical_refs){
+    get_compound_segs(spec){
 
         var compound_segs = [];
 
         for(let simple of spec.simples){
-            var segs = radical_refs[simple.stroke][0].copy().segs;
+            var segs = RADICAL_REFS[simple.stroke][0].copy().segs;
             
             if(simple.stretch) for(var i in segs) segs[i].len *= simple.stretch;
             if(simple.rotate) for (var i in segs) segs[i].ang += simple.rotate;
@@ -20,26 +26,26 @@ class RadicalSet{
         return compound_segs;
     }
 
-    set_radical_ref(name, spec, radical_refs, radical_spec_sofar){
+    set_radical_ref(name, spec, radical_spec_sofar){
     
         switch(spec.type){
 
             case "simple":
                 var stroke = new Stroke(spec.segs);
-                radical_refs[name] = [stroke];
+                RADICAL_REFS[name] = [stroke];
                 break;
 
             case "compound":
-                var compound_segs = this.get_compound_segs(spec, radical_refs);
+                var compound_segs = this.get_compound_segs(spec);
                 var stroke = new Stroke(compound_segs);
-                radical_refs[name] = [stroke];
+                RADICAL_REFS[name] = [stroke];
                 break;
 
             case "radical":
                 var sub_radical_set = new RadicalSet();
                 sub_radical_set.init(radical_spec_sofar, spec.components);
-                radical_refs[name] = sub_radical_set.strokes;
-                console.log("initing radical", name, JSON.stringify(radical_refs[name].map(s => s.points[0])));
+                RADICAL_REFS[name] = sub_radical_set.strokes;
+                console.log("initing radical", name, JSON.stringify(RADICAL_REFS[name].map(s => s.points[0])));
                 break;
         }
 
@@ -49,19 +55,20 @@ class RadicalSet{
 
         this.ctx = document.getElementById('canvas').getContext('2d');
 
-        var radical_spec_sofar = {},
-            radical_refs = {};
+        var radical_spec_sofar = {};
 
         for(let name in radical_spec){
-            this.set_radical_ref(name, radical_spec[name], radical_refs, radical_spec_sofar);
+            if(RADICAL_REFS.name === undefined){
+                this.set_radical_ref(name, radical_spec[name], radical_spec_sofar);
+            }
             radical_spec_sofar[name] = radical_spec[name];
         }
 
         this.strokes = [];
         for(let radical of radical_list){
 
-            console.log(radical_refs, radical);
-            var radicals_copy = radical_refs[radical.name].map(stroke => stroke.copy());
+            console.log(radical);
+            var radicals_copy = RADICAL_REFS[radical.name].map(stroke => stroke.copy());
 
             this.add(radical.conds, radicals_copy); 
 
@@ -69,22 +76,20 @@ class RadicalSet{
 
     }
 
-    // note that the radical contains a list of strokes only. thus we merely change push into concat
-    // so that to make add accept list of stroke instead of single object. for detailed operation over
-    // list will be specified on cond methods.
     add(conditions, radical){
 
-
         if (conditions !== undefined){
-            for (let cond of conditions){
-                var method = Object.keys(cond)[0];
-                radical = this[method](cond[method], radical);
+            for (let method in conditions){
+                console.log("methods", method);
+                radical = this[method](conditions[method], radical);
             }
         }
 
-        for(let stroke of radical){
-            this.strokes.push(stroke);
-        }
+        console.log("prepend!", conditions);
+        if (conditions && conditions.prepend){
+            this.strokes = radical.concat(this.strokes);
+        } else
+            this.strokes = this.strokes.concat(radical);
         
         console.log("adding", JSON.stringify(radical.map(s=>s.points[0])));
     }
@@ -92,6 +97,12 @@ class RadicalSet{
     box(strokes){
         var list = strokes === undefined ? this.strokes : strokes; 
         return list.map(s=>s.box()).reduce((s, b) => s.union(b))
+    }
+
+    // Do nothing but just make the condition list work smoothly.
+    // apparently a bad practice.
+    prepend(whatever, radical){
+        return radical;
     }
 
     rotate(angle, radical){
@@ -102,7 +113,7 @@ class RadicalSet{
         return radical;
     }
 
-    stretch(ratio, radical){
+    scale(ratio, radical){
         for(let s in radical)
             for (let i in radical[s].points)
                 radical[s].points[i].scalei(ratio);
@@ -110,20 +121,51 @@ class RadicalSet{
         return radical;
     }
 
+    stretch(ratio, vec, radical){
+
+        if(radical === undefined){
+            radical = this.strokes;
+        }
+
+        for(let s in radical)
+            for (let i in radical[s].points){
+                radical[s].points[i].subi(vec);
+                radical[s].points[i].multi(ratio);
+                radical[s].points[i].addi(vec);
+            }
+                
+        return radical;
+    }
+
     concat(cond, radical){
 
-        var list_box = this.box(),
-            new_box  = this.box(radical);
-
-        var list_size = list_box.size(),
-            new_size  = new_box.size();
-
-        var place = {
-            "left"   : new_size.hori().neg(),
-            "right"  : list_size.hori(),
-            "top"    : new_size.vert().neg(),
-            "bottom" : list_size.vert()
+        var trans_methods = {
+            "right"  : {"prev":{"ratio":new Vec(0.6, 1), "pos":"left-center"},
+                        "curr":{"ratio":new Vec(0.6, 1), "pos":"right-center"}},
+            "bottom" : {"prev":{"ratio":new Vec(1, 0.6), "pos":"top-center"},
+                        "curr":{"ratio":new Vec(1, 0.6), "pos":"bottom-center"}}
         };
+
+        var prev_box = this.box(),
+            curr_box = this.box(radical);
+
+        var prev_center = prev_box.center(),
+            curr_center = curr_box.center();
+
+        for(var stroke_index in radical){
+            radical[stroke_index].trans(prev_center.sub(curr_center));
+        }
+
+        var unioned_box = prev_box.union(this.box(radical)),
+            prev_anchor = unioned_box.get(trans_methods[cond.place].prev.pos),
+            curr_anchor = unioned_box.get(trans_methods[cond.place].curr.pos);
+
+        this.stretch(trans_methods[cond.place].prev.ratio, prev_anchor);
+        this.stretch(trans_methods[cond.place].curr.ratio, curr_anchor, radical);
+
+        console.log("stretched", this.box(), this.box(radical));
+
+        return radical;
     }
 
     // when doing cross, the radical must be a single stroke radical. Add more
@@ -133,6 +175,8 @@ class RadicalSet{
         var dest = cond.dest,
             rself = cond.rself,
             rdest = cond.rdest;
+
+        console.log(radical);
 
         var dest_point = this.strokes[dest].getPointAt(rdest),
             self_point = radical[0].getPointAt(rself);
@@ -149,7 +193,7 @@ class RadicalSet{
 
         this.ctx.clearRect(0,0,600, 600);
 
-        if(this.strokes.length > 1){
+        if(this.strokes.length > 0){
             var this_box = this.box(),
                 this_size = this_box.size(),
                 this_center = this_box.center(),

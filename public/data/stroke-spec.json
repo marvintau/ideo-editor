@@ -42,8 +42,14 @@
     "wogou"  : {"type":"compound", "simples":[{"stroke":"xiegou", "rotate":-30}]},
     "xieshu" : {"type":"compound", "simples":[{"stroke":"shu", "rotate":-30}]},
     "女":{"type":"radical", "components":[{"name":"piedian"},
-                            {"name":"pie", "conds":[{"stretch":1.2}, {"rotate":-10},{"cross":{"dest":0, "rdest":0.7, "rself":0.6}}]},
-                            {"name":"heng", "conds":[{"stretch":1.4}, {"cross":{"dest":1, "rdest":0.2, "rself":0.7}}]}
-                            ]}
+                            {"name":"pie", "conds":{"scale":1.2, "rotate":-10, "cross":{"dest":0, "rdest":0.7, "rself":0.6}}},
+                            {"name":"heng", "conds":{"scale":1.4, "cross":{"dest":1, "rdest":0.2, "rself":0.7}}}
+                            ]},
+    "木":{"type":"radical", "components":[
+        {"name":"heng"},
+        {"name":"shu", "conds":{"scale":1.3, "cross":{"dest":0, "rdest":0.5, "rself":0.2}}},
+        {"name":"pie", "conds":{"scale":1, "rotate":-10, "cross":{"dest":0, "rdest":0.4, "rself":-0.1}}},
+        {"name":"na",  "conds":{"scale":1, "rotate":10, "cross":{"dest":0, "rdest":0.6, "rself":-0.1, "prepend":true}}}
+        ]}
 }
 
