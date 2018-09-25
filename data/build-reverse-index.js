@@ -49,7 +49,7 @@ function record_handling(record){
         '⿸': ['outer', 'rightbottom'],
         '⿹': ['outer', 'leftbottom'],
         '⿺': ['outer', 'righttop'],
-        '⿻': ['embed1', 'embed2']
+        '⿻': ['embed1', 'embed2'] // for embedding structure, look up from unicode website.
     };
 
     while(record_grouped.length > 0){

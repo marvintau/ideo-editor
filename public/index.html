@@ -31,9 +31,10 @@ body{
                         {"name":"女", "conds":{"concat":{"place":"bottom"}}}]</textarea>
             </div>
     </body>
-    <script src="./javascripts/vector.js"></script>
-    <script src="./javascripts/stroke.js"></script>
-    <script src="./javascripts/radical.js"></script>
+    <!-- <script src="./javascripts/vector.js"></script> -->
+    <script src="./javascripts/structure.js"></script>
+    <!-- <script src="./javascripts/stroke.js"></script> -->
+    <!-- <script src="./javascripts/radical.js"></script> -->
 
     <script>
 
@@ -63,8 +64,7 @@ function loadJSON (json_filename) {
     });
 }
 
-var canvas_size = new Vec(document.getElementById("canvas").width, document.getElementById("canvas").height),
-    canvas = document.getElementById("canvas").getContext("2d");
+var canvas = document.getElementById("canvas").getContext("2d");
 
 var c = document.getElementById("canvas"),
     ratio = window.devicePixelRatio;
@@ -75,19 +75,58 @@ c.height = c.height * ratio;
 canvas.scale(ratio, ratio);
 
 var stroke_input = document.getElementById('stroke-list');
-var radicalSet = new RadicalSet();
+var radicalSet, grand_radical_refs = {};
 var char_set_json;
 
 function redrawRadical(){
     var radical_list_json = JSON.parse(stroke_input.value);
 
-    radicalSet.init(char_set_json, radical_list_json);
-    radicalSet.draw();
+    radicalSet = new Radical(char_set_json, radical_list_json, grand_radical_refs);
+    // radicalSet.draw();
+    console.log(grand_radical_refs);
+}
+
+function getCursorPos(input) {
+    return {
+        start: input.selectionStart,
+        end: input.selectionEnd
+    };
+}
+
+function setCursorPos(input, pos) {
+    setTimeout(function() {
+        input.selectionStart = pos;
+        input.selectionEnd = pos;
+    }, 1);
+}
+
+function insertPair(input, bracket, pos){
+    var cursorPos = getCursorPos(stroke_input),
+        input_str = input.value;
+
+    input.value = input_str.slice(0, cursorPos.start) + bracket + input_str.slice(cursorPos.start);
+    setCursorPos(input, cursorPos.start+pos);
 }
 
 stroke_input.addEventListener('keypress', function(e){
-    if(e.key=="Enter" && e.ctrlKey){
+    var complete_dict = {
+        "[" : ["[]", 1],
+        "'" : ['""', 1],
+        '"' : ['""', 1],
+        "{" : ['{}', 1],
+        "Enter":['\n\n', 1]
+    };
+
+    if(e.key==="Enter" && e.ctrlKey){
         redrawRadical();
+        return;
+    }
+
+
+    console.log(e.key in complete_dict);
+    if(e.key in complete_dict){
+        e.preventDefault();
+        insertPair(stroke_input, complete_dict[e.key][0], complete_dict[e.key][1]);
     }
 });
 
