@@ -22,45 +22,56 @@ class Seg{
     }
 }
 
-class Curve{
-    constructor(segs, anchor, spec){
-        this.segs = (segs === undefined) ? [] : segs.map(seg => new Seg(seg.len, seg.ang));
+class CurveStructureBase { 
+    constructor(sub_level_constructor,segs, anchor, spec){
+        this.components = (segs === undefined) ? [] : segs.map(seg => seg.copy(spec));
         this.anchor = (anchor === undefined) ? {x:0, y:0} : anchor;
-
-        if(!(spec === undefined)) {
-            if (spec.stretch) this.stretchAll(spec.stretch);
-            if (spec.rotate)  this.rotateAll(spec.rotate);
-        }
     }
 
     modify(spec){
-        if (spec.stretch) this.stretchAll(spec.stretch);
-        if (spec.rotate)  this.rotateAll(spec.rotate);
+        if (spec.stretch) this.stretch(spec.stretch);
+        if (spec.rotate)  this.rotate(spec.rotate);
     }
 
-    stretchAll(ratio){
-        for(let i in this.segs){
-            this.segs[i].stretch(ratio);
+    stretch(ratio, ith){
+        if(ith != undefined){
+            this.components[ith].stretch(ratio);
+        } else for(let i in this.components){
+            this.components[i].stretch(ratio);
         }
     }
 
-    stretch(ith, ratio){
-        this.segs[ith].stretch(ratio);
-    }
-
-    rotateAll(angle){
-        for(let i in this.segs){
-            this.segs[i].rotate(angle);
+    rotate(angle, ith){
+        if(ith != undefined){
+            this.components[ith].rotate(angle);    
+        }else for(let i in this.components){
+            this.components[i].rotate(angle);
         }
-    }
-
-    rotate(ith, angle){
-        this.segs[ith].rotate(angle);
     }
 
     translate(increment){
         this.anchor.x += increment.x;
         this.anchor.y += increment.y;
+    }
+
+    copy(spec){
+        
+        var newCurve = new this.constructor();
+        newCurve.components = this.components.map(seg => seg.copy());
+        newCurve.anchor = {x:this.anchor.x, y:this.anchor.y};
+
+        if(spec != undefined){
+            newCurve.modify(spec);
+        }
+        return newCurve;
+    }
+}
+
+class Curve extends CurveStructureBase{
+    constructor(spec){
+        var segs = (spec != undefined) ? spec.segs.map(seg => new Seg(seg.len, seg.ang)) : [],
+            anchor = {x:0, y:0};
+        super(Seg, segs, anchor, spec);
     }
 
     getPointAt(ithRatio, ithSeg){
@@ -72,18 +83,18 @@ class Curve{
         var currSeg;
         if(ithSeg === undefined){
 
-            var totalLen = this.segs.reduce((sum, e) => sum + e.len, 0), 
+            var totalLen = this.components.reduce((sum, e) => sum + e.len, 0), 
                 ratioLen = ithRatio * totalLen,
                 currLen  = 0;
 
-            for(let i = 0; i < this.segs.length-1; i++){
+            for(let i = 0; i < this.components.length-1; i++){
 
-                currSeg =  this.segs[i];
-                currLen += this.segs[i].len;
+                currSeg =  this.components[i];
+                currLen += this.components[i].len;
                 point.x += currSeg.len * Math.cos(currSeg.ang/180*Math.PI);
                 point.y += currSeg.len * Math.sin(currSeg.ang/180*Math.PI);
 
-                if (this.segs[i+1].len + currLen > ratioLen) break;
+                if (this.components[i+1].len + currLen > ratioLen) break;
             }
     
             point.x += (totalLen - currLen) * Math.cos(currSeg.ang/180*Math.PI);
@@ -94,7 +105,7 @@ class Curve{
             // typically not going to use ithSeg (this) routine
 
             for(let i = 0; i < ithSeg; i++){
-                currSeg = this.segs[i];
+                currSeg = this.components[i];
                 ithStartPoint.x += currSeg.len * Math.cos(currSeg.ang/180*Math.PI);
                 ithStartPoint.y += currSeg.len * Math.sin(currSeg.ang/180*Math.PI);
             }
@@ -105,26 +116,13 @@ class Curve{
 
         return point;
     }
-
-    copy(){
-        var newCurve = new Curve();
-        newCurve.segs = this.segs.map(seg => seg.copy());
-        newCurve.anchor = {x:this.anchor.x, y:this.anchor.y};
-        return newCurve;
-    }
 }
 
 
-class CompoundCurve{
+class CompoundCurve extends CurveStructureBase{
 
-    constructor(curves, anchor, spec) {
-        this.curves = (curves === undefined) ? [] : curves.map(curve => curve.copy());
-        this.anchor = (anchor === undefined) ? {x:0, y:0} : anchor;
-
-        if(!(spec === undefined)) {
-            if (spec.stretch) this.stretchAll(spec.stretch);
-            if (spec.rotate)  this.rotateAll(spec.rotate);
-        }
+    constructor(segs, anchor, spec) {
+        super(Curve, segs, anchor, spec);
     }
 
     modify(spec){
@@ -133,48 +131,22 @@ class CompoundCurve{
             if(spec.stretch.constructor===Array) for (let i of spec.stretch)
                 this.stretch(spec.stretch[i][0], spec.stretch[i][1]);
             else
-                this.stretchAll(spec.stretch);
+                this.stretch(spec.stretch);
 
         if(spec.rotate)
             if(spec.rotate.constructor===Array) for (let i of spec.rotate)
                 this.rotate(spec.rotate[i][0], spec.rotate[i][1]);
             else
-                this.stretchAll(spec.rotate);
-    }
-
-    stretchAll(ratio){
-        for(let i in this.segs){
-            this.curves[i].stretch(ratio);
-        }
-    }
-
-    stretch(ith, ratio){
-        this.curves[ith].stretch(ratio);
-    }
-
-    rotateAll(angle){
-        for(let i in this.segs){
-            this.curves[i].rotate(angle);
-        }
-    }
-
-    rotate(ith, angle){
-        this.curves[ith].rotate(angle);
+                this.stretch(spec.rotate);
     }
 
     getPointAt(ithRatio, ithCurve){
-        return this.curves[ithCurve].getPointAt(ithRatio);
+        return this.components[ithCurve].getPointAt(ithRatio);
     }
 
-    copy(){
-        var newCompoundCurve = new CompoundCurve();
-        newCompoundCurve.curves = this.curves.map(curve => curve.copy());
-        return newCompoundCurve;
-    }
 }
 
 class Radical{
-
 
     /**
      * init 初始化部首
@@ -199,16 +171,15 @@ class Radical{
         
         for(let name in radical_spec){
             if(this.grand_radical_ref[name] === undefined){
-                this.set_radical_ref(name, radical_spec[name], radical_spec_sofar);
+                this.register_radical(name, radical_spec[name], radical_spec_sofar);
             }
             radical_spec_sofar[name] = radical_spec[name];
         }
 
-        this.strokes = [];
+        this.components = [];
         for(let radical of radical_list){
 
             var radical_ref = this.grand_radical_ref[radical.name];
-            this.strokes = this.strokes.concat(radical_ref);
         }
     }
 
@@ -234,13 +205,12 @@ class Radical{
 
         for(let component_spec of spec.components){
 
-            var curve = this.grand_radical_ref[component_spec.stroke].copy();
-            curve.modify(component_spec);
+            var curve = this.grand_radical_ref[component_spec.stroke].copy(component_spec);
 
             if(curve.constructor === Curve){
-                compound_curve.curves.push(curve);
+                compound_curve.components.push(curve);
             } else if (curve.constructor === CompoundCurve){
-                compound_curve.curves = compound_curve.curves.concat(curve.curves);
+                compound_curve.components = compound_curve.components.concat(curve.components);
             }
             
         }
@@ -250,7 +220,7 @@ class Radical{
 
 
     /**
-     * set_radical_ref 设置笔画对象的引用
+     * register_radical 设置笔画对象的引用
      * 
      * 这个函数是在初始化部首列表时引用的。
      * 
@@ -267,12 +237,12 @@ class Radical{
      * @param {object} spec 笔画描述
      * @param {object}} radical_spec_sofar 到现在为止已有的笔画
      */
-    set_radical_ref(name, spec, radical_spec_sofar){
+    register_radical(name, spec, radical_spec_sofar){
     
         switch(spec.type){
 
             case "simple":
-                this.grand_radical_ref[name] = new Curve(spec.segs);
+                this.grand_radical_ref[name] = new Curve(spec);
                 break;
 
             case "compound":
@@ -280,8 +250,7 @@ class Radical{
                 break;
 
             case "radical":
-                var sub_radical_set= new Radical(radical_spec_sofar, spec.components, this.grand_radical_ref);
-                this.grand_radical_ref[name] = sub_radical_set.strokes;
+                this.grand_radical_ref[name] = new Radical(radical_spec_sofar, spec.components, this.grand_radical_ref);
                 break;
         }
 
@@ -296,8 +265,7 @@ class Radical{
         //     }
         // }
 
-        this.strokes = this.strokes.concat(radical);
-        
+        this.components = this.components.concat(radical.strokes);
     }
 
 }
