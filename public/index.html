@@ -28,41 +28,37 @@ body{
         <div>
             <div>
                 <textarea id="stroke-list" rows="10" spellcheck="false">[{"name":"木"}, {"name":"木", "conds":{"concat":{"place":"right"}}},
-                        {"name":"女", "conds":{"concat":{"place":"bottom"}}}]</textarea>
+                    {"name":"女", "conds":{"concat":{"place":"bottom"}}}]</textarea>
             </div>
     </body>
-    <!-- <script src="./javascripts/vector.js"></script> -->
     <script src="./javascripts/structure.js"></script>
-    <!-- <script src="./javascripts/stroke.js"></script> -->
-    <!-- <script src="./javascripts/radical.js"></script> -->
-
     <script>
 
-function loadJSON (json_filename) {
+        function loadJSON (json_filename) {
 
-    return new Promise(function (resolve, reject) {
-        var xhr = new XMLHttpRequest();
-        xhr.open('GET', json_filename, true);
+            return new Promise(function (resolve, reject) {
+                var xhr = new XMLHttpRequest();
+                xhr.open('GET', json_filename, true);
 
-        xhr.onload = function () {
-            if (this.status >= 200 && this.status < 300) {
-                resolve(xhr.response);
-            } else {
-                reject({
-                    status: this.status,
-                    statusText: xhr.statusText
-                });
-            }
-        };
-        xhr.onerror = function () {
-            reject({
-                status: this.status,
-                statusText: xhr.statusText
+                xhr.onload = function () {
+                    if (this.status >= 200 && this.status < 300) {
+                        resolve(xhr.response);
+                    } else {
+                        reject({
+                            status: this.status,
+                            statusText: xhr.statusText
+                        });
+                    }
+                };
+                xhr.onerror = function () {
+                    reject({
+                        status: this.status,
+                        statusText: xhr.statusText
+                    });
+                };
+                xhr.send();
             });
-        };
-        xhr.send();
-    });
-}
+        }
 
 var canvas = document.getElementById("canvas").getContext("2d");
 

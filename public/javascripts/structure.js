@@ -1,7 +1,30 @@
+class Box{
+    constructor(x, y, h, w){
+        this.x = x;
+        this.y = y;
+        this.h = h;
+        this.w = w;
+    }
+
+    union(box){
+
+        var x = Math.min(this.x, box.x),
+            y = Math.min(this.y, box.y),
+            w = Math.max(this.x + this.w, box.x + box.w) - x,
+            h = Math.max(this.y + this.h, box.y + box.h) - y;
+
+        return new Box(x, y, w, h);
+    }
+}
+
 class Seg{
-    constructor(len, angle){
+    constructor(len, angle, anchor){
+        
         this.len = len;
         this.ang = angle;
+
+        this.anchor = (anchor === undefined) ? anchor : {x:0, y:0};
+
     }
 
     stretch(ratio){
@@ -12,20 +35,61 @@ class Seg{
         this.ang += angle;
     }
 
-    strotate(ratio, angle){
-        this.len *= ratio;
-        this.ang += angle;
+    copy(){
+        return new Seg(this.len, this.ang, this.anchor);
     }
 
-    copy(){
-        return new Seg(this.len, this.ang);
+    vec(){
+        return {
+            x: this.len*Math.cos(this.ang*Math.PI/180),
+            y: this.len*Math.sin(this.ang*Math.PI/180)
+        }
+    }
+
+    end(){
+        var vec = this.vec();
+
+        return {
+            x: this.anchor.x + vec.x,
+            y: this.anchor.y + vec.y
+        }
+    }
+
+    box(){
+        var end = this.end();
+        return new Box(
+            Math.min(this.x, end.x),
+            Math.min(this.y, end.y),
+            Math.max(this.x, end.x) - Math.min(this.x, end.x),
+            Math.max(this.y, end.y) - Math.min(this.y, end.y)
+        )
+    }
+
+    draw(ctx){
+
+        var width  = ctx.canvas.width,
+            height = ctx.canvas.height,
+            vec    = this.vec();
+
+        var endx = startPoint.x + vec.x,
+            endy = startPoint.y + vec.y;
+
+        ctx.beginPath();
+        ctx.moveTo(startPoint.x, startPoint.y);
+        ctx.lineTo(endx, endy);
+        ctx.stroke();
+        return {x:endx, y:endy}
+
     }
 }
 
 class CurveStructureBase { 
-    constructor(sub_level_constructor,segs, anchor, spec){
+    constructor(sub_level_constructor, segs, anchor, spec){
         this.components = (segs === undefined) ? [] : segs.map(seg => seg.copy(spec));
         this.anchor = (anchor === undefined) ? {x:0, y:0} : anchor;
+        
+        this.canvas = document.getElementById("canvas")
+        this.ctx = this.canvas.getContext("2d")
     }
 
     modify(spec){
@@ -91,14 +155,14 @@ class Curve extends CurveStructureBase{
 
                 currSeg =  this.components[i];
                 currLen += this.components[i].len;
-                point.x += currSeg.len * Math.cos(currSeg.ang/180*Math.PI);
-                point.y += currSeg.len * Math.sin(currSeg.ang/180*Math.PI);
+                point.x += currSeg.len * Math.cos(currSeg.ang*Math.PI/180);
+                point.y += currSeg.len * Math.sin(currSeg.ang*Math.PI/180);
 
                 if (this.components[i+1].len + currLen > ratioLen) break;
             }
     
-            point.x += (totalLen - currLen) * Math.cos(currSeg.ang/180*Math.PI);
-            point.y += (totalLen - currLen) * Math.sin(currSeg.ang/180*Math.PI);            
+            point.x += (totalLen - currLen) * Math.cos(currSeg.ang*Math.PI/180);
+            point.y += (totalLen - currLen) * Math.sin(currSeg.ang*Math.PI/180);            
 
         } else {
 
@@ -106,12 +170,12 @@ class Curve extends CurveStructureBase{
 
             for(let i = 0; i < ithSeg; i++){
                 currSeg = this.components[i];
-                ithStartPoint.x += currSeg.len * Math.cos(currSeg.ang/180*Math.PI);
-                ithStartPoint.y += currSeg.len * Math.sin(currSeg.ang/180*Math.PI);
+                ithStartPoint.x += currSeg.len * Math.cos(currSeg.ang*Math.PI/180);
+                ithStartPoint.y += currSeg.len * Math.sin(currSeg.ang*Math.PI/180);
             }
 
-            point.x += ithRatio * currSeg.len * Math.cos(currSeg.ang/180*Math.PI);
-            point.y += ithRatio * currSeg.len * Math.sin(currSeg.ang/180*Math.PI);            
+            point.x += ithRatio * currSeg.len * Math.cos(currSeg.ang*Math.PI/180);
+            point.y += ithRatio * currSeg.len * Math.sin(currSeg.ang*Math.PI/180);            
         }
 
         return point;
