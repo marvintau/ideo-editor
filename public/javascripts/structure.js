@@ -26,33 +26,25 @@ class Seg{
         
         this.len = len;
         this.ang = angle;
-
         this.anchor = (anchor != undefined) ? anchor : {x:0, y:0};
 
+        // specs代表可以应用于Seg上面的操作，specs不能在初始化时设置，而必须从外部设置。
+        // 和下面由CurveStructure派生出的类不同，Seg没有this.operations属性，因为
+        // 可以应用于Seg对象的操作已经在Modify函数中全部列出了。
+
+        this.program = [];
     }
 
     copy(){
         return new Seg(this.len, this.ang, this.anchor);
     }
 
-    vec(){
-        return {
-            x: this.len*Math.cos(this.ang*Math.PI/180),
-            y: this.len*Math.sin(this.ang*Math.PI/180)
-        }
-    }
-
-    end(){
-        var vec = this.vec();
-
-        return {
-            x: this.anchor.x + vec.x,
-            y: this.anchor.y + vec.y
-        }
-    }
-
     box(){
-        var end = this.end();
+
+        var end = {
+            x: this.anchor.x + this.len*Math.cos(this.ang*Math.PI/180),
+            y: this.anchor.y + this.len*Math.sin(this.ang*Math.PI/180)
+        }
 
         var minx = Math.min(this.x, end.x),
             miny = Math.min(this.y, end.y),
@@ -65,18 +57,36 @@ class Seg{
     draw(ctx, anchor){
 
         var width  = ctx.canvas.width,
-            height = ctx.canvas.height,
-            vec    = this.vec();
+            height = ctx.canvas.height;
 
-        var endx = anchor.x + vec.x,
-            endy = anchor.y + vec.y;
+        var end = {
+            x: anchor.x + this.len*Math.cos(this.ang*Math.PI/180),
+            y: anchor.y + this.len*Math.sin(this.ang*Math.PI/180)
+        }
 
         ctx.beginPath();
         ctx.moveTo(anchor.x * width, anchor.y * height);
-        ctx.lineTo(endx * width, endy * height);
+        ctx.lineTo(end.x * width, end.y * height);
         ctx.stroke();
-        return {x:endx, y:endy}
+        return {x:end.x, y:end.y}
+    }
 
+    
+    modify(){
+        for(let operation of this.program){
+            switch(operation.op){
+                case "trans":
+                    this.anchor.x += operation.trans.x;
+                    this.anchor.y += operation.trans.y;    
+                    break;
+                case "rotate":
+                    this.ang += operation.rotate.theta;
+                    break;
+                case "stretch":
+                    this.len *= operation.stretch.ratio;
+                    break;
+            }    
+        }
     }
 }
 
@@ -85,8 +95,8 @@ class CurveStructureBase {
         this.components = (segs === undefined) ? [] : segs.map(seg => seg.copy(spec));
         this.anchor = (anchor === undefined) ? {x:0, y:0} : anchor;
         
-        // this.canvas = document.getElementById("canvas")
-        // this.ctx = this.canvas.getContext("2d")
+        this.procs = [];
+        this.specs = [];
     }
 
     translate(increment){
@@ -120,6 +130,19 @@ class CurveStructureBase {
         }
         return box;
     }
+
+    modify(specs){
+        if(specs === undefined){
+            specs = this.specs;
+        }
+        for (let spec in this.specs){
+            if(spec.ith === undefined){
+                for(let i in this.components){
+                    this.components[i].modify(spec.specs);
+                }
+            }
+        }
+    }
 }
 
 class Curve extends CurveStructureBase{
@@ -127,13 +150,6 @@ class Curve extends CurveStructureBase{
         var segs = (spec != undefined) ? spec.segs.map(seg => new Seg(seg.len, seg.ang)) : [],
             anchor = {x:0, y:0};
 
-        for(let i = 1; i < segs.length; i++){
-            var vec = segs[i-1].vec();
-            segs[i].anchor = {
-                x:segs[i-1].anchor.x + vec.x,
-                y:segs[i-1].anchor.y + vec.y
-            }
-        }
         super(Seg, segs, anchor, spec);
     }
 
@@ -265,6 +281,7 @@ class Radical{
         for(let component_spec of spec.components){
 
             var curve = this.grand_radical_ref[component_spec.stroke].copy(component_spec);
+            console.log(curve.compo);
             compound_curve.components = compound_curve.components.concat(curve.components);
             
         }
