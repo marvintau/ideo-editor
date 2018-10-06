@@ -1,4 +1,10 @@
 class Vec{
+    /**
+     * Simple Vector class.
+     * 
+     * @param {number} x x coordinate. When y is undefined, x denotes the angle of the desired vector.
+     * @param {number} y y coordinate.
+     */
     constructor(x, y){
         if (y === undefined){
             if(x === undefined) {
@@ -45,6 +51,12 @@ class Vec{
 }
 
 class Box{
+
+    /**
+     * Box for representing bounding box.
+     * @param {Vec} head top-left coordinate
+     * @param {Vec} tail bottom-right coordinate
+     */
     constructor(head, tail){
         this.head = head.copy();
         this.tail = tail.copy();
@@ -64,7 +76,7 @@ class Box{
     }
 
     center(){
-        return this.head.add(this.tail.mult(new Vec(0.5, 0.5)));
+        return this.head.add(this.tail).mult(new Vec(0.5, 0.5));
     }
 }
 
@@ -144,7 +156,7 @@ class CurveStructureBase{
     }
 
     transCenter(){
-        this.anchor = this.anchor.add((new Vec(300, 300)).sub(this.box().center()));
+        this.head = this.head.add((new Vec(300, 300)).sub(this.box.center()));
         this.update();
     }
 }
@@ -182,9 +194,9 @@ class Seg extends CurveStructureBase{
         ctx.lineTo(this.tail.x, this.tail.y);
         ctx.stroke();
 
-        var size = this.box.tail.sub(this.box.head);
-        ctx.rect(this.box.head.x, this.box.head.y, size.x, size.y);
-        ctx.stroke();
+        // var size = this.box.tail.sub(this.box.head);
+        // ctx.rect(this.box.head.x, this.box.head.y, size.x, size.y);
+        // ctx.stroke();
     }
 
     modify(progs){
@@ -280,7 +292,7 @@ class CompoundCurve extends CurveStructureBase{
 
 function testCompoundCurve(){
 
-    var edges = 10,
+    var edges = 30,
         edgeLen = 2,
         arcs = 5;
 
@@ -300,10 +312,10 @@ function testCompoundCurve(){
     }))
     
     compoundCurve.modify();
-    // // compoundCurve.transCenter();
+    compoundCurve.transCenter();
 
     var ctx = document.getElementById("canvas").getContext("2d");
-    ctx.translate(300, 300);
+    // ctx.translate(300, 300);
     compoundCurve.draw(ctx);    
 
     var box = compoundCurve.box;

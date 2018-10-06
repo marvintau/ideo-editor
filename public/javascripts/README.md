@@ -1,5 +1,4 @@
 # TODO:
-test box.
 make crossedStrokeSet extendable.
 
 # 如何定义笔画模型与参数
