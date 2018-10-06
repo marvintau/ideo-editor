@@ -71,14 +71,14 @@ c.height = c.height * ratio;
 canvas.scale(ratio, ratio);
 
 var stroke_input = document.getElementById('stroke-list');
-var radicalSet, grand_radical_refs = {};
+var radical, grand_radical_refs = {};
 var char_set_json;
 
 function redrawRadical(){
     var radical_list_json = JSON.parse(stroke_input.value);
 
-    radicalSet = new Radical(char_set_json, radical_list_json, grand_radical_refs);
-    // radicalSet.draw();
+    radical = new Radical(char_set_json, radical_list_json, grand_radical_refs);
+    // radical.draw();
     console.log(grand_radical_refs);
 }
 
@@ -117,7 +117,6 @@ stroke_input.addEventListener('keypress', function(e){
         redrawRadical();
         return;
     }
-
 
     console.log(e.key in complete_dict);
     if(e.key in complete_dict){

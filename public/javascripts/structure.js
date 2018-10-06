@@ -1,230 +1,333 @@
+class Vec{
+    constructor(x, y){
+        if (y === undefined){
+            if(x === undefined) {
+                this.x = 0;
+                this.y = 0;
+            } else {
+                this.x = Math.cos(x*Math.PI/180);
+                this.y = Math.sin(x*Math.PI/180);
+            }
+        } else {
+            this.x = x;
+            this.y = y;
+        }
+    }
+
+    add(vec){
+        return new Vec(this.x + vec.x, this.y + vec.y);
+    }
+
+    sub(vec){
+        return new Vec(this.x - vec.x, this.y - vec.y);
+    }
+
+    mult(vec){
+        if(vec.x === undefined){
+            return new Vec(this.x * vec, this.y * vec);
+        } else {
+            return new Vec(this.x * vec.x, this.y * vec.y);
+        }
+    }
+
+    head(vec){
+        return new Vec(Math.min(this.x, vec.x), Math.min(this.y, vec.y));
+    }
+
+    tail(vec){
+        return new Vec(Math.max(this.x, vec.x), Math.max(this.y, vec.y));
+    }
+
+    copy(){
+        return new Vec(this.x, this.y);
+    }
+
+}
+
 class Box{
-    constructor(x, y, h, w){
-        this.x = x;
-        this.y = y;
-        this.h = h;
-        this.w = w;
+    constructor(head, tail){
+        this.head = head.copy();
+        this.tail = tail.copy();
     }
 
     union(box){
 
-        var x = Math.min(this.x, box.x),
-            y = Math.min(this.y, box.y),
-            w = Math.max(this.x + this.w, box.x + box.w) - x,
-            h = Math.max(this.y + this.h, box.y + box.h) - y;
-        
-        return new Box(x, y, w, h);
+        var head = this.head.head(box.head),
+            tail = this.tail.tail(box.tail);
+
+        return new Box(head, tail);
+
     }
 
     copy(){
-        return new Box(this.x, this.y, this.h, this.w);
+        return new Box(this.head.copy(), this.tail.copy());
+    }
+
+    center(){
+        return this.head.add(this.tail.mult(new Vec(0.5, 0.5)));
     }
 }
 
-class Seg{
-    constructor(len, angle, anchor){
+
+class CurveStructureBase{ 
+    constructor(body){
+        // console.log(this.constructor.name, body);
+        this.body = (body === undefined) ? [] : body.map(seg => seg.copy());
+        this.head = new Vec();
+        this.progs = [];
         
-        this.len = len;
-        this.ang = angle;
-        this.anchor = (anchor != undefined) ? anchor : {x:0, y:0};
-
-        // specs代表可以应用于Seg上面的操作，specs不能在初始化时设置，而必须从外部设置。
-        // 和下面由CurveStructure派生出的类不同，Seg没有this.operations属性，因为
-        // 可以应用于Seg对象的操作已经在Modify函数中全部列出了。
-
-        this.program = [];
     }
 
-    copy(){
-        return new Seg(this.len, this.ang, this.anchor);
-    }
+    modify(progs){
+        
+        if(progs === undefined) progs = this.progs;
 
-    box(){
+        for (let prog of progs){
 
-        var end = {
-            x: this.anchor.x + this.len*Math.cos(this.ang*Math.PI/180),
-            y: this.anchor.y + this.len*Math.sin(this.ang*Math.PI/180)
+            if(prog.ith === undefined){
+                this.body.forEach(c => c.modify(prog.progs));
+            } else {
+                this.body[prog.ith].modify(prog.progs);
+            }
         }
 
-        var minx = Math.min(this.x, end.x),
-            miny = Math.min(this.y, end.y),
-            maxx = Math.max(this.x, end.x),
-            maxy = Math.max(this.y, end.y);
-
-        return new Box(minx, miny, maxx, maxx - minx, maxy-miny);
+        this.update();
     }
 
-    draw(ctx, anchor){
+    update(){
 
-        var width  = ctx.canvas.width,
-            height = ctx.canvas.height;
-
-        var end = {
-            x: anchor.x + this.len*Math.cos(this.ang*Math.PI/180),
-            y: anchor.y + this.len*Math.sin(this.ang*Math.PI/180)
+        // first deal with the first component. 
+        if(this.body.length > 0){
+            this.body[0].head = this.head.copy();
+            this.body[0].update();
+            this.box = this.body[0].box;
         }
-
-        ctx.beginPath();
-        ctx.moveTo(anchor.x * width, anchor.y * height);
-        ctx.lineTo(end.x * width, end.y * height);
-        ctx.stroke();
-        return {x:end.x, y:end.y}
-    }
-
-    
-    modify(){
-        for(let operation of this.program){
-            switch(operation.op){
-                case "trans":
-                    this.anchor.x += operation.trans.x;
-                    this.anchor.y += operation.trans.y;    
-                    break;
-                case "rotate":
-                    this.ang += operation.rotate.theta;
-                    break;
-                case "stretch":
-                    this.len *= operation.stretch.ratio;
-                    break;
+        
+        if(this.body.length > 1){
+            for(let i = 1; i < this.body.length; i++){
+                try{
+                    this.body[i].head = this.body[i-1].tail.copy();
+                    this.body[i].update();
+                    this.tail = this.body[i].tail;
+                    this.box = this.box.union(this.body[i].box);
+                } catch(TypeError){
+                    console.log(this.body[i-1]);
+                }
             }    
         }
     }
-}
-
-class CurveStructureBase { 
-    constructor(sub_level_constructor, segs, anchor, spec){
-        this.components = (segs === undefined) ? [] : segs.map(seg => seg.copy(spec));
-        this.anchor = (anchor === undefined) ? {x:0, y:0} : anchor;
-        
-        this.procs = [];
-        this.specs = [];
-    }
 
     translate(increment){
-        this.anchor.x += increment.x;
-        this.anchor.y += increment.y;
+        this.head.x += increment.x;
+        this.head.y += increment.y;
     }
 
-    copy(spec){
+    copy(){
         
         var newCurve = new this.constructor();
-        newCurve.components = this.components.map(seg => seg.copy());
-        newCurve.anchor = {x:this.anchor.x, y:this.anchor.y};
+        newCurve.body = this.body.map(seg => seg.copy());
+        newCurve.head = this.head.copy();
 
         return newCurve;
     }
 
-    draw(ctx, startPoint){
-
-        if(startPoint === undefined) startPoint = this.anchor;
+    draw(ctx){
         
-        for(let component of this.components){
-            startPoint = component.draw(ctx, startPoint);
+        for(let component of this.body){
+            component.draw(ctx);
         }
-        return startPoint;
+
+        // ctx.fillRect(this.head.x-2, this.head.y-2, 4, 4);
+        var size = this.box.tail.sub(this.box.head);
+        // ctx.rect(this.box.head.x, this.box.head.y, size.x, size.y);
+        // ctx.stroke();
     }
 
-    box(){
-        var box = this.components[0].box().copy();
-        for(let i = 1; i < this.components.length; i++){
-            box = box.union(this.components[i].box());
-        }
-        return box;
+    transCenter(){
+        this.anchor = this.anchor.add((new Vec(300, 300)).sub(this.box().center()));
+        this.update();
+    }
+}
+
+class Seg extends CurveStructureBase{
+
+    constructor(spec){
+        
+        super();
+        this.len = spec.len;
+        this.ang = spec.ang;
+        this.head = new Vec();
+        this.update();
     }
 
-    modify(specs){
-        if(specs === undefined){
-            specs = this.specs;
-        }
-        for (let spec in this.specs){
-            if(spec.ith === undefined){
-                for(let i in this.components){
-                    this.components[i].modify(spec.specs);
-                }
-            }
-        }
+    copy(){
+        return new Seg({len:this.len, ang:this.ang, head:this.head});
     }
+
+    update(){
+
+        var angleVec = new Vec(this.ang);
+        this.tail = this.head.add(angleVec.mult(this.len));
+
+        var boxHead = this.head.head(this.tail),
+            boxTail = this.tail.tail(this.head);
+
+        this.box  = new Box(boxHead, boxTail);
+    }
+
+    draw(ctx){
+
+        ctx.beginPath();
+        ctx.moveTo(this.head.x, this.head.y);
+        ctx.lineTo(this.tail.x, this.tail.y);
+        ctx.stroke();
+
+        var size = this.box.tail.sub(this.box.head);
+        ctx.rect(this.box.head.x, this.box.head.y, size.x, size.y);
+        ctx.stroke();
+    }
+
+    modify(progs){
+
+        if(progs === undefined) progs = this.progs;
+
+        for(let prog of progs){
+            switch(Object.keys(prog)[0]){
+                case "trans":
+                    this.head.x += prog.trans.x;
+                    this.head.y += prog.trans.y;    
+                    break;
+                case "rotate":
+                    this.ang += prog.rotate.theta;
+                    break;
+                case "stretch":
+                    this.len *= prog.stretch.ratio;
+                    break;
+            }    
+        }
+
+        this.update();
+    }
+}
+
+function testSeg(){
+    var ctx = document.getElementById("canvas").getContext("2d");
+    var body = [...Array(20).keys()].map((e) => new Seg({len:10, ang:0}));
+    for(let i = 0; i < 20; i++){
+        body[i].progs = [
+            {"trans":{x:10*i, y:10*i}},
+            {"rotate":{"theta":2*i}},
+            {"stretch":{"ratio":i}}
+        ];
+        body[i].modify();
+        body[i].draw(ctx, body[i].head);
+    }
+    
+    console.log(body);
 }
 
 class Curve extends CurveStructureBase{
     constructor(spec){
-        var segs = (spec != undefined) ? spec.segs.map(seg => new Seg(seg.len, seg.ang)) : [],
-            anchor = {x:0, y:0};
+        var body = (spec != undefined) ? spec.body.map(seg => new Seg(seg)) : [];
 
-        super(Seg, segs, anchor, spec);
+        super(body);
+
+        this.update();
+        // console.log(this.body);
     }
 
-    at(ithRatio, ithSeg){
+    at(ithRatio){
         
-        var point = {x:0, y:0};
-        point.x = this.anchor.x;
-        point.y = this.anchor.y;
+        var point = this.head.copy();
 
         var currSeg;
-        if(ithSeg === undefined){
+        
+        var totalLen = this.body.reduce((sum, e) => sum + e.len, 0), 
+            ratioLen = ithRatio * totalLen,
+            currLen  = 0;
 
-            var totalLen = this.components.reduce((sum, e) => sum + e.len, 0), 
-                ratioLen = ithRatio * totalLen,
-                currLen  = 0;
+        for(let i = 0; i < this.body.length-1; i++){
 
-            for(let i = 0; i < this.components.length-1; i++){
+            currSeg =  this.body[i];
+            currLen += this.body[i].len;
+            point = point.add((new Vec(currSeg.ang)).mult(currSeg.len));
 
-                currSeg =  this.components[i];
-                currLen += this.components[i].len;
-                point.x += currSeg.len * Math.cos(currSeg.ang*Math.PI/180);
-                point.y += currSeg.len * Math.sin(currSeg.ang*Math.PI/180);
-
-                if (this.components[i+1].len + currLen > ratioLen) break;
-            }
-    
-            point.x += (ratioLen - currLen) * Math.cos(currSeg.ang*Math.PI/180);
-            point.y += (ratioLen - currLen) * Math.sin(currSeg.ang*Math.PI/180);            
-
-        } else {
-
-            // typically not going to use ithSeg (this) routine
-
-            for(let i = 0; i < ithSeg; i++){
-                currSeg = this.components[i];
-                ithStartPoint.x += currSeg.len * Math.cos(currSeg.ang*Math.PI/180);
-                ithStartPoint.y += currSeg.len * Math.sin(currSeg.ang*Math.PI/180);
-            }
-
-            point.x += ithRatio * currSeg.len * Math.cos(currSeg.ang*Math.PI/180);
-            point.y += ithRatio * currSeg.len * Math.sin(currSeg.ang*Math.PI/180);            
+            if (this.body[i+1].len + currLen > ratioLen) break;
         }
+
+        point = point.add((new Vec(currSeg.ang)).mult(ratioLen - currLen));
 
         return point;
     }
 }
 
-// var ctx = document.getElementById("canvas").getContext("2d");
-// var seg_spec = {segs:[...Array(20).keys()].map((e, i) => ({len:0.02, ang:i*8}))};
-// var curve = new Curve(seg_spec);
-// curve.draw(ctx);
-
-
+/**
+ * CompoundCurve is a higher level wrapper that provides an API to locate the
+ * intersection point with ratio over one Curve Segment. Typically, a CompoundCurve
+ * is what we called a stroke.
+ */
 class CompoundCurve extends CurveStructureBase{
 
-    constructor(curves, anchor, spec) {
-        super(Curve, curves, anchor, spec);
+    constructor(body) {
+        super(body);
+        this.update();
     }
 
     at(ithRatio, ithCurve){
-        return this.components[ithCurve].at(ithRatio);
+        return this.body[ithCurve].at(ithRatio);
     }
 }
 
-// var seg_spec = {segs:[...Array(20).keys()].map((e, i) => ({len:0.01, ang:i*8}))};
-// var curves = [new Curve(seg_spec), new Curve(seg_spec), new Curve(seg_spec)];
-// var comp_curve = new CompoundCurve(curves);
+function testCompoundCurve(){
 
-// var ctx = document.getElementById("canvas").getContext("2d");
-// comp_curve.draw(ctx);
+    var edges = 10,
+        edgeLen = 2,
+        arcs = 5;
+
+    var segSpecs = {body:[...Array(edges+1).keys()].map((e, i) => ({len:edgeLen/Math.sin(Math.PI/(360/edges)), ang:(180/edges*i)}))};
+    // var segSpecs = {body:[...Array(edges+1).keys()].map((e, i) => ({len:100, ang:(180/edges*i)}))};
+
+    var curves = [...Array(arcs).keys()].map((e, i) => new Curve(segSpecs));
+    var compoundCurve = new CompoundCurve(curves);
+    console.log(compoundCurve);
+    compoundCurve.progs = [...Array(arcs).keys()].map((e, i) => ({
+        ith:i,
+        progs:[{ // curve level
+            progs:[{ // seg level
+                rotate:{theta:360/arcs*i}
+            }]
+        }]
+    }))
+    
+    compoundCurve.modify();
+    // // compoundCurve.transCenter();
+
+    var ctx = document.getElementById("canvas").getContext("2d");
+    ctx.translate(300, 300);
+    compoundCurve.draw(ctx);    
+
+    var box = compoundCurve.box;
+    // console.log(box);
+    ctx.rect(box.head.x, box.head.y, box.tail.x-box.head.x, box.tail.y-box.head.y);
+    ctx.stroke();
+}
+
+/**
+ * CrossedStrokeSet is such a structure that, it contains several strokes, including
+ * their intersecting information, but not aligning. like 戈, 匕. 
+ * 
+ */
+class CrossedStrokeSet extends CurveStructureBase{
+    constructor(strokes, head, spec) {
+        super(CompoundCurve, strokes, head, spec);
+
+    }
+}
 
 class Radical{
 
     /**
-     * init 初始化部首
+     * 初期化
      * 
      * 在这里比较tricky的部分是radical_spec_sofar。完整的radical_spec
      * 是一个体积巨大的JSON对象，将它遍历一遍会非常耗时。在递归的部首查询中，
@@ -251,16 +354,13 @@ class Radical{
             radical_spec_sofar[name] = radical_spec[name];
         }
 
-        this.components = [];
-        for(let radical of radical_list){
-
-            var radical_ref = this.grand_radical_ref[radical.name];
-        }
+        this.body = [];
+        for(let radical of radical_list) this.add(radical);
     }
 
 
     /**
-     * get_compound_segs 得到复合笔画的线段
+     * get_compound_body 得到复合笔画的线段
      * 
      * 这是一个辅助函数，因为复合笔画中并不直接描述笔画的线段，而是引用了简单笔画的
      * 名称。需要通过名称来找到简单笔画的线段，再拼接成由线段构成的复合笔画。也就是
@@ -278,11 +378,11 @@ class Radical{
 
         var compound_curve = new CompoundCurve();
 
-        for(let component_spec of spec.components){
+        for(let component_spec of spec.body){
 
             var curve = this.grand_radical_ref[component_spec.stroke].copy(component_spec);
-            console.log(curve.compo);
-            compound_curve.components = compound_curve.components.concat(curve.components);
+
+            Array.prototype.push(compound_curve.body, curve.body);
             
         }
  
@@ -321,22 +421,35 @@ class Radical{
                 break;
 
             case "radical":
-                this.grand_radical_ref[name] = new Radical(radical_spec_sofar, spec.components, this.grand_radical_ref);
+                this.grand_radical_ref[name] = new Radical(radical_spec_sofar, spec.body, this.grand_radical_ref);
                 break;
         }
-
     }
 
-    add(radical){
+    draw(){
+        
+        var ctx = document.getElementById("canvas").getContext("2d");
+        
+        for(let component of this.body){
+            console.log(component);
+            component.draw(ctx);
+        }
+    }
 
-        if (conditions !== undefined){
-            for (let method in conditions){
-                console.log("methods", method);
+    add(radical_desc){
+
+        // supposed to create an instance, rather than directly refer it.
+        var radical = this.grand_radical_ref[radical_desc.name];
+
+        if (radical_desc.conds !== undefined){
+            for (let method in radical_desc.conds){
+                // console.log("methods", method);
                 // radical = this[method](conditions[method], radical);
             }
         }
 
-        this.components = this.components.concat(radical.strokes);
+        this.body = this.body.concat(radical.body);
     }
+
 
 }
