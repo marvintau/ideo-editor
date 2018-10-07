@@ -1,6 +1,10 @@
 # TODO:
 make crossedStrokeSet extendable.
 
+modify **modify** to make it accept more settings.
+and a unified description.
+
+
 # 如何定义笔画模型与参数
 
 首先我们知道，笔画最基本的参数是构成笔画的线段的**长度**、**角度**以及**笔画之间的位置**。在

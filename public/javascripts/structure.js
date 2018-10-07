@@ -96,6 +96,21 @@ class CurveStructureBase{
 
         for (let prog of progs){
 
+            // Explain: if the member in prog is not ith or
+            // progs, it is a method that will be applied over
+            // the object. The method should be defined in the 
+            // class.
+            // Notably, the sequence of calling the method is
+            // not always in order, so the sequential operation
+            // should not be specified in same prog, but should
+            // be separated into different prog.
+
+            for (let method in prog){
+                if (method !== "ith" && method !== "progs"){
+                    this[method](prog[method]);
+                }
+            }
+
             if(prog.ith === undefined){
                 this.body.forEach(c => c.modify(prog.progs));
             } else {
@@ -293,11 +308,10 @@ class CompoundCurve extends CurveStructureBase{
 function testCompoundCurve(){
 
     var edges = 30,
-        edgeLen = 2,
-        arcs = 5;
+        edgeLen = 1,
+        arcs = 17;
 
     var segSpecs = {body:[...Array(edges+1).keys()].map((e, i) => ({len:edgeLen/Math.sin(Math.PI/(360/edges)), ang:(180/edges*i)}))};
-    // var segSpecs = {body:[...Array(edges+1).keys()].map((e, i) => ({len:100, ang:(180/edges*i)}))};
 
     var curves = [...Array(arcs).keys()].map((e, i) => new Curve(segSpecs));
     var compoundCurve = new CompoundCurve(curves);
@@ -315,7 +329,6 @@ function testCompoundCurve(){
     compoundCurve.transCenter();
 
     var ctx = document.getElementById("canvas").getContext("2d");
-    // ctx.translate(300, 300);
     compoundCurve.draw(ctx);    
 
     var box = compoundCurve.box;
@@ -325,15 +338,22 @@ function testCompoundCurve(){
 }
 
 /**
- * CrossedStrokeSet is such a structure that, it contains several strokes, including
+ * StrokeSet is such a structure that, it contains several strokes, including
  * their intersecting information, but not aligning. like 戈, 匕. 
  * 
  */
-class CrossedStrokeSet extends CurveStructureBase{
+class StrokeSet extends CurveStructureBase{
     constructor(strokes, head, spec) {
         super(CompoundCurve, strokes, head, spec);
 
+        // crossing stores the crossing information between strokes.
+        // crossing can be further modified by external specs, thus
+        // it has to be 
+        this.crossing = spec.crossing;
     }
+
+    
+
 }
 
 class Radical{
