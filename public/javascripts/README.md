@@ -1,5 +1,5 @@
 # TODO:
-make crossedStrokeSet extendable.
+make StrokeSet extendable.
 
 modify **modify** to make it accept more settings.
 and a unified description.
