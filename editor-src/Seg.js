@@ -8,6 +8,7 @@ export default class Seg extends CurveStructureBase{
         
         super();
         
+        
         this.len  = spec.len;
         this.ang  = spec.ang;
         this.head = new Vec();
@@ -21,6 +22,61 @@ export default class Seg extends CurveStructureBase{
         return new Seg({len:this.len, ang:this.ang, head:this.head});
     }
 
+    draw(ctx){
+        // ctx.beginPath();
+        // ctx.moveTo(this.head.x, this.head.y);
+        ctx.lineTo(this.tail.x, this.tail.y);
+        // ctx.stroke();
+    }
+
+    /**
+     * rotate the line segment
+     * @param {number} rotate angle to be rotated with
+     */
+    rotate(rotate){
+        this.ang += rotate;
+        this.update();
+    }
+
+    /**
+     * translate
+     * @param {Vec} vec vector to be translated with
+     */
+    trans(trans){
+        this.head = this.head.add(new Vec(trans));
+        this.update();
+    }
+    
+    /**
+     * stretch
+     * @param {number} ratio ratio to stretch with
+     */
+    scale(scale){
+        this.len *= scale;
+        this.update();
+    }
+
+    modify(progs){
+
+        if(progs === undefined) progs = this.progs;
+
+        for(let prog of progs){
+            switch(Object.keys(prog)[0]){
+                case "trans":
+                    this.trans(prog.trans);
+                    break;
+                case "rotate":
+                    this.rotate(prog.rotate);
+                    break;
+                case "stretch":
+                    this.stretch(prog.scale);
+                    break;
+            }    
+        }
+
+        this.update();
+    }
+
     update(){
 
         var angleVec = new Vec(this.ang);
@@ -32,46 +88,33 @@ export default class Seg extends CurveStructureBase{
         this.box  = new Box(boxHead, boxTail);
     }
 
-    draw(ctx){
-        ctx.beginPath();
-        ctx.moveTo(this.head.x, this.head.y);
-        ctx.lineTo(this.tail.x, this.tail.y);
-        ctx.stroke();
-    }
-
-    modify(progs){
-
-        if(progs === undefined) progs = this.progs;
-
-        for(let prog of progs){
-            switch(Object.keys(prog)[0]){
-                case "trans":
-                    this.head.x += prog.trans.x;
-                    this.head.y += prog.trans.y;    
-                    break;
-                case "rotate":
-                    this.ang += prog.rotate.theta;
-                    break;
-                case "stretch":
-                    this.len *= prog.stretch.ratio;
-                    break;
-            }    
+    /**
+     * sample
+     * returns a list of sampled points
+     * @param {number} step 
+     */
+    sample(step){
+        var points = [],
+            angVec = new Vec(this.ang);
+        for(var i = 0; i < this.len; i += step){
+            points.push(angVec.mult(i).add(this.head));
         }
-
-        this.update();
+        return points;
     }
 }
 
 import {range} from "./Util.js"
 export function testSeg(ctx){
 
-    var number = 20;
-    var body = range(number, (e, i) => new Seg({len:10, ang:0}));
+    ctx.strokeColor = "blue";
+
+    var number = 61;
+    var body = range(number, (e) => new Seg({len:10, ang:0}));
     for(let i = 0; i < number; i++){
         body[i].progs = [
             {"trans":{x:10*i, y:10*i}},
-            {"rotate":{"theta":2*i}},
-            {"stretch":{"ratio":i}}
+            {"rotate":{"theta":3*i}},
+            {"scale":{"ratio":1+i*0.25}}
         ];
         body[i].modify();
         body[i].draw(ctx, body[i].head);

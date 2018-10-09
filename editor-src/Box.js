@@ -32,6 +32,17 @@ export default class Box{
     center(){
         return this.head.add(this.tail).mult(new Vec(0.5, 0.5));
     }
+
+    size(){
+        return this.tail.sub(this.head);
+    }
+
+    draw(ctx){
+        var size = this.size();
+        ctx.lineWidth = 0.8;
+        ctx.rect(this.head.x, this.head.y, size.x, size.y);
+        ctx.stroke();
+    }
 }
 
 export function testBox(){

@@ -8,9 +8,15 @@ export default class Vec{
     constructor(x, y){
         if (y === undefined){
             if(x === undefined) {
+                // for nothing given.
                 this.x = 0;
                 this.y = 0;
-            } else {
+            } else if (x.x !== undefined && x.y !== undefined){
+                // if x is something like {x:1, y:1}
+                this.x = x.x;
+                this.y = x.y;
+            } else if (typeof x === 'number'){
+                // if x is a number
                 this.x = Math.cos(x*Math.PI/180);
                 this.y = Math.sin(x*Math.PI/180);
             }
@@ -48,6 +54,12 @@ export default class Vec{
         return new Vec(this.x, this.y);
     }
 
+    draw(ctx, r){
+        if (r === undefined) r = 10;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, r,0, 2*Math.PI);
+        ctx.fill();
+    }
 }
 
 export function testVec(){

@@ -21,27 +21,30 @@ function insertPair(input, bracket, pos){
     setCursorPos(input, cursorPos.start+pos);
 }
 
+function insertPairFromDict(strokeInput, event){
+    var complete_dict = {
+        "[" : ["[]", 1],
+        "'" : ['""', 1],
+        '"' : ['""', 1],
+        "{" : ['{}', 1],
+        "Enter":['\n\n', 1]
+    };
+
+    if(event.key in complete_dict){
+        event.preventDefault();
+        insertPair(strokeInput, complete_dict[event.key][0], complete_dict[event.key][1]);
+    }
+}
 
 export default function initInput(strokeInput){
     strokeInput.addEventListener('keypress', function(e){
-        var complete_dict = {
-            "[" : ["[]", 1],
-            "'" : ['""', 1],
-            '"' : ['""', 1],
-            "{" : ['{}', 1],
-            "Enter":['\n\n', 1]
-        };
     
         if(e.key==="Enter" && e.ctrlKey){
             redrawRadical();
             return;
         }
     
-        // console.log(e.key in complete_dict);
-        if(e.key in complete_dict){
-            e.preventDefault();
-            insertPair(strokeInput, complete_dict[e.key][0], complete_dict[e.key][1]);
-        }
+        insertPairFromDict(strokeInput, e);
     });
     
     strokeInput.focus();    

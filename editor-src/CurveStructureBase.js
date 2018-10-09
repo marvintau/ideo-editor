@@ -2,41 +2,104 @@ import Vec from "./Vec.js";
 import Box from "./Box.js";
 
 export default class CurveStructureBase{ 
-    constructor(body){
-        // console.log(this.constructor.name, body);
-        this.body = (body === undefined) ? [] : body.map(seg => seg.copy());
-        this.head = new Vec();
-        this.box  = new Box();
-        this.progs = [];
-        
+
+    /**
+     * CurveStructureBase
+     * A fundamental class to describe the curve and operations applied to it. Not supposed
+     * to be used directly, should be extended instead.
+     * 
+     * @param {Class} Constructor The constructor that instantiates the elements in the body
+     * @param {Object} spec the JSON Object specifies this curve structure.
+     */
+    constructor(Constructor, spec){
+
+        // console.log("CurveStructureBase", spec);
+        this.body  = (spec=== undefined || spec.body  === undefined) ? [] : spec.body.map(comp => new Constructor(comp));
+        this.head  = (spec=== undefined || spec.head  === undefined) ? new Vec() : spec.head;
+        this.progs = (spec=== undefined || spec.progs === undefined) ? [] : spec.progs;
+        this.box   = new Box();
     }
 
+    /**
+     * rotate
+     * @param {number} theta angle to rotate.
+     */
+    rotate(theta){
+        this.body.forEach(elem => elem.rotate(theta));
+        this.update();
+    }
+
+    /**
+     * 
+     * @param {number} ratio ratio to scale
+     */
+    scale(ratio){
+        this.body.forEach(elem => elem.scale(ratio));
+        this.update();
+    }
+
+    // NOTE:
+    // since angle and ratio are position-invariant, thus the two methods
+    // above do nothing but calling the same methods of their components,
+    // and eventually effected when the methods in Seg being called. However,
+    // the trans method below is different. It only changes the head of
+    // this curve, and the remaining work is done in this.update.
+
+    /**
+     * trans
+     * @param {Vec} vec vector to translate.
+     */
+    trans(vec){
+        this.head = this.head.add(vec);
+        this.update();
+    }
+
+
+    /**
+     * modify: operate the curve object with given instructions.
+     * 
+     * there are two ways to modify a component of this structure.
+     * The first one is to use the progs in the component itself,
+     * the second one is to apply operations from higher level. 
+     * 
+     * @param {Object} progs the programmes to be applied over different level of curve structure.
+     */
     modify(progs){
-        
-        if(progs === undefined) progs = this.progs;
+
+        // modify accepts both external programmes and
+        // the programs itself.
+        if (progs === undefined) progs = this.progs;
+
+        // Typically the component curve object contains program
+        // when instantiating. So now we apply the programs like
+        // initialization. According to this order of calling.
+        // The lowest component will be applied operations first. 
+        for (let elem of this.body) elem.modify();
+
+        // Then apply the programs in current level.
+        // the rule is, if prog.ith is specified, other methods
+        // that will be executed at same level will not be
+        // executed, except what specified in its progs, and vice
+        // versa.
 
         for (let prog of progs){
 
-            // **VERY IMPORTANT**
-            // Explain: if the member in prog is not ith or
-            // progs, it is a method that will be applied over
-            // the object. The method should be defined in the 
-            // class.
-            // Notably, the sequence of calling the method is
-            // not always in order, so the sequential operation
-            // should not be specified in same prog, but should
-            // be separated into different prog.
-
-            for (let method in prog){
-                if (method !== "ith" && method !== "progs"){
-                    this[method](prog[method]);
-                }
-            }
-
             if(prog.ith === undefined){
-                this.body.forEach(c => c.modify(prog.progs));
+                // apply all operations at this level. this can be
+                // considered as a short hand of specifying things
+                // in progs list. saves some typing.
+                for (let method in prog)
+                    if( method != "ith" && method != 'progs')
+                        this[method](prog[method]);
+
             } else {
-                this.body[prog.ith].modify(prog.progs);
+                for (let method in prog)
+                    if( method != "ith" && method != 'progs')
+                        {
+                            console.log(this.body[prog.ith][method], prog[method]);
+                            this.body[prog.ith][method](prog[method]);
+                        }
+
             }
         }
 
@@ -44,12 +107,14 @@ export default class CurveStructureBase{
     }
 
     update(){
-
+        
         // first deal with the first component. 
         if(this.body.length > 0){
             this.body[0].head = this.head.copy();
             this.body[0].update();
-            this.box = this.body[0].box;
+
+            this.box  = this.body[0].box;
+            this.tail = this.body[0].tail;
         }
 
         if(this.body.length > 1){
@@ -66,9 +131,12 @@ export default class CurveStructureBase{
         }
     }
 
+    /**
+     * Translate
+     * @param {Vec} increment vector to translate 
+     */
     translate(increment){
-        this.head.x += increment.x;
-        this.head.y += increment.y;
+        this.head = this.head.add(increment);
     }
 
     copy(){
@@ -86,13 +154,13 @@ export default class CurveStructureBase{
         }
     }
 
-    transCenter(){
-        try{
-            this.head = this.head.add((new Vec(300, 300)).sub(this.box.center()));
-        } catch(TypeError){
-            console.error("transCenter", this.box);
-        }
-        
-        this.update();
+    sample(step){
+        var self = this;
+
+        return this.body.reduce(function(list, comp){
+            // console.error(this);
+            return list.concat(comp.sample(step));
+        }, []);
     }
+
 }

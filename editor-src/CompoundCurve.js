@@ -7,48 +7,56 @@ import CurveStructureBase from "./CurveStructureBase.js";
  */
 export default class CompoundCurve extends CurveStructureBase{
 
-    constructor(body) {
-        super(body);
+    constructor(spec) {
+        super(Curve, spec);
         this.update();
     }
 
-    at(ithRatio, ithCurve){
-        return this.body[ithCurve].at(ithRatio);
+    at(spec){
+        console.log("compound curve at:", spec.curve, this.body);
+        return this.body[spec.curve].at(spec.r);
     }
+
 }
 
 
 import {range} from "./Util.js"
 import Curve from "./Curve.js"
 
-export function testCompoundCurve(){
+export function testCompoundCurve(ctx){
 
     var edges   = 30,
-        edgeLen = 1,
-        arcs    = 17;
+        edgeLen = 1.5,
+        arcs    = 5;
 
-    var segSpecs = {body:range(edges+1, (e, i) => ({len:edgeLen/Math.sin(Math.PI/(360/edges)), ang:(180/edges*i)}))};
+    var spec = {
+        body:range(arcs, (e) => ({                       // compound curve level
+            body:range(edges+1, (e) => ({                // curve level
+                len:edgeLen/Math.sin(Math.PI/(360/edges)),
+                ang:(180/edges*e)
+            }))
+        }))
+    };
 
-    var curves = [...Array(arcs).keys()].map((e, i) => new Curve(segSpecs));
-    var compoundCurve = new CompoundCurve(curves);
+    var compoundCurve = new CompoundCurve(spec);
 
-    compoundCurve.progs = range(arcs, (e, i) => ({
-        ith:i,
-        progs:[{                            // curve level
-            progs:[{                        // seg level
-                rotate:{theta:360/arcs*i}
-            }]
+    compoundCurve.progs = range(arcs, (e) => ({
+        ith:e,
+        progs:[{                                    // curve level
+            progs:[{ rotate:{theta:180/arcs*e-90}}],// seg level
+            rotate : {theta:180/arcs*e-90}          // seg level and can be observed that the change of angle.
         }]
     }))
-    
+
     compoundCurve.modify();
     compoundCurve.transCenter();
 
-    var ctx = document.getElementById("canvas").getContext("2d");
-    compoundCurve.draw(ctx);    
-
     var box = compoundCurve.box;
-    // console.log(box);
-    ctx.rect(box.head.x, box.head.y, box.tail.x-box.head.x, box.tail.y-box.head.y);
-    ctx.stroke();
+
+    // ctx.fillStyle = "rgb(123, 123, 123, 0.5)";
+    // ctx.fillRect(box.head.x, box.head.y, box.tail.x-box.head.x, box.tail.y-box.head.y);
+    
+    ctx.lineWidth = 30;
+    ctx.strokeStyle = "rgb(0, 0, 0, 0.5)";
+    compoundCurve.draw(ctx);    
 }

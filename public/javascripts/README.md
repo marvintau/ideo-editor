@@ -1,8 +1,6 @@
-# TODO:
+# TODO:       
+   
 make StrokeSet extendable.
-
-modify **modify** to make it accept more settings.
-and a unified description.
 
 
 # 如何定义笔画模型与参数

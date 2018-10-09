@@ -3,10 +3,7 @@ import CurveStructureBase from "./CurveStructureBase.js";
 
 export default class Curve extends CurveStructureBase{
     constructor(spec){
-        var body = (spec != undefined) ? spec.body.map(seg => new Seg(seg)) : [];
-
-        super(body);
-
+        super(Seg, spec);
         this.update();
     }
 
@@ -33,8 +30,24 @@ export default class Curve extends CurveStructureBase{
 
         return point;
     }
+
 }
 
-export function testCurve(){
+import {range} from "./Util.js"
+import Vec from "./Vec.js"
+
+export function testCurve(ctx){
+    var specs = range(60, (e) => ({
+            body:range(e+1, (se) => ({
+                len:(se+1) * 0.1,
+                ang:se * 3.1 + e * 3 - 180
+            })),
+            head: new Vec(
+                e*10, e*10)
+        }));
     
+    var curves = specs.map(spec => new Curve(spec));
+
+    ctx.strokeStyle = "red";
+    curves.forEach(curve => curve.draw(ctx));
 }
