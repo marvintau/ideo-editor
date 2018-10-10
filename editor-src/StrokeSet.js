@@ -172,9 +172,6 @@ function findCenterRect(ctx, pointSet, step){
             }
         }
 
-    
-    console.log(mean, dev);
-
     maxRangeMaxBox.draw(ctx);
     points
         .filter( point => maxRangeMaxBox.include(point))
