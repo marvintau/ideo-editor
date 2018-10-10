@@ -13,8 +13,13 @@ export default class CompoundCurve extends CurveStructureBase{
     }
 
     at(spec){
-        console.log("compound curve at:", spec.curve, this.body);
         return this.body[spec.curve].at(spec.r);
+    }
+
+    sample(step){
+        return this.body.map(function(comp){
+            return comp.sample(step);
+        });
     }
 
 }

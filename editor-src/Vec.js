@@ -26,14 +26,30 @@ export default class Vec{
         }
     }
 
+    /**
+     * 
+     * @param {Vec} vec another vec to be added
+     * @returns {Vec}
+     */
     add(vec){
         return new Vec(this.x + vec.x, this.y + vec.y);
     }
 
+    /**
+     * 
+     * @param {Vec} vec another vec to be subtracted
+     * @returns {Vec}
+     */
     sub(vec){
         return new Vec(this.x - vec.x, this.y - vec.y);
     }
 
+    /**
+     * 
+     * @param {Vec, number} vec can be either a vec or a scalar. If it's a scalar,
+     *                          then times it both to x and y.
+     * @returns {Vec}
+     */
     mult(vec){
         if(vec.x === undefined){
             return new Vec(this.x * vec, this.y * vec);
@@ -42,20 +58,65 @@ export default class Vec{
         }
     }
 
+    /**
+     * head: returns the most left-top vector between two.
+     * @param {Vec} vec another vector
+     * @returns {Vec}
+     */
     head(vec){
         return new Vec(Math.min(this.x, vec.x), Math.min(this.y, vec.y));
     }
 
+    /**
+     * isHeaderTo: compare which vector should be the head between two
+     * @param {Vec} vec another vector
+     * @returns {boolean}
+     */
+    isHeaderTo(vec){
+        return (this.x < vec.x) && (this.y < vec.y);
+    }
+
+    /**
+     * tail: returns the most right-bottom vector between two.
+     * @param {Vec} vec another vector
+     * @returns {Vec}
+     */
     tail(vec){
         return new Vec(Math.max(this.x, vec.x), Math.max(this.y, vec.y));
     }
 
+    /**
+     * isHeaderTo: compare which vector should be the tail between two.
+     * @param {Vec} vec another vector
+     * @returns {boolean}
+     */
+    isTailerTo(vec){
+        return this.x > vec.x && this.y > vec.y;
+    }
+
+    /**
+     * copy: duplicate an object instance of this.
+     * @returns {Vec}
+     */
     copy(){
         return new Vec(this.x, this.y);
     }
 
-    draw(ctx, r){
+    mag(){
+        return Math.hypot(this.x, this.y);
+    }
+
+    /**
+     * draw vector as point over canvas
+     * @param {CanvasRenderingContext2D} ctx canvas context to be rendered
+     * @param {number} r radius
+     * @returns {undefined}
+     */
+    draw(ctx, r, color){
+        if (color === undefined) color = "rgb(0, 0, 0, 0.5)";
         if (r === undefined) r = 10;
+        
+        ctx.fillStyle = color;
         ctx.beginPath();
         ctx.arc(this.x, this.y, r,0, 2*Math.PI);
         ctx.fill();

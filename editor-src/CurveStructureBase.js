@@ -84,23 +84,15 @@ export default class CurveStructureBase{
 
         for (let prog of progs){
 
-            if(prog.ith === undefined){
-                // apply all operations at this level. this can be
-                // considered as a short hand of specifying things
-                // in progs list. saves some typing.
-                for (let method in prog)
-                    if( method != "ith" && method != 'progs')
+            // apply all operations at this level. this can be
+            // considered as a short hand of specifying things
+            // in progs list. saves some typing.
+            for (let method in prog)
+                if( method != "ith" && method != 'progs')
+                    if(prog.ith === undefined)
                         this[method](prog[method]);
-
-            } else {
-                for (let method in prog)
-                    if( method != "ith" && method != 'progs')
-                        {
-                            console.log(this.body[prog.ith][method], prog[method]);
-                            this.body[prog.ith][method](prog[method]);
-                        }
-
-            }
+                    else
+                        this.body[prog.ith][method](prog[method]);
         }
 
         this.update();
