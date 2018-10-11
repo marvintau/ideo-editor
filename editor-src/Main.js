@@ -2,9 +2,7 @@
 // import { testCurve } from "./Curve.js";
 // import { testCompoundCurve } from "./CompoundCurve.js";
 
-// import { testStrokeSet } from "./StrokeSet.js";
-
-import {strokeBase} from "./StrokeBase";
+import StrokeBase from "./StrokeBase.js";
 import initInput from "./Input.js";
 
 var c              = document.getElementById("canvas"),
@@ -19,3 +17,5 @@ ctx.scale(ratio, ratio);
 
 initInput(document.getElementById('stroke-list'));
 
+var strokeBase = new StrokeBase(ctx);
+strokeBase.updateBase();

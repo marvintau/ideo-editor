@@ -1,39 +1,63 @@
 <html>
     <style>
+
 body{
     background: #8abeb7;
-    text-align: center;
+    text-align: left;
 }
 
-                #canvas{
-                    margin: 10px;
-                    border: true;
-                    background: white;
-                }
-                textarea{
-                    font-family : "TheSansMono Office";
-                margin: 10px;
-                resize: none;
-                    border : none;
-                width: 600px;
-                background: white;
-                }
+.left-float {
+    float : left;
+}
 
+#canvas{
+    margin: 10px;
+    border: true;
+    background: white;
+    border-radius: 5px;
+}
+
+textarea{
+    font-family : "TheSansMono Office";
+    margin: 10px;
+    resize: none;
+    border : none;
+    width: 600px;
+    background: white;
+    border-radius: 5px;
+}
+
+#char-list{
+    background-color : rgba(0, 0, 0, 0.1);
+    width : 600px;
+    margin : 10px;
+    position : relative;
+    float : left;
+    border-radius: 5px;
+}
+
+.char-button{
+    font-size: 200%;
+    font-family:"Kaiti SC";
+    margin : 10px;
+    display : block;
+    /* border-radius:5px; */
+}
 
     </style>
     <body>
-        <div id="canvas_wrap">
-            <canvas id="canvas" width="600" height="600" ></canvas>
+        <div class="left-float">
+            <div id="canvas_wrap">
+                <canvas id="canvas" width="600" height="600" ></canvas>
+            </div>
+
+            <div>
+                <textarea id="stroke-list" rows="10" spellcheck="false">[{"name":"木"}, {"name":"木", "conds":{"concat":{"place":"right"}}},
+                    {"name":"女", "conds":{"concat":{"place":"bottom"}}}]</textarea>
+            </div>
         </div>
 
-        <div>
-            <textarea id="stroke-list" rows="10" spellcheck="false">[{"name":"木"}, {"name":"木", "conds":{"concat":{"place":"right"}}},
-                {"name":"女", "conds":{"concat":{"place":"bottom"}}}]</textarea>
-        </div>
-
-        <div id="characters">
-
-        </div>
+        <div id="char-list"></div>
 
     </body>
     <script src="./javascripts/Main.js"></script>

@@ -13,9 +13,9 @@ import Box from "./Box.js";
 export default class StrokeSet extends CurveStructureBase{
     
     constructor(spec) {
-        console.log("strokeset constructor", spec);
+        // console.log("strokeset constructor", spec);
         super(CompoundCurve, spec);
-        this.update();
+        this.modify();
     }
 
     cross(spec){
@@ -82,6 +82,8 @@ export default class StrokeSet extends CurveStructureBase{
 
         this.stretchFull(ctx);
         this.transCenter();
+        
+        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
         ctx.lineWidth = 25;
         ctx.lineCap = "round";
@@ -180,7 +182,6 @@ function findCenterRect(ctx, pointSet, step){
 
 export function testStrokeSet(ctx, spec){
     var strokeSet = new StrokeSet(spec);
-    strokeSet.modify();
     console.log(strokeSet);
 
     ctx.lineWidth = 1;
