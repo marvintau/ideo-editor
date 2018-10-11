@@ -114,7 +114,7 @@ function findCentroid(ctx, pointSet, threshold){
             for (let pj of pointSet[j])
                 if (pi.sub(pj).mag() < threshold){
                     var weight = pi.sub(pj).mag()/threshold;
-                    ctx.strokeStyle = 'rgb(0, 0, 0, '+0.2*weight+')';
+                    ctx.strokeStyle = 'rgb(0, 0, 0, '+(1-weight)+')';
                     ctx.beginPath();
                     ctx.moveTo(pi.x, pi.y);
                     ctx.lineTo(pj.x, pj.y);
@@ -144,7 +144,7 @@ function findCenterRect(ctx, pointSet, step){
     // enumerate all possible sizes of box rectangle
 
     // any criteria for the shape of box can be specified here.
-    for (let h = 20*step; h <= height; h += step)
+    for (let h = step; h <= height; h += step)
         for (let w = step; w <= h; w += step) {
 
             // for all positions
@@ -162,7 +162,7 @@ function findCenterRect(ctx, pointSet, step){
             var res = findMinMax(pointNum, e => e.p);
             var range = (pointNum.length != 0) ? pointNum[res.max].p - pointNum[res.min].p : 0;
             
-            if (range > maxRange) {
+            if (range >= maxRange) {
                 maxRange = range;
                 maxRangeMaxBox = pointNum[res.max].b.copy();
 
@@ -173,9 +173,6 @@ function findCenterRect(ctx, pointSet, step){
         }
 
     maxRangeMaxBox.draw(ctx);
-    points
-        .filter( point => maxRangeMaxBox.include(point))
-        .forEach(p => p.draw(ctx, 7, "rgb(192, 0, 0, 1)"));
 
     return maxRangeMaxBox;
 }
@@ -188,13 +185,15 @@ export function testStrokeSet(ctx, spec){
 
     ctx.lineWidth = 1;
     strokeSet.draw(ctx);
-    // strokeSet.box.draw(ctx);
-    strokeSet.sample(20);
+    strokeSet.sample(15);
 
     for (let s of strokeSet.samples)
         for (let p of s)
             p.draw(ctx, 5);
  
+    var t1 = performance.now()
     findCenterRect(ctx, strokeSet.samples, 20);
+    console.log("centerrect found in:", (performance.now() - t1)*0.001, "secs") ;
+
     findCentroid(ctx, strokeSet.samples, 150);
 }

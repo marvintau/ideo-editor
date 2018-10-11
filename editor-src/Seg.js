@@ -96,7 +96,7 @@ export default class Seg extends CurveStructureBase{
     sample(step){
         var points = [],
             angVec = new Vec(this.ang);
-        for(var i = 0; i < this.len; i += step){
+        for(var i = step; i < this.len; i += step){
             points.push(angVec.mult(i).add(this.head));
         }
         return points;

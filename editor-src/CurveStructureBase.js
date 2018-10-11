@@ -38,13 +38,6 @@ export default class CurveStructureBase{
         this.update();
     }
 
-    // NOTE:
-    // since angle and ratio are position-invariant, thus the two methods
-    // above do nothing but calling the same methods of their components,
-    // and eventually effected when the methods in Seg being called. However,
-    // the trans method below is different. It only changes the head of
-    // this curve, and the remaining work is done in this.update.
-
     /**
      * trans
      * @param {Vec} vec vector to translate.
@@ -87,16 +80,21 @@ export default class CurveStructureBase{
             // apply all operations at this level. this can be
             // considered as a short hand of specifying things
             // in progs list. saves some typing.
-            for (let method in prog)
-                if( method != "ith" && method != 'progs')
-                    if(prog.ith === undefined)
-                        this[method](prog[method]);
-                    else
-                        this.body[prog.ith][method](prog[method]);
+            for (let method in prog){
+                var instance = (prog.ith === undefined) ? this : this.body[prog.ith];
+
+                if(method != 'progs')
+                    instance[method](prog[method]);
+                else
+                    instance.modify(prog.progs);
+            }
+            
         }
 
         this.update();
     }
+
+    ith() {/*dummy*/}
 
     update(){
         
@@ -121,14 +119,6 @@ export default class CurveStructureBase{
                 }
             }    
         }
-    }
-
-    /**
-     * Translate
-     * @param {Vec} increment vector to translate 
-     */
-    translate(increment){
-        this.head = this.head.add(increment);
     }
 
     copy(){

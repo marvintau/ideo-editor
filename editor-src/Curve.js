@@ -15,15 +15,17 @@ export default class Curve extends CurveStructureBase{
         
         var totalLen = this.body.reduce((sum, e) => sum + e.len, 0), 
             ratioLen = ithRatio * totalLen,
+            currSeg  = this.body[0],
             currLen  = 0;
 
         for(let i = 0; i < this.body.length-1; i++){
 
-            currSeg =  this.body[i];
-            currLen += this.body[i].len;
-            point = point.add((new Vec(currSeg.ang)).mult(currSeg.len));
+            if (currSeg.len + currLen > ratioLen) break;
 
-            if (this.body[i+1].len + currLen > ratioLen) break;
+            currSeg  = this.body[i];
+            point    = currSeg.tail;
+            currLen += currSeg.len;
+
         }
 
         point = point.add((new Vec(currSeg.ang)).mult(ratioLen - currLen));

@@ -1,9 +1,10 @@
-import { testSeg } from "./Seg.js";
-import { testCurve } from "./Curve.js";
-import { testCompoundCurve } from "./CompoundCurve.js";
-import { testStrokeSet } from "./StrokeSet.js";
+// import { testSeg } from "./Seg.js";
+// import { testCurve } from "./Curve.js";
+// import { testCompoundCurve } from "./CompoundCurve.js";
 
-import {loadStrokeBase, getStroke} from "./StrokeBase";
+// import { testStrokeSet } from "./StrokeSet.js";
+
+import {strokeBase} from "./StrokeBase";
 import initInput from "./Input.js";
 
 var c              = document.getElementById("canvas"),
@@ -18,16 +19,3 @@ ctx.scale(ratio, ratio);
 
 initInput(document.getElementById('stroke-list'));
 
-
-function withStrokeData(data){
-    var strokes = JSON.parse(data);
-
-    // testSeg(ctx);
-    // testCurve(ctx);
-    // testCompoundCurve(ctx);
-    
-    var strokeSpec = getStroke(strokes, "女");
-    testStrokeSet(ctx, strokeSpec);
-}
-
-loadStrokeBase().then(withStrokeData)
