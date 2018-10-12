@@ -1,6 +1,7 @@
 import Vec from "./Vec.js";
 import Box from "./Box.js";
 import CurveStructureBase from "./CurveStructureBase.js";
+import Raster from "./Raster.js";
 
 export default class Seg extends CurveStructureBase{
 
@@ -60,16 +61,16 @@ export default class Seg extends CurveStructureBase{
 
         if(progs === undefined) progs = this.progs;
 
-        for(let prog of progs){
-            switch(Object.keys(prog)[0]){
+        for(let instr of progs){
+            switch(Object.keys(instr)[0]){
                 case "trans":
-                    this.trans(prog.trans);
+                    this.trans(instr.trans);
                     break;
                 case "rotate":
-                    this.rotate(prog.rotate);
+                    this.rotate(instr.rotate);
                     break;
                 case "stretch":
-                    this.stretch(prog.scale);
+                    this.stretch(instr.scale);
                     break;
             }    
         }

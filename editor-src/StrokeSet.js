@@ -1,9 +1,37 @@
 import Vec from "./Vec.js";
 import CurveStructureBase from "./CurveStructureBase.js";
 import CompoundCurve from "./CompoundCurve.js";
+// import Raster from "./Raster.js";
 
-import {flatten, findMinMax} from "./Util.js";
+import {flatten} from "./Util.js";
 import Box from "./Box.js";
+
+// only for saving indentation 
+function forAllKernelSize(width, height, step, func){
+    for (let h = step; h <= height; h += step)
+        for (let w = 0.5*h; w <= 0.66*h; w += step) 
+            func(w, h);
+}
+
+function findMinMax(data, func){
+    var min =  10000,
+        max = -10000,
+        minIndex = 0,
+        maxIndex = 0;
+
+    var p = (func === undefined) ? data : data.map(func);
+    for (let i in p)
+        if(p[i] > max) {
+            max = p[i]; maxIndex = i;
+        } else if (p[i] < min) {
+            min = p[i]; minIndex = i;
+        }
+
+    return {
+        max : parseInt(maxIndex),
+        min : parseInt(minIndex)
+    };
+}
 
 /**
  * StrokeSet is such a structure that, it contains several strokes, including
@@ -86,7 +114,7 @@ export default class StrokeSet extends CurveStructureBase{
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
         ctx.lineWidth = 25;
-        ctx.lineCap = "round";
+        ctx.lineCap = "square";
         ctx.lineJoin = "round";
         ctx.strokeStyle = "rgb(0, 0, 0, 0.5)";
 
@@ -102,81 +130,72 @@ export default class StrokeSet extends CurveStructureBase{
     }
 
     sample(step){
-        this.samples = this.body.reduce(function(list, comp){
+        return this.body.reduce(function(list, comp){
             return list.concat(comp.sample(step));
         }, []);
     }
-}
 
-function findCentroid(ctx, pointSet, threshold){
-        // ctx.setLineDash([1, 50]);
-    ctx.lineWidth = 1;
-    for (let i in pointSet) for (let j in pointSet) if (i < j)
-        for (let pi of pointSet[i])
-            for (let pj of pointSet[j])
-                if (pi.sub(pj).mag() < threshold){
-                    var weight = pi.sub(pj).mag()/threshold;
-                    ctx.strokeStyle = 'rgb(0, 0, 0, '+(1-weight)+')';
-                    ctx.beginPath();
-                    ctx.moveTo(pi.x, pi.y);
-                    ctx.lineTo(pj.x, pj.y);
-                    ctx.stroke();    
-                }
+    findCentroid(ctx){
 
-    var flattenPoints = flatten(pointSet),
-        centroid = new Vec();
-    for (let p of flattenPoints){
-        centroid = centroid.add(p);
+        var pointSet = this.sample(25);
+        var flattenPoints = flatten(pointSet),
+            centroid = new Vec();
+        for (let p of flattenPoints){
+            centroid = centroid.add(p);
+        }
+        centroid = centroid.mult(1/flattenPoints.length);
+        console.log("centroid: ", centroid);
+        centroid.draw(ctx, 10, "red");
     }
-    centroid = centroid.mult(1/flattenPoints.length);
-    centroid.draw(ctx, 10, "red");
-}
 
-function findCenterRect(ctx, pointSet, step){
-    var points = flatten(pointSet);
-
-    var width = ctx.canvas.width,
-        height = ctx.canvas.height;
-
-    var maxRange = 0,
-        maxRangeMaxBox = new Box();
+    findCenterRect(ctx, step){
+        var points = flatten(this.sample(25));
+        var width = ctx.canvas.width,
+            height = ctx.canvas.height;
     
-    var nums, mean, dev;
-
-    // enumerate all possible sizes of box rectangle
-
-    // any criteria for the shape of box can be specified here.
-    for (let h = step; h <= height; h += step)
-        for (let w = step; w <= h; w += step) {
-
+        var maxRange = 0,
+            box = new Box(),
+            maxRangeMaxBox = new Box();
+        
+        // var nums, mean, dev;
+        
+        // enumerate all possible sizes of box rectangle
+    
+        var ts = performance.now();
+        // any criteria for the shape of box can be specified here.
+        forAllKernelSize(width, height, step, function(w, h){
             // for all positions
             var pointNum = [];
             for(let x = 0; x + w <= width; x += step)
                 for(let y = 0; y + h <= height; y += step){
-                    var box = new Box(new Vec(x, y), new Vec(x+w, y+h));
-                    pointNum.push({
-                        p:points.filter( point => box.include(point)).length,
-                        b:box.copy()
-                    });
+                    box.set(x, y, w, h);
+                    pointNum.push(points.filter( point => box.include(point)).length);
                 }
 
-
-            var res = findMinMax(pointNum, e => e.p);
-            var range = (pointNum.length != 0) ? pointNum[res.max].p - pointNum[res.min].p : 0;
+            var res = findMinMax(pointNum);
+            var range = (pointNum.length != 0) ? pointNum[res.max] - pointNum[res.min] : 0;
             
             if (range >= maxRange) {
                 maxRange = range;
-                maxRangeMaxBox = pointNum[res.max].b.copy();
 
-                nums = pointNum.map(e => e.p),
-                mean = nums.reduce((s, e) => s+e) / nums.length,
-                dev  = nums.map(e => Math.abs(e - mean)).reduce((s, e) => s+e) / nums.length;
+                var hstep = (height-h)/step,
+                    maxX = Math.ceil(res.max/hstep),
+                    maxY = maxX*hstep - res.max;
+                
+                maxRangeMaxBox.set((maxX-2)*step, (maxY)*step, w, h);
+
+                // maxRangeMaxBox.draw(ctx);
+                // nums = pointNum.map(e => e.p),
+                // mean = nums.reduce((s, e) => s+e) / nums.length,
+                // dev  = nums.map(e => Math.abs(e - mean)).reduce((s, e) => s+e) / nums.length;
             }
-        }
-
-    maxRangeMaxBox.draw(ctx);
-
-    return maxRangeMaxBox;
+        })
+    
+        maxRangeMaxBox.draw(ctx);
+        console.log("finding rect takes: ", (performance.now() - ts)*0.001 , "secs");
+        console.log("rect ", maxRangeMaxBox);
+        return maxRangeMaxBox;
+    }
 }
 
 

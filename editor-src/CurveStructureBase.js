@@ -1,5 +1,6 @@
 import Vec from "./Vec.js";
 import Box from "./Box.js";
+import Raster from "./Raster.js";
 
 export default class CurveStructureBase{ 
 
@@ -17,6 +18,7 @@ export default class CurveStructureBase{
         this.body  = (spec=== undefined || spec.body  === undefined) ? [] : spec.body.map(comp => new Constructor(comp));
         this.head  = (spec=== undefined || spec.head  === undefined) ? new Vec() : spec.head;
         this.progs = (spec=== undefined || spec.progs === undefined) ? [] : spec.progs;
+        this.vars = (spec=== undefined || spec.vars === undefined) ? {} : spec.vars;
         this.box   = new Box();
     }
 
@@ -47,20 +49,49 @@ export default class CurveStructureBase{
         this.update();
     }
 
+    /**
+     * get variable from variable table.
+     * if the parameter is a number, then just return itself.
+     * if the parameter is a string, then first treat it as a
+     * key of variable table and find its value. If it's not
+     * a number, then evaluate it until a number is get.
+     * 
+     * @param {oject} item item can be either form of number, string and object.
+     */
+    getVariable(item){
+        console.log("get variable: ", item, typeof item);
+        switch(typeof item){
+            case "number" :
+                return item;
+            case "string" :
+                switch(typeof this.vars[item].val){
+                    case "number":
+                        return this.vars[item].val;
+                    case "string":
+                        return eval(this.vars[item].val.replace(/@'(.*)'/, "this.getVariable('$1')"));
+                }
+            case "object":
+                for (let key in item) item[key] = this.getVariable(item[key]);
+                return item;
+            default :
+                console.error("Key not found", item, typeof item);
+        }
+    }
+
 
     /**
      * modify: operate the curve object with given instructions.
      * 
-     * there are two ways to modify a component of this structure.
-     * The first one is to use the progs in the component itself,
-     * the second one is to apply operations from higher level. 
      * 
-     * @param {Object} progs the programmes to be applied over different level of curve structure.
+     * @param {Array} progs the programmes to be applied over different level of curve structure.
+     * @param {Array} vars  variables referred in progs
      */
-    modify(progs){
+    modify(progs, vars){
 
-        // modify accepts both external programmes and
-        // the programs itself.
+        // modify uses program and variables from external, but
+        // if they are not given, the program and variables in
+        // itself will be used.
+        if (vars === undefined) vars = this.vars;
         if (progs === undefined) progs = this.progs;
 
         // Typically the component curve object contains program
@@ -75,18 +106,19 @@ export default class CurveStructureBase{
         // executed, except what specified in its progs, and vice
         // versa.
 
-        for (let prog of progs){
+        console.log(progs);
+        for (let instr of progs){
 
             // apply all operations at this level. this can be
             // considered as a short hand of specifying things
             // in progs list. saves some typing.
-            for (let method in prog){
-                var instance = (prog.ith === undefined) ? this : this.body[prog.ith];
+            for (let method in instr){
+                var instance = (instr.ith === undefined) ? this : this.body[instr.ith];
 
                 if(method != 'progs')
-                    instance[method](prog[method]);
+                    instance[method](this.getVariable(instr[method]));
                 else
-                    instance.modify(prog.progs);
+                    instance.modify(instr[method]);
             }
             
         }
@@ -145,4 +177,19 @@ export default class CurveStructureBase{
         }, []);
     }
 
+    rasterize(raster){
+        if (raster === undefined){
+            var canvas = document.getElementById("canvas").getContext("2d"),
+                height = canvas.height,
+                width  = canvas.width;
+
+            raster = new Raster(width, height);
+        }
+        
+        for(let elem of this.body){
+            raster = elem.rasterize(raster);
+        }
+
+        return raster;
+    }
 }

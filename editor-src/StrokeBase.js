@@ -1,3 +1,5 @@
+import Input from "./Input.js";
+
 import StrokeSet from "./StrokeSet.js";
 
 function dup(json){
@@ -36,15 +38,17 @@ function loadStrokeBase () {
 export default class StrokeBase {
 
     constructor(ctx){
-        this.strokeSet = {};
-        this.ctx = ctx;
+        this.base  = {};
+        this.ctx   = ctx;
+        this.input = new Input();
     }
+    
 
     updateBase(){
         loadStrokeBase()
         .then(function(data){
-            this.strokeSet = JSON.parse(data);
-            this.updateUI(this.strokeSet);
+            this.base = JSON.parse(data);
+            this.updateUI(this.base);
         }.bind(this));
     }
 
@@ -58,17 +62,21 @@ export default class StrokeBase {
 
             p.onclick = function(e){
                 this.getStroke(char);
-                // this.getStroke(char);
+                this.input.update(this.getStrokeSpecText(char));
             }.bind(this);
 
             CharUI.appendChild(p);
         }
     }
 
+    getStrokeSpecText(strokeName){
+        return JSON.stringify(this.base[strokeName], null, 4);
+    }
+
     getStrokeSpec(strokeName){
     
         var self = this;
-        var stroke = dup(this.strokeSet[strokeName]);
+        var stroke = dup(this.base[strokeName]);
         
         switch(stroke.type){
             case "radical":
@@ -94,8 +102,11 @@ export default class StrokeBase {
     
     
     getStroke(char){
+        console.clear();
         var strokeSpec = this.getStrokeSpec(char);
         var stroke = new StrokeSet(strokeSpec);
         stroke.draw(this.ctx);
+        stroke.findCenterRect(this.ctx, 10);
+        stroke.findCentroid(this.ctx, 15);
     }
 }

@@ -74,6 +74,20 @@ export default class Box{
         return new Box(vec, vec.add(size));
     }
 
+    /**
+     * 
+     * @param {number} x headx
+     * @param {number} y heady
+     * @param {number} w width
+     * @param {number} h height
+     */
+    set(x, y, w, h){
+        this.head.x = x;
+        this.head.y = y;
+        this.tail.x = x+w;
+        this.tail.y = y+h;
+    }
+
     draw(ctx){
         var size = this.size();
         // ctx.strokeStyle = "rgb(0, 0, 0, 0)";

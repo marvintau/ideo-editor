@@ -36,16 +36,27 @@ function insertPairFromDict(strokeInput, event){
     }
 }
 
-export default function initInput(strokeInput){
-    strokeInput.addEventListener('keypress', function(e){
-    
-        if(e.key==="Enter" && e.ctrlKey){
-            redrawRadical();
-            return;
-        }
-    
-        insertPairFromDict(strokeInput, e);
-    });
-    
-    strokeInput.focus();    
+export default class Input{
+
+    constructor(){
+        this.input = document.getElementById('stroke-list');
+    }
+
+    init(func){
+        this.input.addEventListener('keypress', function(e){
+        
+            if(e.key==="Enter" && e.ctrlKey){
+                func(this.input.value);
+                return;
+            }
+        
+            insertPairFromDict(this.input, e);
+        });
+        
+        this.input.focus();
+    }
+
+    update(text){
+        this.input.value = text;
+    }
 }
