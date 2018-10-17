@@ -70,7 +70,6 @@ export default class StrokeBase {
     }
 
     getStrokeSpecText(strokeName){
-        console.log(JSON.stringify(this.base[strokeName], null, 4));
         return fromJSONObject(this.base[strokeName]);
     }
 

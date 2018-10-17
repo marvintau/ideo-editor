@@ -11,7 +11,7 @@ Array.prototype.flatten = function(){
  * @param {string} str input string
  */
 function quoteString(str){
-    return str.includes(" ") ? '"' + str + '"' : str;
+    return str.match(/[ @]/) ? '"' + str + '"' : str;
 }
 
 /**
@@ -100,9 +100,7 @@ function fromJSONObjectRecursive(object, remLen){
         case "string":
             return [quoteString(object)];
         case "number":
-        var res = [object.toFixed(2)];
-        console.log("got number and should return: ", res);
-        return res;
+            return [object.toFixed(2)];
         case "object":
             var res = (Array.isArray(object)) 
                       ? handleArray(object, fromJSONObjectRecursive, remLen)
@@ -229,9 +227,9 @@ export function toJSONText(text){
 
 export function highlightION(text){
     return text.split('\n').map(t=> t
-               .replace(/([#@:])/, '<span class="keyword">$1</span>')
-               .replace(/(([^\s])\s*)(?=:)/, '<span class="key">$1</span>'))
-               .join('\n');
+        .replace(/(\S+\s*)(?=:)/g, '<span class="key">$1</span>')
+        .replace(/([#@:])/g, '<span class="keyword">$1</span>'))
+        .join('\n');
 }
 
 function test(){

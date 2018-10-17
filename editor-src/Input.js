@@ -1,3 +1,4 @@
+import {highlightION} from "./ION.js";
 
 function escapeHtml(unsafe) {
 	return unsafe
@@ -7,8 +8,6 @@ function escapeHtml(unsafe) {
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#039;");
 }
-
-function highlight(text){return text;}
 
 export default class Input{
 
@@ -37,9 +36,9 @@ export default class Input{
 
         var content = this.input.value;
         var codeHolder = document.getElementById("code-display");
-        var escaped = escapeHtml(content);
+        var escaped = content;
         
-        codeHolder.innerHTML = highlight(escaped);
+        codeHolder.innerHTML = (highlightION(escaped));
 
     }
 
