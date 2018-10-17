@@ -98,9 +98,11 @@ export default class StrokeSet extends CurveStructureBase{
         this.update();
     }
 
-    transCenter(){
+    transCenter(ctx){
+        var centerX = ctx.canvas.width/2,
+            centerY = ctx.canvas.height/2;
         for (let comp of this.body){
-            comp.head = comp.head.add((new Vec(300, 300)).sub(this.box.center()));
+            comp.head = comp.head.add((new Vec(centerX, centerY)).sub(this.box.center()));
         }
         this.update();
     }
@@ -108,7 +110,7 @@ export default class StrokeSet extends CurveStructureBase{
     draw(ctx){
 
         this.stretchFull(ctx);
-        this.transCenter();
+        this.transCenter(ctx);
         
         ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 

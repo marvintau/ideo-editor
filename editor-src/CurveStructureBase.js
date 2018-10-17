@@ -59,7 +59,6 @@ export default class CurveStructureBase{
      * @param {oject} item item can be either form of number, string and object.
      */
     getVariable(item){
-        console.log("get variable: ", item, typeof item);
         switch(typeof item){
             case "number" :
                 return item;

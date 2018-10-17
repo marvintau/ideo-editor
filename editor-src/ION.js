@@ -1,9 +1,12 @@
 var indentWidth = 4,
     lineLength  = 80;
 
-if(Array)
 Array.prototype.flatten = function(){
     return [].concat(...this);
+}
+
+Array.prototype.last = function(){
+    return this[this.length - 1];
 }
 
 /**
@@ -100,14 +103,12 @@ function fromJSONObjectRecursive(object, remLen){
         case "string":
             return [quoteString(object)];
         case "number":
-            return [object.toFixed(2)];
+            return [object.toString()];
         case "object":
             var res = (Array.isArray(object)) 
                       ? handleArray(object, fromJSONObjectRecursive, remLen)
                       : handleObject(object, fromJSONObjectRecursive, remLen);
             
-            if (res[res.length-1].slice(-1) != "\n")
-                res[res.length-1] += "\n";
             return res;
     }
 }
@@ -118,7 +119,7 @@ export function fromJSONObject(object){
 
 
 function returnRightBracket(stack){
-    var pairs = {"{": "}", "[": "]"};
+    var pairs = {"{": "}", "[": "]", ":":""};
     return pairs[stack[stack.length - 1].type];
 }
 
@@ -129,22 +130,25 @@ function returnRightBracket(stack){
 //  end with space or comma.
 export function toJSONText(text){
     
-    var lines = text.split("\n");
+    var lines = text.split("\n").filter(e => e.length > 0);
 
     var resultText = "",
         stack      = [],
-        indentCurr = 0;
+        currIndent = 0;
 
     for (let i = 0; i < lines.length; i++){
 
-        indentCurr = lines[i].search(/\S|$/);
-
-        while (stack.length > 0 && stack[stack.length - 1].indent > indentCurr){
+        var lineIndent = lines[i].search(/\S|$/);
+        while (stack.length > 0 && stack[stack.length - 1].indent >= lineIndent){
+            var added = returnRightBracket(stack);
+            if (added != "") console.log("curr", lineIndent, "stack", stack.last().indent, "added",added, "to", resultText.length);
             resultText += returnRightBracket(stack);
             stack.pop();
         }
 
+        currIndent = 0;
         var currLineRem = lines[i];
+        console.log(currLineRem);
         while(currLineRem.length > 0){
             switch(currLineRem[0]){
                 case " ":
@@ -155,27 +159,27 @@ export function toJSONText(text){
                     else
                         stack[stack.length - 1].comma = true;
 
-                    indentCurr  += lines[i].search(/\S|$/);
+                    currIndent  += currLineRem.search(/\S|$/);
                     currLineRem  = currLineRem.trim();
                     break;
 
                 case "@": 
                     // beginning of an arary
-                    resultText += "["; stack.push({type:"[", indent: indentCurr, comma:false});
-                    indentCurr += 1;
+                    resultText += "["; stack.push({type:"[", indent: currIndent, comma:false});
+                    currIndent += 1;
                     currLineRem = currLineRem.slice(1);
                     break;
 
                 case "#":
                     // beginning of an object
-                    resultText += "{"; stack.push({type:"{", indent: indentCurr, comma:false});
-                    indentCurr += 1;
+                    resultText += "{"; stack.push({type:"{", indent: currIndent, comma:false});
+                    currIndent += 1;
                     currLineRem = currLineRem.slice(1);
                     break;
 
                 case ":":
-                    resultText += ":"; stack.push({type:":"});
-                    indentCurr += 1;
+                    resultText += ":"; stack.push({type:":", indent: currIndent});
+                    currIndent += 1;
                     currLineRem = currLineRem.slice(1);
                     break;
 
@@ -183,12 +187,11 @@ export function toJSONText(text){
                     // beginning of a quoted string. Notably, we don't accept
                     // a single quotation mark appearing on a single line.
 
-                    
                     var quoted = currLineRem.match(/"(?:\\"|[^"])*"/);
                     if (!quoted) throw "Quoted string missing at Line: " + i;
                     
-                    if (stack.length > 0 &&stack[stack.length - 1].type == ":") stack.pop();
-                    indentCurr += quoted[0].length;
+                    if (stack.length > 0 && stack[stack.length - 1].type == ":") stack.pop();
+                    currIndent += quoted[0].length;
                     resultText += currLineRem.slice(0, quoted[0].length);
                     currLineRem = currLineRem.slice(quoted[0].length);
                     break;
@@ -202,14 +205,15 @@ export function toJSONText(text){
                     // console.log("gotcha");
                     var simple = currLineRem.match(/[^\s:]*/);
                     if (!simple) throw "Simple string got some problem at Line: " + 1;
-                    if (stack.length > 0 &&stack[stack.length - 1].type == ":") stack.pop();
+                    if (stack.length > 0 && stack[stack.length - 1].type == ":") {stack.pop();}
+
+                    currIndent += simple[0].length;
+
+                    var result = currLineRem.slice(0, simple[0].length),
+                        parsed = parseFloat(result) ;
                     
-                    result = currLineRem.slice(0, simple[0].length);
-                    parsed = parseFloat(result) ;
-                    if (!parsed && parsed != 0)
-                        resultText += '"' + result + '"';
-                    else
-                        resultText += parsed;
+                    resultText += (!parsed && parsed != 0) ? '"' + result + '"' : parsed;
+
                     currLineRem = currLineRem.slice(simple[0].length);
                     break;
 

@@ -91,7 +91,7 @@ export default class Box{
     draw(ctx){
         var size = this.size();
         // ctx.strokeStyle = "rgb(0, 0, 0, 0)";
-        ctx.lineWidth = 3;
+        ctx.lineWidth = 1;
         ctx.beginPath();
         ctx.rect(this.head.x, this.head.y, size.x, size.y);
         ctx.stroke();

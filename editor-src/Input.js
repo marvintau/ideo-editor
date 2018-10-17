@@ -1,4 +1,4 @@
-import {highlightION} from "./ION.js";
+import {highlightION, toJSONText} from "./ION.js";
 
 function escapeHtml(unsafe) {
 	return unsafe
@@ -36,14 +36,14 @@ export default class Input{
 
         var content = this.input.value;
         var codeHolder = document.getElementById("code-display");
-        var escaped = content;
         
-        codeHolder.innerHTML = (highlightION(escaped));
-
+        codeHolder.innerHTML = (highlightION(content));
     }
 
     update(text){
         this.input.value = text;
         this.highlight();
+        console.log(toJSONText(text));
+        console.log(JSON.parse(toJSONText(text)));
     }
 }
