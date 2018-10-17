@@ -45,10 +45,10 @@ export function testCompoundCurve(ctx){
 
     var compoundCurve = new CompoundCurve(spec);
 
-    compoundCurve.progs = range(arcs, (e) => ({
+    compoundCurve.prog = range(arcs, (e) => ({
         ith:e,
-        progs:[{                                    // curve level
-            progs:[{ rotate:{theta:180/arcs*e-90}}],// seg level
+        prog:[{                                    // curve level
+            prog:[{ rotate:{theta:180/arcs*e-90}}],// seg level
             rotate : {theta:180/arcs*e-90}          // seg level and can be observed that the change of angle.
         }]
     }))

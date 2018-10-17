@@ -15,11 +15,11 @@ export default class CurveStructureBase{
     constructor(Constructor, spec){
 
         // console.log("CurveStructureBase", spec);
-        this.body  = (spec=== undefined || spec.body  === undefined) ? [] : spec.body.map(comp => new Constructor(comp));
-        this.head  = (spec=== undefined || spec.head  === undefined) ? new Vec() : spec.head;
-        this.progs = (spec=== undefined || spec.progs === undefined) ? [] : spec.progs;
+        this.body = (spec=== undefined || spec.body === undefined) ? [] : spec.body.map(comp => new Constructor(comp));
+        this.head = (spec=== undefined || spec.head === undefined) ? new Vec() : spec.head;
+        this.prog = (spec=== undefined || spec.prog === undefined) ? [] : spec.prog;
         this.vars = (spec=== undefined || spec.vars === undefined) ? {} : spec.vars;
-        this.box   = new Box();
+        this.box  = new Box();
     }
 
     /**
@@ -78,21 +78,22 @@ export default class CurveStructureBase{
         }
     }
 
+    getConstraint(){}
 
     /**
      * modify: operate the curve object with given instructions.
      * 
      * 
-     * @param {Array} progs the programmes to be applied over different level of curve structure.
-     * @param {Array} vars  variables referred in progs
+     * @param {Array} prog the programmes to be applied over different level of curve structure.
+     * @param {Array} vars  variables referred in prog
      */
-    modify(progs, vars){
+    modify(prog, vars){
 
         // modify uses program and variables from external, but
         // if they are not given, the program and variables in
         // itself will be used.
         if (vars === undefined) vars = this.vars;
-        if (progs === undefined) progs = this.progs;
+        if (prog === undefined) prog = this.prog;
 
         // Typically the component curve object contains program
         // when instantiating. So now we apply the programs like
@@ -103,19 +104,19 @@ export default class CurveStructureBase{
         // Then apply the programs in current level.
         // the rule is, if prog.ith is specified, other methods
         // that will be executed at same level will not be
-        // executed, except what specified in its progs, and vice
+        // executed, except what specified in its prog, and vice
         // versa.
 
-        console.log(progs);
-        for (let instr of progs){
+        console.log(prog);
+        for (let instr of prog){
 
             // apply all operations at this level. this can be
             // considered as a short hand of specifying things
-            // in progs list. saves some typing.
+            // in prog list. saves some typing.
             for (let method in instr){
                 var instance = (instr.ith === undefined) ? this : this.body[instr.ith];
 
-                if(method != 'progs')
+                if(method != 'prog')
                     instance[method](this.getVariable(instr[method]));
                 else
                     instance.modify(instr[method]);

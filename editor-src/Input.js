@@ -1,62 +1,50 @@
 
-function getCursorPos(input) {
-    return {
-        start: input.selectionStart,
-        end: input.selectionEnd
-    };
+function escapeHtml(unsafe) {
+	return unsafe
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
 }
 
-function setCursorPos(input, pos) {
-    setTimeout(function() {
-        input.selectionStart = pos;
-        input.selectionEnd = pos;
-    }, 1);
-}
-
-function insertPair(input, bracket, pos){
-    var cursorPos = getCursorPos(input),
-        input_str = input.value;
-
-    input.value = input_str.slice(0, cursorPos.start) + bracket + input_str.slice(cursorPos.start);
-    setCursorPos(input, cursorPos.start+pos);
-}
-
-function insertPairFromDict(strokeInput, event){
-    var complete_dict = {
-        "[" : ["[]", 1],
-        "'" : ['""', 1],
-        '"' : ['""', 1],
-        "{" : ['{}', 1],
-        "Enter":['\n\n', 1]
-    };
-
-    if(event.key in complete_dict){
-        event.preventDefault();
-        insertPair(strokeInput, complete_dict[event.key][0], complete_dict[event.key][1]);
-    }
-}
+function highlight(text){return text;}
 
 export default class Input{
 
     constructor(){
         this.input = document.getElementById('stroke-list');
+        this.init();
     }
 
-    init(func){
-        this.input.addEventListener('keypress', function(e){
+    init(){
+
+        var self = this;
+        for (let event in ['keyup', 'change']){
+            window.addEventListener("keyup", function(e){
+                self.highlight();
+                if(e.key==="Enter" && e.ctrlKey){
+                    func(self.input.value);
+                    return;
+                }            
+            });
+        }
+    }
+
+    highlight(){
+
+        this.input.style.height = this.input.scrollHeight;
+
+        var content = this.input.value;
+        var codeHolder = document.getElementById("code-display");
+        var escaped = escapeHtml(content);
         
-            if(e.key==="Enter" && e.ctrlKey){
-                func(this.input.value);
-                return;
-            }
-        
-            insertPairFromDict(this.input, e);
-        });
-        
-        this.input.focus();
+        codeHolder.innerHTML = highlight(escaped);
+
     }
 
     update(text){
         this.input.value = text;
+        this.highlight();
     }
 }

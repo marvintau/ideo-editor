@@ -19,30 +19,30 @@
     "-gou-left"  : {"type":"simple", "body":[{"len":1, "ang":-120}, {"len":2, "ang":-135}]},
     "-gou-up"    : {"type":"simple", "body":[{"len":3, "ang":-103}]},
 
-    "hengzhe-"        : {"type":"compound", "body":["heng", "-zhe-down"],                    "progs":[{"ith":0, "scale":0.9}, {"ith":1, "scale":0.9}]},
-    "henggou"         : {"type":"compound", "body":["heng", "-zhe-down"],                    "progs":[{"ith":0, "scale":1.2}, {"ith":1, "scale":0.8}]},
-    "hengzhe"         : {"type":"compound", "body":["heng", "shu"],                          "progs":[{"ith":0, "scale":0.9}, {"ith":1, "scale":0.9}]},
-    "hengzhegou"      : {"type":"compound", "body":["heng", "shu", "-gou-left"],             "progs":[{"ith":0, "scale":0.9}, {"ith":1, "scale":0.9}, {"ith":2, "scale":0.7}]},
-    "hengzhezhe"      : {"type":"compound", "body":["heng", "shu", "heng"],                  "progs":[{"ith":0, "scale":0.9}, {"ith":1, "scale":0.9}, {"ith":2, "scale":0.9}]},
-    "hengzhezhezhe"   : {"type":"compound", "body":["hengzhezhe", "shu"],                    "progs":[{"ith":0, "scale":0.9}, {"ith":1, "scale":0.9}]},
-    "hengzhezhepie"   : {"type":"compound", "body":["hengzhe-", "heng", "pie"],              "progs":[{"ith":1, "scale":0.5}, {"ith":2, "scale":1.3}]},
-    "hengzhezhezhegou": {"type":"compound", "body":["hengzhe-", "heng", "pie", "-gou-left"], "progs":[{"ith":1, "scale":0.5}, {"ith":2, "rotate":-30 }]},
-    "hengzhewangou"   : {"type":"compound", "body":["heng", "-xieshuwan2",  "-gou-up"],      "progs":[{"ith":0, "scale":0.9}, {"ith":1, "scale":1.9}]},
-    "hengshuwangou"   : {"type":"compound", "body":["heng", "-shuwan", "-gou-up"],           "progs":[{"ith":0, "scale":0.9}, {"ith":1, "scale":1.9}]},
-    "hengxiegou"      : {"type":"compound", "body":["heng", "xie", "-gou-up"    ],           "progs":[{"ith":0, "scale":0.9}, {"ith":1, "scale":1.1}]},
-    "shugou"          : {"type":"compound", "body":["shu",   "-gou-left"],                   "progs":[{"ith":0, "scale":1.2}, {"ith":1, "scale":0.8}]},
-    "shuzhe"          : {"type":"compound", "body":["shu",   "heng"],                        "progs":[{"ith":0, "scale":1.2}, {"ith":1, "scale":0.8}]},
-    "shuzhezhe"       : {"type":"compound", "body":["shuzhe", "shu"],                        "progs":[{"ith":0, "scale":1.2}, {"ith":1, "scale":0.8}]},
-    "shuzhezhegou"    : {"type":"compound", "body":["shuzhe", "pie", "-gou-left" ],          "progs":[{"ith":0, "scale":1.2}, {"ith":1, "rotate":-30 }]},
+    "hengzhe-"        : {"type":"compound", "body":["heng", "-zhe-down"],                    "prog":[{"ith":0, "scale":0.9}, {"ith":1, "scale":0.9}]},
+    "henggou"         : {"type":"compound", "body":["heng", "-zhe-down"],                    "prog":[{"ith":0, "scale":1.2}, {"ith":1, "scale":0.8}]},
+    "hengzhe"         : {"type":"compound", "body":["heng", "shu"],                          "prog":[{"ith":0, "scale":0.9}, {"ith":1, "scale":0.9}]},
+    "hengzhegou"      : {"type":"compound", "body":["heng", "shu", "-gou-left"],             "prog":[{"ith":0, "scale":0.9}, {"ith":1, "scale":0.9}, {"ith":2, "scale":0.7}]},
+    "hengzhezhe"      : {"type":"compound", "body":["heng", "shu", "heng"],                  "prog":[{"ith":0, "scale":0.9}, {"ith":1, "scale":0.9}, {"ith":2, "scale":0.9}]},
+    "hengzhezhezhe"   : {"type":"compound", "body":["hengzhezhe", "shu"],                    "prog":[{"ith":0, "scale":0.9}, {"ith":1, "scale":0.9}]},
+    "hengzhezhepie"   : {"type":"compound", "body":["hengzhe-", "heng", "pie"],              "prog":[{"ith":1, "scale":0.5}, {"ith":2, "scale":1.3}]},
+    "hengzhezhezhegou": {"type":"compound", "body":["hengzhe-", "heng", "pie", "-gou-left"], "prog":[{"ith":1, "scale":0.5}, {"ith":2, "rotate":-30 }]},
+    "hengzhewangou"   : {"type":"compound", "body":["heng", "-xieshuwan2",  "-gou-up"],      "prog":[{"ith":0, "scale":0.9}, {"ith":1, "scale":1.9}]},
+    "hengshuwangou"   : {"type":"compound", "body":["heng", "-shuwan", "-gou-up"],           "prog":[{"ith":0, "scale":0.9}, {"ith":1, "scale":1.9}]},
+    "hengxiegou"      : {"type":"compound", "body":["heng", "xie", "-gou-up"    ],           "prog":[{"ith":0, "scale":0.9}, {"ith":1, "scale":1.1}]},
+    "shugou"          : {"type":"compound", "body":["shu",   "-gou-left"],                   "prog":[{"ith":0, "scale":1.2}, {"ith":1, "scale":0.8}]},
+    "shuzhe"          : {"type":"compound", "body":["shu",   "heng"],                        "prog":[{"ith":0, "scale":1.2}, {"ith":1, "scale":0.8}]},
+    "shuzhezhe"       : {"type":"compound", "body":["shuzhe", "shu"],                        "prog":[{"ith":0, "scale":1.2}, {"ith":1, "scale":0.8}]},
+    "shuzhezhegou"    : {"type":"compound", "body":["shuzhe", "pie", "-gou-left" ],          "prog":[{"ith":0, "scale":1.2}, {"ith":1, "rotate":-30 }]},
     "shuwan"          : {"type":"compound", "body":["-shuwan"]},
     "shuwangou"       : {"type":"compound", "body":["-shuwan", "-gou-up"]},
-    "hengpie"         : {"type":"compound", "body":["heng"    ,"pie"],                       "progs":[{"ith":0, "scale":0.9}, {"ith":1,"scale":0.9}]},
-    "hengpiewan"      : {"type":"compound", "body":["hengpie" ,"wan"],                       "progs":[{"ith":0, "scale":0.8}, {"ith":1, "scale":0.9}]},
-    "piezhe"          : {"type":"compound", "body":["pie", "heng"],                          "progs":[{"ith":0, "rotate":-15}]},
-    "piedian"         : {"type":"compound", "body":["pie", "dian"],                          "progs":[{"ith":0, "rotate":-30}, {"ith":1, "rotate":-15, "scale":2.2}]},
+    "hengpie"         : {"type":"compound", "body":["heng"    ,"pie"],                       "prog":[{"ith":0, "scale":0.9}, {"ith":1,"scale":0.9}]},
+    "hengpiewan"      : {"type":"compound", "body":["hengpie" ,"wan"],                       "prog":[{"ith":0, "scale":0.8}, {"ith":1, "scale":0.9}]},
+    "piezhe"          : {"type":"compound", "body":["pie", "heng"],                          "prog":[{"ith":0, "rotate":-15}]},
+    "piedian"         : {"type":"compound", "body":["pie", "dian"],                          "prog":[{"ith":0, "rotate":-30}, {"ith":1, "rotate":-15, "scale":2.2}]},
     "xiegou"          : {"type":"compound", "body":["xie", "-gou-up"]},
-    "wogou"           : {"type":"compound", "body":["xiegou"],                               "progs":[{"ith":0, "rotate":-30}]},
-    "xieshu"          : {"type":"compound", "body":["shu"   ],                               "progs":[{"ith":0, "rotate":-30}]},
+    "wogou"           : {"type":"compound", "body":["xiegou"],                               "prog":[{"ith":0, "rotate":-30}]},
+    "xieshu"          : {"type":"compound", "body":["shu"   ],                               "prog":[{"ith":0, "rotate":-30}]},
     
     "女":{
         "type":"radical",
@@ -50,8 +50,11 @@
         "vars":{
             "heng-scale":{"desc":"横划比例", "range":{"max":2, "min":1}, "val":0.2},
             "heng-scale2":{"desc":"横划比例", "range":{"max":2, "min":1}, "val":"@'heng-scale'+1"}
-        },            
-        "progs":[
+        },
+        "cons":[
+            {"cross":{}}
+        ],
+        "prog":[
             {"ith":0, "scale":"heng-scale2", "rotate":0},
             {"ith":1, "scale":1.5, "rotate": -30},
             {"ith":2, "scale":1.5, "rotate":0},
@@ -61,7 +64,7 @@
 
     "木":{"type":"radical", "body":["heng", "shu", "pie", "na"],
         
-        "progs":[
+        "prog":[
             {"ith":1, "scale":1.3},
             {"cross":{"dest":{"ith":0, "curve":0, "r":0.45}, "self":{"ith":1, "curve":0, "r":0.2}}},
             {"ith":2, "scale":1, "rotate":-10},
@@ -72,8 +75,8 @@
     "日":{
         "type":"radical",
         "body":["shu", "hengzhe", "heng", "heng"],
-        "progs":[
-            {"ith":1, "progs":[{"ith":0, "scale":0.6}, {"ith":1, "scale":1.1}]},
+        "prog":[
+            {"ith":1, "prog":[{"ith":0, "scale":0.6}, {"ith":1, "scale":1.1}]},
             {"ith":2, "scale":0.4},
             {"ith":3, "scale":0.5},
             {"cross":{"dest":{"ith":0, "curve":0, "r":0.42}, "self":{"ith":2, "curve":0, "r":0}}},
@@ -82,9 +85,9 @@
     "月":{
         "type":"radical",
         "body":["shupie", "hengzhegou", "heng", "heng"],
-        "progs":[
+        "prog":[
             {"ith":0, "scale":1.1, "rotate":2},
-            {"ith":1, "progs":[{"ith":0, "scale":0.4}, {"ith":1, "scale":1}]},
+            {"ith":1, "prog":[{"ith":0, "scale":0.4}, {"ith":1, "scale":1}]},
             {"ith":2, "scale":0.27},
             {"ith":3, "scale":0.27},
             {"cross":{"dest":{"ith":0, "curve":0, "r":0.24}, "self":{"ith":2, "curve":0, "r":0}}},
@@ -93,8 +96,8 @@
     "目":{
         "type":"radical",
         "body":["shu", "hengzhe", "heng", "heng", "heng"],
-        "progs":[
-            {"ith":1, "progs":[{"ith":0, "scale":0.6}, {"ith":1, "scale":1.1}]},
+        "prog":[
+            {"ith":1, "prog":[{"ith":0, "scale":0.6}, {"ith":1, "scale":1.1}]},
             {"ith":2, "scale":0.4},
             {"ith":3, "scale":0.4},
             {"ith":4, "scale":0.5},
@@ -106,12 +109,12 @@
     "世":{
         "type":"radical",
         "body":["heng", "shu", "shu", "heng", "shuzhe"],
-        "progs":[
+        "prog":[
             {"ith":0, "scale":1.5},
             {"ith":1, "scale":1},
             {"ith":2, "scale":1},
             {"ith":3, "scale":0.35},
-            {"ith":4, "progs":[{"ith":0, "scale":0.95}, {"ith":1, "scale":1.2}]},
+            {"ith":4, "prog":[{"ith":0, "scale":0.95}, {"ith":1, "scale":1.2}]},
             {"cross":{"dest":{"ith":0, "curve":0, "r":0.42},  "self":{"ith":1, "curve":0, "r":0.5}}},
             {"cross":{"dest":{"ith":0, "curve":0, "r":0.7}, "self":{"ith":2, "curve":0, "r":0.5}}},
             {"cross":{"dest":{"ith":1, "curve":0, "r":0.85}, "self":{"ith":3, "curve":0, "r":0}}},

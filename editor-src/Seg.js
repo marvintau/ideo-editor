@@ -57,11 +57,11 @@ export default class Seg extends CurveStructureBase{
         this.update();
     }
 
-    modify(progs){
+    modify(prog){
 
-        if(progs === undefined) progs = this.progs;
+        if(prog === undefined) prog = this.prog;
 
-        for(let instr of progs){
+        for(let instr of prog){
             switch(Object.keys(instr)[0]){
                 case "trans":
                     this.trans(instr.trans);
@@ -112,7 +112,7 @@ export function testSeg(ctx){
     var number = 61;
     var body = range(number, (e) => new Seg({len:10, ang:0}));
     for(let i = 0; i < number; i++){
-        body[i].progs = [
+        body[i].prog = [
             {"trans":{x:10*i, y:10*i}},
             {"rotate":{"theta":3*i}},
             {"scale":{"ratio":1+i*0.25}}

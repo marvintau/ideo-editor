@@ -41,7 +41,6 @@ function findMinMax(data, func){
 export default class StrokeSet extends CurveStructureBase{
     
     constructor(spec) {
-        // console.log("strokeset constructor", spec);
         super(CompoundCurve, spec);
         this.modify();
     }

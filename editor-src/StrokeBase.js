@@ -1,6 +1,6 @@
 import Input from "./Input.js";
-
 import StrokeSet from "./StrokeSet.js";
+import {fromJSONObject, toJSONText} from "./ION.js";
 
 function dup(json){
     return JSON.parse(JSON.stringify(json));
@@ -70,7 +70,8 @@ export default class StrokeBase {
     }
 
     getStrokeSpecText(strokeName){
-        return JSON.stringify(this.base[strokeName], null, 4);
+        console.log(JSON.stringify(this.base[strokeName], null, 4));
+        return fromJSONObject(this.base[strokeName]);
     }
 
     getStrokeSpec(strokeName){
