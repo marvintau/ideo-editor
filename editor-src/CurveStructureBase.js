@@ -106,7 +106,6 @@ export default class CurveStructureBase{
         // executed, except what specified in its prog, and vice
         // versa.
 
-        console.log(prog);
         for (let instr of prog){
 
             // apply all operations at this level. this can be

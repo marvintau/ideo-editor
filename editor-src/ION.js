@@ -140,15 +140,13 @@ export function toJSONText(text){
 
         var lineIndent = lines[i].search(/\S|$/);
         while (stack.length > 0 && stack[stack.length - 1].indent >= lineIndent){
-            var added = returnRightBracket(stack);
-            if (added != "") console.log("curr", lineIndent, "stack", stack.last().indent, "added",added, "to", resultText.length);
             resultText += returnRightBracket(stack);
             stack.pop();
         }
 
         currIndent = 0;
         var currLineRem = lines[i];
-        console.log(currLineRem);
+        
         while(currLineRem.length > 0){
             switch(currLineRem[0]){
                 case " ":

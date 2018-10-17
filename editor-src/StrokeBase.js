@@ -40,9 +40,9 @@ export default class StrokeBase {
     constructor(ctx){
         this.base  = {};
         this.ctx   = ctx;
-        this.input = new Input();
+        this.input = new Input(this);
+        this.currCharName = "";
     }
-    
 
     updateBase(){
         loadStrokeBase()
@@ -62,11 +62,20 @@ export default class StrokeBase {
 
             p.onclick = function(e){
                 this.getStroke(char);
+                this.currCharName = char;
                 this.input.update(this.getStrokeSpecText(char));
             }.bind(this);
 
             CharUI.appendChild(p);
         }
+    }
+
+    submit(){
+        var updatedSpec = JSON.parse(toJSONText(document.getElementById("stroke-list").value));
+        console.log(this.base[this.currCharName], updatedSpec);
+        this.base[this.currCharName] = updatedSpec;
+        // this.updateStroke(this.currCharName, updatedSpec);
+        this.getStroke(this.currCharName);
     }
 
     getStrokeSpecText(strokeName){
@@ -75,9 +84,9 @@ export default class StrokeBase {
 
     getStrokeSpec(strokeName){
     
-        var self = this;
-        var stroke = dup(this.base[strokeName]);
-        
+        var self = this,
+            stroke = dup(this.base[strokeName]);
+    
         switch(stroke.type){
             case "radical":
                 stroke.body = stroke.body.reduce(function(list, elem){
@@ -100,6 +109,13 @@ export default class StrokeBase {
         }
     }
     
+    updateStroke(char, spec){
+        console.log("update", spec);
+        var stroke = new StrokeSet(spec);
+        stroke.draw(this.ctx);
+        stroke.findCenterRect(this.ctx, 10);
+        stroke.findCentroid(this.ctx, 15);
+    }
     
     getStroke(char){
         console.clear();

@@ -1,29 +1,22 @@
 import {highlightION, toJSONText} from "./ION.js";
 
-function escapeHtml(unsafe) {
-	return unsafe
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-}
 
 export default class Input{
 
-    constructor(){
+    constructor(strokeBase){
         this.input = document.getElementById('stroke-list');
+        this.strokeBase = strokeBase;
         this.init();
     }
 
     init(){
 
         var self = this;
-        for (let event in ['keyup', 'change']){
+        for (let event of ['keyup', 'change']){
             window.addEventListener("keyup", function(e){
                 self.highlight();
                 if(e.key==="Enter" && e.ctrlKey){
-                    func(self.input.value);
+                    self.strokeBase.submit(self.input.value);
                     return;
                 }            
             });
@@ -43,7 +36,5 @@ export default class Input{
     update(text){
         this.input.value = text;
         this.highlight();
-        console.log(toJSONText(text));
-        console.log(JSON.parse(toJSONText(text)));
     }
 }
