@@ -59,6 +59,20 @@ export default class Vec{
     }
 
     /**
+     * returns the cross product between this and vec.
+     * also is the result of det
+     * 
+     * |this.x   that.x|
+     * |               |
+     * |this.y   that.y|
+     * 
+     * @param {Vec} that another vector
+     */
+    cross(that){
+        return this.x * that.y - that.x * this.y;
+    }
+
+    /**
      * head: returns the most left-top vector between two.
      * @param {Vec} vec another vector
      * @returns {Vec}

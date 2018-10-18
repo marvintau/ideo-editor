@@ -72,9 +72,7 @@ export default class StrokeBase {
 
     submit(){
         var updatedSpec = JSON.parse(toJSONText(document.getElementById("stroke-list").value));
-        console.log(this.base[this.currCharName], updatedSpec);
         this.base[this.currCharName] = updatedSpec;
-        // this.updateStroke(this.currCharName, updatedSpec);
         this.getStroke(this.currCharName);
     }
 
@@ -109,18 +107,11 @@ export default class StrokeBase {
         }
     }
     
-    updateStroke(char, spec){
-        console.log("update", spec);
-        var stroke = new StrokeSet(spec);
-        stroke.draw(this.ctx);
-        stroke.findCenterRect(this.ctx, 10);
-        stroke.findCentroid(this.ctx, 15);
-    }
-    
     getStroke(char){
-        console.clear();
+        // console.clear();
         var strokeSpec = this.getStrokeSpec(char);
         var stroke = new StrokeSet(strokeSpec);
+        console.log("strokeSpec", strokeSpec);
         stroke.draw(this.ctx);
         stroke.findCenterRect(this.ctx, 10);
         stroke.findCentroid(this.ctx, 15);

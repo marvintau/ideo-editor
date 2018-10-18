@@ -130,8 +130,8 @@ function returnRightBracket(stack){
 //  end with space or comma.
 export function toJSONText(text){
     
-    var lines = text.split("\n").filter(e => e.length > 0);
-
+    var lines = text.split("\n").filter(e => !e.match(/^\s*$/));
+    console.log(lines);
     var resultText = "",
         stack      = [],
         currIndent = 0;

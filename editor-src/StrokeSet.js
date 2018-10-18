@@ -43,6 +43,7 @@ export default class StrokeSet extends CurveStructureBase{
     constructor(spec) {
         super(CompoundCurve, spec);
         this.modify();
+        this.cons(spec);
     }
 
     cross(spec){
@@ -51,6 +52,67 @@ export default class StrokeSet extends CurveStructureBase{
             pointSelf = this.body[spec.self.ith].at(spec.self);
 
         this.body[spec.self.ith].trans(pointDest.sub(pointSelf));
+    }
+
+    cons(spec){
+        var cons = (spec.cons === undefined) ? {} : spec.cons;
+        var consVars = {};
+
+        var result = true;
+        for (let cond of cons)
+            for (let method in cond){
+                console.log(method);
+                result &= this["cons_"+method](cond[method], consVars);
+            }
+        console.log("consVars", consVars);
+        return result;
+    }
+
+    cons_len(spec, consVars){
+        if (spec.ith === undefined)
+        throw {type :"TypeError", message:"ConsComp: You must specify which stroke."};
+        if (spec.to === undefined)
+        throw {type :"TypeError", message:"ConsComp: You must specify the variable to store."};
+
+        consVars[spec.to] = (spec.curve === undefined) ? this.body[spec.ith].len() : this.body[spec.ith].body[spec.curve].len();
+
+        return true;
+    }
+
+    cons_comp(consCompSpec, consVars){
+        if (consCompSpec.self === undefined ||
+            consCompSpec.is   === undefined ||
+            consCompSpec.to   === undefined)
+            throw {type :"TypeError", message:"ConsComp: invalid Object format of consComp."};
+        if (consVars[consCompSpec.self] === undefined)
+            throw {type :"ValueError", message:"ConsComp: given variable name not found in variable list"};
+        if (typeof consVars[consCompSpec.self] !== 'number' || typeof consCompSpec.to !== 'number')
+            throw {type :"ValueError", message:"ConsComp: the type of operand must be number"};
+        
+        var operators = {">":0, ">=":0, "<":0, "<=":0, "==":0, "!=":0}
+        if(!(consCompSpec.is in operators))
+            throw {type :"ValueError", message:"ConsComp: unsupported operator"};
+
+        return eval(" " + consVars[consCompSpec.self] + " " + consCompSpec.is +" "+ consCompSpec.to);
+    }
+
+    cons_cross(consCrossSpec, consVars){
+        if( consCrossSpec          === undefined ||
+            consCrossSpec.self     === undefined ||
+            consCrossSpec.dest     === undefined ||
+            consCrossSpec.self.ith === undefined ||
+            consCrossSpec.dest.ith === undefined)
+            throw {type:"TypeError", message:"invalid object format of consCross."};
+        var selfSpec  = consCrossSpec.self,
+            selfCurve = this.body[selfSpec.ith].body[selfSpec.curve],
+            destSpec  = consCrossSpec.dest,
+            destCurve = this.body[destSpec.ith].body[destSpec.curve],
+            result    = selfCurve.cross(destCurve);
+        
+        consVars[selfSpec.to] = result.s,
+        consVars[destSpec.to] = result.t;
+
+        return true;
     }
 
     // Stroke set contains strokes that starting from different

@@ -49,6 +49,10 @@ export default class CurveStructureBase{
         this.update();
     }
 
+    len(){
+        return this.body.reduce((l, e) => l + e.len(), 0);
+    }
+
     /**
      * get variable from variable table.
      * if the parameter is a number, then just return itself.
@@ -124,6 +128,7 @@ export default class CurveStructureBase{
 
         this.update();
     }
+
 
     ith() {/*dummy*/}
 

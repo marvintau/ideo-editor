@@ -14,11 +14,11 @@ export default class Input{
         var self = this;
         for (let event of ['keyup', 'change']){
             window.addEventListener("keyup", function(e){
-                self.highlight();
                 if(e.key==="Enter" && e.ctrlKey){
-                    self.strokeBase.submit(self.input.value);
-                    return;
-                }            
+                    self.strokeBase.submit(self.input.value); return;
+                } else {
+                    self.highlight();
+                }          
             });
         }
     }

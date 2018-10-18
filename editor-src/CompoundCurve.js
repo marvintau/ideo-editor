@@ -10,7 +10,6 @@ export default class CompoundCurve extends CurveStructureBase{
     constructor(spec) {
         super(Curve, spec);
         this.update();
-        console.log(this.body);
     }
 
     at(spec){

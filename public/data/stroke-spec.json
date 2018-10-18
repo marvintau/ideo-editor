@@ -48,14 +48,15 @@
         "type":"radical",
         "body":["piedian", "wanpie", "heng"],
         "vars":{
-            "heng-scale":{"desc":"横划比例", "range":{"max":2, "min":1}, "val":0.2},
-            "heng-scale2":{"desc":"横划比例", "range":{"max":2, "min":1}, "val":"@'heng-scale'+1"}
+            "heng-scale":{"desc":"横划比例", "range":{"max":2, "min":1}, "val":1.2}
         },
         "cons":[
-            {"cross":{}}
+            {"cross":{"dest":{"ith":0, "curve":1, "to":"ds"}, "self":{"ith":1, "curve":0, "to":"ss"}}},
+            {"comp":{"self":"ds", "is":">", "to":0.1}},
+            {"len":{"ith":0, "curve":0, "to":"ln"}}
         ],
         "prog":[
-            {"ith":0, "scale":"heng-scale2", "rotate":0},
+            {"ith":0, "scale":"heng-scale", "rotate":0},
             {"ith":1, "scale":1.5, "rotate": -30},
             {"ith":2, "scale":1.5, "rotate":0},
             {"cross":{"dest":{"ith":0, "curve":1, "r":0.45}, "self":{"ith":1, "curve":0, "r":0.5}}},

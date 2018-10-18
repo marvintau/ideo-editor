@@ -102,6 +102,22 @@ export default class Seg extends CurveStructureBase{
         }
         return points;
     }
+
+    /**
+     * returns the condition of intersecting with another segment
+     * @param {Seg} seg another seg
+     */
+    cross(that){
+        var det_s = that.head.sub(that.tail).cross(that.head.sub(this.head)),
+            det_t = this.head.sub(this.tail).cross(that.head.sub(this.head)),
+            det   = that.head.sub(that.tail).cross(this.tail.sub(this.head));
+
+        var s = det_s/det,
+            t = det_t/det;
+
+        return {s:s, t:t};
+    }
+
 }
 
 import {range} from "./Util.js"
