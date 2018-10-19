@@ -55,7 +55,7 @@ export default class StrokeSet extends CurveStructureBase{
     }
 
     cons(spec){
-        var cons = (spec.cons === undefined) ? {} : spec.cons;
+        var cons = (spec.cons === undefined) ? [] : spec.cons;
         var consVars = {};
 
         var result = true;

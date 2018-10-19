@@ -27,17 +27,18 @@ export default class Curve extends CurveStructureBase{
     }
 
     at(ithRatio){
-        
-        var point = this.head.copy();
 
-        var currSeg;
+        var point = this.head.copy();
         
+        var temp = [point].concat(this.body.reduce((s, e) => s.concat([e.head, e.tail]), []));
+        console.log(temp);
+
         var totalLen = this.body.reduce((sum, e) => sum + e.len, 0), 
             ratioLen = ithRatio * totalLen,
             currSeg  = this.body[0],
             currLen  = 0;
 
-        for(let i = 0; i < this.body.length-1; i++){
+        for(let i = 0; i < this.body.length; i++){
 
             if (currSeg.len + currLen > ratioLen) break;
 
