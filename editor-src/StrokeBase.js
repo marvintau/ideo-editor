@@ -35,6 +35,32 @@ function loadStrokeBase () {
     });
 }
 
+function saveStrokeBase(payload) {
+    return new Promise(function (resolve, reject) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', "save", true);
+        xhr.setRequestHeader('content-type', 'application/json');
+
+        xhr.onload = function () {
+            if (this.status >= 200 && this.status < 300) {
+                resolve(xhr.response);
+            } else {
+                reject({
+                    status: this.status,
+                    statusText: xhr.statusText
+                });
+            }
+        };
+        xhr.onerror = function () {
+            reject({
+                status: this.status,
+                statusText: xhr.statusText
+            });
+        };
+        xhr.send(payload);
+    });
+}
+
 export default class StrokeBase {
 
     constructor(ctx){
@@ -58,7 +84,7 @@ export default class StrokeBase {
         for(let char in chars) if (chars[char].type == "radical") {
             var p = document.createElement('button')
             p.appendChild(document.createTextNode(char));
-            p.classList.add('char-button');
+            p.classList.add('char-button'); 
 
             p.onclick = function(e){
                 this.getStroke(char);
@@ -71,13 +97,32 @@ export default class StrokeBase {
     }
 
     submit(){
-        var updatedSpec = JSON.parse(toJSONText(document.getElementById("stroke-list").value));
+        var text = document.getElementById("stroke-list").value;
+        var updatedSpec = JSON.parse(toJSONText(text));
         this.base[this.currCharName] = updatedSpec;
         this.getStroke(this.currCharName);
+        this.base[this.currCharName].text = text;
+    }
+
+    save(){
+        var stringified = JSON.stringify(this.base, null, 2);
+        saveStrokeBase(stringified).then(function(e){
+            console.log("persisted");
+        }).catch(function(e){
+            console.log("error", e);
+        });
     }
 
     getStrokeSpecText(strokeName){
-        return fromJSONObject(this.base[strokeName]);
+
+        var text = "";
+        if (this.base[strokeName].text === undefined){
+            text = fromJSONObject(this.base[strokeName]);
+        } else {
+            text = this.base[strokeName].text;
+        }
+
+        return text;
     }
 
     getStrokeSpec(strokeName){

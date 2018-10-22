@@ -9,7 +9,7 @@ import Box from "./Box.js";
 // only for saving indentation 
 function forAllKernelSize(width, height, step, func){
     for (let h = step; h <= height; h += step)
-        for (let w = 0.5*h; w <= 0.66*h; w += step) 
+        for (let w = 0.5*h; w <= h; w += step) 
             func(w, h);
 }
 
@@ -156,7 +156,7 @@ export default class StrokeSet extends CurveStructureBase{
             comp.head = comp.head.mult(ratio);
         }
 
-        this.scale(ratio * 0.9);
+        this.scale(ratio);
         this.update();
     }
 
@@ -174,10 +174,12 @@ export default class StrokeSet extends CurveStructureBase{
         this.stretchFull(ctx);
         this.transCenter(ctx);
         
-        ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-
+        ctx.clearRect(-100, -100, ctx.canvas.width+200, ctx.canvas.height+200);
+        ctx.setTransform(1,0,0,1,0,0);   // reset matrix
+        ctx.translate(ctx.canvas.width*0.05, ctx.canvas.height*0.05)
+        ctx.scale(0.9, 0.9);
+        
         ctx.lineWidth = 25;
-        ctx.lineCap = "square";
         ctx.lineJoin = "round";
         ctx.strokeStyle = "rgb(0, 0, 0, 0.5)";
 

@@ -28,29 +28,23 @@ export default class Curve extends CurveStructureBase{
 
     at(ithRatio){
 
-        var point = this.head.copy();
-        
-        var temp = [point].concat(this.body.reduce((s, e) => s.concat([e.head, e.tail]), []));
-        console.log(temp);
-
-        var totalLen = this.body.reduce((sum, e) => sum + e.len, 0), 
+        var totalLen = this.body.reduce((sum, e) => sum + e.len, 0),
             ratioLen = ithRatio * totalLen,
-            currSeg  = this.body[0],
-            currLen  = 0;
+            currLen  = 0,
+            currSeg  = null;
 
-        for(let i = 0; i < this.body.length; i++){
-
-            if (currSeg.len + currLen > ratioLen) break;
-
-            currSeg  = this.body[i];
-            point    = currSeg.tail;
-            currLen += currSeg.len;
-
+        for(var i = 0; i < this.body.length; i++){
+            
+            currSeg = this.body[i];
+            if (currLen + currSeg.len >= ratioLen) break;
+            currLen   += this.body[i].len;
         }
 
-        point = point.add((new Vec(currSeg.ang)).mult(ratioLen - currLen));
-
-        return point;
+        var segRatio = (ratioLen - currLen)/currSeg.len,
+            finalSeg = currSeg.tail.sub(currSeg.head).mult(segRatio);
+        
+        console.log(segRatio);
+        return currSeg.head.add(finalSeg);
     }
 
     /**

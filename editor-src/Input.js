@@ -12,15 +12,18 @@ export default class Input{
     init(){
 
         var self = this;
-        for (let event of ['keyup', 'change']){
-            window.addEventListener("keyup", function(e){
-                if(e.key==="Enter" && e.ctrlKey){
-                    self.strokeBase.submit(self.input.value); return;
-                } else {
-                    self.highlight();
-                }          
-            });
-        }
+
+        window.addEventListener("keyup", function(e){
+            if(e.key==="Enter" && e.ctrlKey && e.shiftKey){
+                self.strokeBase.submit(self.input.value);
+                self.strokeBase.save();
+            } else if(e.key==="Enter" && e.ctrlKey){
+                self.strokeBase.submit(self.input.value);
+            } else {
+                self.highlight();
+            }          
+        });
+
     }
 
     highlight(){
