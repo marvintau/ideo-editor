@@ -6,30 +6,25 @@ import CompoundCurve from "./CompoundCurve.js";
 import {flatten} from "./Util.js";
 import Box from "./Box.js";
 
-// only for saving indentation 
-function forAllKernelSize(width, height, step, func){
-    for (let h = step; h <= height; h += step)
-        for (let w = 0.5*h; w <= h; w += step) 
-            func(w, h);
-}
 
-function findMinMax(data, func){
-    var min =  10000,
-        max = -10000,
-        minIndex = 0,
-        maxIndex = 0;
-
-    var p = (func === undefined) ? data : data.map(func);
-    for (let i in p)
-        if(p[i] > max) {
-            max = p[i]; maxIndex = i;
-        } else if (p[i] < min) {
-            min = p[i]; minIndex = i;
+function pixelDensity(imageData){
+    var width   = imageData.width * 4,
+        height  = imageData.height,
+        data    = imageData.data,
+        centerX = 0,
+        centerY = 0,
+        sum     = 0;
+    for (let row = 0; row < height; row ++)
+    for (let col = 0; col < width;  col += 4){
+        if(data[row * width + col] > 0){
+            centerX += col;
+            centerY += row;
+            sum += 1;
         }
-
+    }
     return {
-        max : parseInt(maxIndex),
-        min : parseInt(minIndex)
+        density: sum / Math.pow(Math.hypot(width, height), 1.125),
+        centroid: new Vec(centerX/4/sum, centerY/sum)
     };
 }
 
@@ -42,8 +37,8 @@ export default class StrokeSet extends CurveStructureBase{
     
     constructor(spec) {
         super(CompoundCurve, spec);
+        console.log(spec.vars);
         this.modify();
-        this.cons(spec);
     }
 
     cross(spec){
@@ -52,67 +47,6 @@ export default class StrokeSet extends CurveStructureBase{
             pointSelf = this.body[spec.self.ith].at(spec.self);
 
         this.body[spec.self.ith].trans(pointDest.sub(pointSelf));
-    }
-
-    cons(spec){
-        var cons = (spec.cons === undefined) ? [] : spec.cons;
-        var consVars = {};
-
-        var result = true;
-        for (let cond of cons)
-            for (let method in cond){
-                console.log(method);
-                result &= this["cons_"+method](cond[method], consVars);
-            }
-        console.log("consVars", consVars);
-        return result;
-    }
-
-    cons_len(spec, consVars){
-        if (spec.ith === undefined)
-        throw {type :"TypeError", message:"ConsComp: You must specify which stroke."};
-        if (spec.to === undefined)
-        throw {type :"TypeError", message:"ConsComp: You must specify the variable to store."};
-
-        consVars[spec.to] = (spec.curve === undefined) ? this.body[spec.ith].len() : this.body[spec.ith].body[spec.curve].len();
-
-        return true;
-    }
-
-    cons_comp(consCompSpec, consVars){
-        if (consCompSpec.self === undefined ||
-            consCompSpec.is   === undefined ||
-            consCompSpec.to   === undefined)
-            throw {type :"TypeError", message:"ConsComp: invalid Object format of consComp."};
-        if (consVars[consCompSpec.self] === undefined)
-            throw {type :"ValueError", message:"ConsComp: given variable name not found in variable list"};
-        if (typeof consVars[consCompSpec.self] !== 'number' || typeof consCompSpec.to !== 'number')
-            throw {type :"ValueError", message:"ConsComp: the type of operand must be number"};
-        
-        var operators = {">":0, ">=":0, "<":0, "<=":0, "==":0, "!=":0}
-        if(!(consCompSpec.is in operators))
-            throw {type :"ValueError", message:"ConsComp: unsupported operator"};
-
-        return eval(" " + consVars[consCompSpec.self] + " " + consCompSpec.is +" "+ consCompSpec.to);
-    }
-
-    cons_cross(consCrossSpec, consVars){
-        if( consCrossSpec          === undefined ||
-            consCrossSpec.self     === undefined ||
-            consCrossSpec.dest     === undefined ||
-            consCrossSpec.self.ith === undefined ||
-            consCrossSpec.dest.ith === undefined)
-            throw {type:"TypeError", message:"invalid object format of consCross."};
-        var selfSpec  = consCrossSpec.self,
-            selfCurve = this.body[selfSpec.ith].body[selfSpec.curve],
-            destSpec  = consCrossSpec.dest,
-            destCurve = this.body[destSpec.ith].body[destSpec.curve],
-            result    = selfCurve.cross(destCurve);
-        
-        consVars[selfSpec.to] = result.s,
-        consVars[destSpec.to] = result.t;
-
-        return true;
     }
 
     // Stroke set contains strokes that starting from different
@@ -174,18 +108,19 @@ export default class StrokeSet extends CurveStructureBase{
         this.stretchFull(ctx);
         this.transCenter(ctx);
         
-        ctx.clearRect(-100, -100, ctx.canvas.width+200, ctx.canvas.height+200);
+        ctx.fillStyle = "black";
+        ctx.fillRect(-100, -100, ctx.canvas.width+200, ctx.canvas.height+200);
         ctx.setTransform(1,0,0,1,0,0);   // reset matrix
         ctx.translate(ctx.canvas.width*0.05, ctx.canvas.height*0.05)
         ctx.scale(0.9, 0.9);
         
-        ctx.lineWidth = 25;
+        ctx.lineWidth = 2;
+        ctx.lineCap = "square";
         ctx.lineJoin = "round";
-        ctx.strokeStyle = "rgb(0, 0, 0, 0.5)";
+        ctx.strokeStyle = "rgb(255, 255, 255, 1)";
 
         // ctx.translate(600, 30);
         for(let component of this.body){
-            component.head.draw(ctx);
             ctx.beginPath();
             ctx.moveTo(component.head.x, component.head.y);
             component.draw(ctx);
@@ -194,91 +129,40 @@ export default class StrokeSet extends CurveStructureBase{
 
     }
 
-    sample(step){
-        return this.body.reduce(function(list, comp){
-            return list.concat(comp.sample(step));
-        }, []);
+    findSubdivision(ctx){
+
     }
 
-    findCentroid(ctx){
+    findCenterRect(ctx){
 
-        var pointSet = this.sample(25);
-        var flattenPoints = flatten(pointSet),
-            centroid = new Vec();
-        for (let p of flattenPoints){
-            centroid = centroid.add(p);
-        }
-        centroid = centroid.mult(1/flattenPoints.length);
-        console.log("centroid: ", centroid);
-        centroid.draw(ctx, 10, "red");
-    }
+        var ss = performance.now();
+        var width  = ctx.canvas.width,
+            height = ctx.canvas.height,
+            canvasData = ctx.getImageData(0, 0, width, height),
+            canvasDensity = pixelDensity(canvasData),
+            canvasCentroid = canvasDensity.centroid;
 
-    findCenterRect(ctx, step){
-        var points = flatten(this.sample(25));
-        var width = ctx.canvas.width,
-            height = ctx.canvas.height;
-    
-        var maxRange = 0,
-            box = new Box(),
-            maxRangeMaxBox = new Box();
-        
-        // var nums, mean, dev;
-        
-        // enumerate all possible sizes of box rectangle
-    
-        var ts = performance.now();
-        // any criteria for the shape of box can be specified here.
-        forAllKernelSize(width, height, step, function(w, h){
-            // for all positions
-            var pointNum = [];
-            for(let x = 0; x + w <= width; x += step)
-                for(let y = 0; y + h <= height; y += step){
-                    box.set(x, y, w, h);
-                    pointNum.push(points.filter( point => box.include(point)).length);
-                }
+        var data, result, resultMax = {density: 0};
+        for (let r = 0.02; r < 1; r += 0.02){
+            var sx = canvasCentroid.x * (1-r),
+                sy = canvasCentroid.y * (1-r),
+                sw = width * r,
+                sh = height * r;
 
-            var res = findMinMax(pointNum);
-            var range = (pointNum.length != 0) ? pointNum[res.max] - pointNum[res.min] : 0;
-            
-            if (range >= maxRange) {
-                maxRange = range;
-
-                var hstep = (height-h)/step,
-                    maxX = Math.ceil(res.max/hstep),
-                    maxY = maxX*hstep - res.max;
-                
-                maxRangeMaxBox.set((maxX-2)*step, (maxY)*step, w, h);
-
-                // maxRangeMaxBox.draw(ctx);
-                // nums = pointNum.map(e => e.p),
-                // mean = nums.reduce((s, e) => s+e) / nums.length,
-                // dev  = nums.map(e => Math.abs(e - mean)).reduce((s, e) => s+e) / nums.length;
+            data = ctx.getImageData( sx, sy, sw, sh);
+            result = pixelDensity(data);
+            if(result.density > resultMax.density){
+                resultMax = result;
+                resultMax.r = r;
             }
-        })
-    
-        maxRangeMaxBox.draw(ctx);
-        console.log("finding rect takes: ", (performance.now() - ts)*0.001 , "secs");
-        console.log("rect ", maxRangeMaxBox);
-        return maxRangeMaxBox;
+            result.centroid.add(new Vec(sx, sy)).draw(ctx);
+        }
+
+        resultMax.centroid = resultMax.centroid.add(new Vec(sx, sy));
+        ctx.fillStyle = "rgb(255, 255, 255, 0.5)";
+        ctx.fillRect( canvasCentroid.x * (1-resultMax.r), canvasCentroid.y * (1-resultMax.r), width * resultMax.r, height * resultMax.r);
+
+        var tt = performance.now();
+        return resultMax;
     }
-}
-
-
-export function testStrokeSet(ctx, spec){
-    var strokeSet = new StrokeSet(spec);
-    console.log(strokeSet);
-
-    ctx.lineWidth = 1;
-    strokeSet.draw(ctx);
-    strokeSet.sample(15);
-
-    for (let s of strokeSet.samples)
-        for (let p of s)
-            p.draw(ctx, 5);
- 
-    var t1 = performance.now()
-    findCenterRect(ctx, strokeSet.samples, 20);
-    console.log("centerrect found in:", (performance.now() - t1)*0.001, "secs") ;
-
-    findCentroid(ctx, strokeSet.samples, 150);
 }

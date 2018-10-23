@@ -6,6 +6,62 @@ function dup(json){
     return JSON.parse(JSON.stringify(json));
 }
 
+function getStrokeSpec(strokeName, base){
+    
+    var stroke = dup(base[strokeName]);
+
+    switch(stroke.type){
+        case "radical":
+            stroke.body = stroke.body.reduce(function(list, elem){
+                var strokeElem = getStrokeSpec(elem, base);
+                return (strokeElem.type == "radical") ? list.concat(strokeElem.body) : list.concat(strokeElem);
+            }, []);
+            return stroke;
+        case "compound":
+            stroke.body = stroke.body.reduce(function(list, elem){
+                var strokeElem = getStrokeSpec(elem, base);
+
+                // a note about recursive call:
+                // by this point, all elements in strokeElem body has been found.
+                // the lower level of flattening has been done in previous calls.
+                return (strokeElem.type == "compound") ? list.concat(strokeElem.body) : list.concat(strokeElem);
+            }, []);
+            return stroke;
+        case "simple":
+            return {type:"compound", body:[stroke]};
+    }
+}
+
+function addSlider(name, variable, func){
+    var x = document.createElement("INPUT");
+    x.setAttribute("type", "range");
+    x.classList.add("slider");
+
+    x.setAttribute("name", name);
+    x.setAttribute("min", variable.range.min);
+    x.setAttribute("max", variable.range.max);
+    x.setAttribute("value", variable.val);
+    x.setAttribute("step", 0.01);
+    x.addEventListener('input', func);
+    x.addEventListener('change', func);
+
+    return x;
+}
+
+function addLabel(name){
+    var x = document.createElement('label');
+    x.innerHTML = name;
+    x.setAttribute('for', name);
+    return x;
+}
+
+function addInput(name, variable, func){
+    var x = document.createElement("div");
+    x.appendChild(addLabel(name));
+    x.appendChild(addSlider(name, variable, func));
+    return x;
+}
+
 /**
  * load stroke base specification JSON from server
  */
@@ -68,6 +124,7 @@ export default class StrokeBase {
         this.ctx   = ctx;
         this.input = new Input(this);
         this.currCharName = "";
+        this.currStrokeSpec = {};
     }
 
     updateBase(){
@@ -113,6 +170,10 @@ export default class StrokeBase {
         });
     }
 
+    getStrokeSpec(strokeName){
+        this.currStrokeSpec = getStrokeSpec(strokeName, this.base);
+    }
+
     getStrokeSpecText(strokeName){
 
         var text = "";
@@ -125,40 +186,31 @@ export default class StrokeBase {
         return text;
     }
 
-    getStrokeSpec(strokeName){
     
-        var self = this,
-            stroke = dup(this.base[strokeName]);
-    
-        switch(stroke.type){
-            case "radical":
-                stroke.body = stroke.body.reduce(function(list, elem){
-                    var strokeElem = self.getStrokeSpec(elem);
-                    return (strokeElem.type == "radical") ? list.concat(strokeElem.body) : list.concat(strokeElem);
-                }, []);
-                return stroke;
-            case "compound":
-                stroke.body = stroke.body.reduce(function(list, elem){
-                    var strokeElem = self.getStrokeSpec(elem);
-    
-                    // a note about recursive call:
-                    // by this point, all elements in strokeElem body has been found.
-                    // the lower level of flattening has been done in previous calls.
-                    return (strokeElem.type == "compound") ? list.concat(strokeElem.body) : list.concat(strokeElem);
-                }, []);
-                return stroke;
-            case "simple":
-                return {type:"compound", body:[stroke]};
+    initVariableControls(charName){
+        let varsDom = document.getElementById("var-bars");
+        while (varsDom.firstChild) {
+            varsDom.removeChild(varsDom.firstChild);
+        }
+        let vars = this.currStrokeSpec.vars;
+
+        for (let i in vars){
+            varsDom.appendChild(addInput(i, vars[i], function(e){
+                vars[i].val = parseFloat(e.target.value);
+                this.updateStroke();
+            }.bind(this)));
         }
     }
-    
-    getStroke(char){
-        // console.clear();
-        var strokeSpec = this.getStrokeSpec(char);
-        var stroke = new StrokeSet(strokeSpec);
-        console.log("strokeSpec", strokeSpec);
-        stroke.draw(this.ctx);
-        stroke.findCenterRect(this.ctx, 10);
-        stroke.findCentroid(this.ctx, 15);
+
+    getStroke(charName){        
+        this.getStrokeSpec(charName);
+        this.initVariableControls();
+        this.updateStroke();
+    }
+
+    updateStroke(){
+        var stroke = new StrokeSet(this.currStrokeSpec);
+        stroke.draw(this.ctx);        
+        stroke.findCenterRect(this.ctx);
     }
 }

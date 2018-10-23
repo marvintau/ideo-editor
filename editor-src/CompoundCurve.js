@@ -62,6 +62,6 @@ export function testCompoundCurve(ctx){
     // ctx.fillRect(box.head.x, box.head.y, box.tail.x-box.head.x, box.tail.y-box.head.y);
     
     ctx.lineWidth = 30;
-    ctx.strokeStyle = "rgb(0, 0, 0, 0.5)";
+    ctx.strokeStyle = "rgb(0, 0, 0, 0)";
     compoundCurve.draw(ctx);    
 }

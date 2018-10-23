@@ -131,7 +131,7 @@ function returnRightBracket(stack){
 export function toJSONText(text){
     
     var lines = text.split("\n").filter(e => !e.match(/^\s*$/));
-    console.log(lines);
+    
     var resultText = "",
         stack      = [],
         currIndent = 0;

@@ -81,8 +81,6 @@ export default class CurveStructureBase{
         }
     }
 
-    getConstraint(){}
-
     /**
      * modify: operate the curve object with given instructions.
      * 
@@ -95,14 +93,19 @@ export default class CurveStructureBase{
         // modify uses program and variables from external, but
         // if they are not given, the program and variables in
         // itself will be used.
-        if (vars === undefined) vars = this.vars;
-        if (prog === undefined) prog = this.prog;
 
+        // Notably, since vars is a dictionary, outer variables
+        // with same name will overwrite the inner variables.
+        // This is reasonable because outer variables typically
+        // have more specific meanings.
+        if (vars === undefined) vars = this.vars; else vars = Object.assign(this.vars, vars);
+        if (prog === undefined) prog = this.prog; //else prog = this.prog.concat(prog);
+        // console.log("modify prog: ", prog);
         // Typically the component curve object contains program
         // when instantiating. So now we apply the programs like
         // initialization. According to this order of calling.
         // The lowest component will be applied operations first. 
-        for (let elem of this.body) elem.modify();
+        for (let elem of this.body) elem.modify(undefined, vars);
 
         // Then apply the programs in current level.
         // the rule is, if prog.ith is specified, other methods

@@ -59,7 +59,7 @@ export default class Seg extends CurveStructureBase{
 
     modify(prog){
 
-        if(prog === undefined) prog = this.prog;
+        if(prog === undefined) prog = this.prog; else prog = this.prog.concat(prog);
 
         for(let instr of prog){
             switch(Object.keys(instr)[0]){

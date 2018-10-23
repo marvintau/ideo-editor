@@ -127,8 +127,8 @@ export default class Vec{
      * @returns {undefined}
      */
     draw(ctx, r, color){
-        if (color === undefined) color = "rgb(0, 0, 0, 0.5)";
-        if (r === undefined) r = 10;
+        if (color === undefined) color = "rgb(255, 0, 0, 0.9)";
+        if (r === undefined) r = 1;
         
         ctx.fillStyle = color;
         ctx.beginPath();

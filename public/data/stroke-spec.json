@@ -24,7 +24,7 @@
         "ang": 120
       },
       {
-        "len": 3,
+        "len": 3.5,
         "ang": 145
       },
       {
@@ -696,58 +696,63 @@
     ],
     "vars": {
       "heng-scale": {
-        "desc": "横划比例",
         "range": {
-          "max": 2,
-          "min": 1
+          "min": 1,
+          "max": 2
         },
-        "val": 1.2
+        "val": 1.25
+      },
+      "pie-scale": {
+        "range": {
+          "min": 1,
+          "max": 2
+        },
+        "val": 1
+      },
+      "pie-rotate": {
+        "range": {
+          "min": -45,
+          "max": -30
+        },
+        "val": -30
+      },
+      "piedian-pie-scale": {
+        "range": {
+          "min": 0.5,
+          "max": 1.5
+        },
+        "val": 1
+      },
+      "piedian-dian-rotate": {
+        "range": {
+          "min": -10,
+          "max": 10
+        },
+        "val": 0
       }
     },
-    "cons": [
-      {
-        "cross": {
-          "dest": {
-            "ith": 0,
-            "curve": 1,
-            "to": "ds"
-          },
-          "self": {
-            "ith": 1,
-            "curve": 0,
-            "to": "ss"
-          }
-        }
-      },
-      {
-        "comp": {
-          "self": "ds",
-          "is": ">",
-          "to": 0.1
-        }
-      },
-      {
-        "len": {
-          "ith": 0,
-          "curve": 0,
-          "to": "ln"
-        }
-      }
-    ],
     "prog": [
       {
         "ith": 0,
-        "scale": "heng-scale",
-        "rotate": 0
+        "prog": [
+          {
+            "ith": 0,
+            "scale": "piedian-pie-scale"
+          },
+          {
+            "ith": 1,
+            "rotate": "piedian-dian-rotate"
+          }
+        ]
       },
       {
         "ith": 1,
-        "scale": 1.5,
-        "rotate": -30
+        "scale": "pie-scale",
+        "rotate": "pie-rotate"
       },
       {
         "ith": 2,
-        "scale": 1.5,
+        "scale": "heng-scale",
         "rotate": 0
       },
       {
@@ -779,7 +784,7 @@
         }
       }
     ],
-    "text": "# type: radical\n  body: @ piedian wanpie heng\n  vars: # heng-scale: # desc: 横划比例\n                        range: # max: 2 min: 1\n                        val: 1.2\n  cons: @ # cross: # dest: # ith: 0 curve: 1 to: ds\n                     self: # ith: 1 curve: 0 to: ss\n          # comp: # self: ds is: > to: 0.1\n          # len: # ith: 0 curve: 0 to: ln\n  prog: @ # ith: 0 scale: heng-scale rotate: 0\n          # ith: 1 scale: 1.5 rotate: -30\n          # ith: 2 scale: 1.5 rotate: 0\n          # cross: # dest: # ith: 0 curve: 1 r: 0.45\n                     self: # ith: 1 curve: 0 r: 0.5\n          # cross: # dest: # ith: 1 curve: 0 r: 0.1\n                     self: # ith: 2 curve: 0 r: 0.7"
+    "text": "# type: radical\n  body: @ piedian wanpie heng\n  vars: # heng-scale: # range: # min: 1 max: 2\n                        val: 1.25\n          pie-scale: # range: # min: 1 max: 2\n                        val: 1.\n          pie-rotate: # range: # min: -45 max: -30\n                        val: -30\n          piedian-pie-scale: # range: # min: 0.5 max: 1.5\n                               val: 1\n          piedian-dian-rotate: # range: # min: -10 max: 10\n                                 val: 0\n\n  prog: @ # ith: 0 prog: @ # ith: 0 \n                             scale: piedian-pie-scale\n                           # ith: 1\n                             rotate: piedian-dian-rotate\n          # ith: 1 scale: pie-scale rotate: pie-rotate\n          # ith: 2 scale: heng-scale rotate: 0\n          # cross: # dest: # ith: 0 curve: 1 r: 0.45\n                     self: # ith: 1 curve: 0 r: 0.5\n          # cross: # dest: # ith: 1 curve: 0 r: 0.1\n                     self: # ith: 2 curve: 0 r: 0.7"
   },
   "木": {
     "type": "radical",
@@ -799,7 +804,7 @@
           "dest": {
             "ith": 0,
             "curve": 0,
-            "r": 0.45
+            "r": 0.5
           },
           "self": {
             "ith": 1,
@@ -846,7 +851,8 @@
           }
         }
       }
-    ]
+    ],
+    "text": "# type: radical\n  body: @ heng shu pie na\n  prog: @ # ith: 1 scale: 1.3\n          # cross: # dest: # ith: 0 curve: 0 r: 0.5\n                     self: # ith: 1 curve: 0 r: 0.2\n          # ith: 2 scale: 1 rotate: -10\n          # cross: # dest: # ith: 1 curve: 0 r: 0.22\n                     self: # ith: 2 curve: 0 r: 0\n          # ith: 3 scale: 0.9 rotate: 0\n          # cross: # dest: # ith: 1 curve: 0 r: 0.22\n                     self: # ith: 3 curve: 0 r: 0"
   },
   "日": {
     "type": "radical",
