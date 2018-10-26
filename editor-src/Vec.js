@@ -120,23 +120,13 @@ export default class Vec{
         return Math.hypot(this.x, this.y);
     }
 
-    /**
-     * draw vector as point over canvas
-     * @param {CanvasRenderingContext2D} ctx canvas context to be rendered
-     * @param {number} r radius
-     * @returns {undefined}
-     */
-    draw(ctx, r, color){
-        if (color === undefined) color = "rgb(255, 0, 0, 0.9)";
-        if (r === undefined) r = 1;
-        
-        ctx.fillStyle = color;
-        ctx.beginPath();
-        ctx.arc(this.x, this.y, r,0, 2*Math.PI);
-        ctx.fill();
+    sampleTo(vec, resolution){
+        var lis = [],
+            off = vec.sub(this);
+
+        for (let i = 0; i < resolution; i++){
+            lis.push(this.add(off.mult(i/resolution)));
+        }
+        return lis;
     }
-}
-
-export function testVec(){
-
 }

@@ -1,6 +1,5 @@
 import Vec from "./Vec.js";
 import Box from "./Box.js";
-import Raster from "./Raster.js";
 
 export default class CurveStructureBase{ 
 
@@ -169,10 +168,13 @@ export default class CurveStructureBase{
         return newCurve;
     }
 
-    draw(ctx){
-        for(let component of this.body){
-            component.draw(ctx);
-        }
+    draw(pointList){
+
+        var thisList = [];
+        for(let component of this.body)
+            thisList = thisList.concat(component.draw(thisList));
+
+        return pointList.concat(thisList);
     }
 
     sample(step){
@@ -182,21 +184,5 @@ export default class CurveStructureBase{
             // console.error(this);
             return list.concat(comp.sample(step));
         }, []);
-    }
-
-    rasterize(raster){
-        if (raster === undefined){
-            var canvas = document.getElementById("canvas").getContext("2d"),
-                height = canvas.height,
-                width  = canvas.width;
-
-            raster = new Raster(width, height);
-        }
-        
-        for(let elem of this.body){
-            raster = elem.rasterize(raster);
-        }
-
-        return raster;
     }
 }

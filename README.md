@@ -1,15 +1,15 @@
-# TODO:       
+# TODO:
 
-重新回顾中宫的定义。[**ongoing**]
+check if seg modify really works
 
-1. UI便利性 [**ongoing**]
+1. UI便利性 [done]
    * 点击汉字的时候，对应的spec条目出现 [done]
    * 对spec和某种更简单的语言实现双向翻译 [done]
    * 在线编辑 [done]
    * 代码高亮 [done]
    * 提交代码 [done]
    * 将文本代码保存至服务器并persistent store [done]
-   * 可以搞出变量的拖拽条
+   * 可以搞出变量的拖拽条 [done]
        
     
 2. 字拓扑结构的约束条件
@@ -23,7 +23,19 @@
        * 获取笔画总长度 [done]
        * 获取某个笔画部件的长度 [done]
        
-3. 自动在boundary内寻找所有参数组合，以及rect/centroid结果 [*next*]
+3. 自动在boundary内寻找所有参数组合，以及rect/centroid结果 [**ongoing**]
+   * centroid方法[done]
+   * Voronoi笔画分割方法[done]
+   * 获取canvas上的点阵信息[**ongoing**]
+     需要解决刷新时内存的问题
+     1.将按距离sample改为按比例sample [done]
+     2.首次初始化笔画点并初始化cones
+     3.
+   * 统计同种颜色pixel数
+   * 用curve重新划分笔画并重新统计pixel数
+   
+       
+     
 
 4. RadicalSet: 组字方法 [*next*]
 
@@ -52,6 +64,7 @@
 ### 基于Convex Hull的方法
 第二種是將所有的點按照到質心的距離排序，然後逐個求convex hull看哪個cunvex hull囊括了半數的點，或者看占總面積一半的convex hull囊括了百分之多少的點。這個更像是一個幾何學的算法，但結果是我們會得到一個不規則的圖形。不過不規則圖形也有自己的好處，即我們可以研究它的穩定性，而不像本來不穩定的字，因為採用kernel的方法而無法研究其穩定性。
 
+### 笔画疏密程度确认
 
 
 

@@ -1,14 +1,12 @@
 import Vec from "./Vec.js";
 import Box from "./Box.js";
 import CurveStructureBase from "./CurveStructureBase.js";
-import Raster from "./Raster.js";
 
 export default class Seg extends CurveStructureBase{
 
     constructor(spec){
         
         super();
-        
         
         this.len  = spec.len;
         this.ang  = spec.ang;
@@ -21,13 +19,6 @@ export default class Seg extends CurveStructureBase{
 
     copy(){
         return new Seg({len:this.len, ang:this.ang, head:this.head});
-    }
-
-    draw(ctx){
-        // ctx.beginPath();
-        // ctx.moveTo(this.head.x, this.head.y);
-        ctx.lineTo(this.tail.x, this.tail.y);
-        // ctx.stroke();
     }
 
     /**
@@ -88,54 +79,4 @@ export default class Seg extends CurveStructureBase{
 
         this.box  = new Box(boxHead, boxTail);
     }
-
-    /**
-     * sample
-     * returns a list of sampled points
-     * @param {number} step 
-     */
-    sample(step){
-        var points = [],
-            angVec = new Vec(this.ang);
-        for(var i = step; i < this.len; i += step){
-            points.push(angVec.mult(i).add(this.head));
-        }
-        return points;
-    }
-
-    /**
-     * returns the condition of intersecting with another segment
-     * @param {Seg} seg another seg
-     */
-    cross(that){
-        var det_s = that.head.sub(that.tail).cross(that.head.sub(this.head)),
-            det_t = this.head.sub(this.tail).cross(that.head.sub(this.head)),
-            det   = that.head.sub(that.tail).cross(this.tail.sub(this.head));
-
-        var s = det_s/det,
-            t = det_t/det;
-
-        return {s:s, t:t};
-    }
-
-}
-
-import {range} from "./Util.js"
-export function testSeg(ctx){
-
-    ctx.strokeColor = "blue";
-
-    var number = 61;
-    var body = range(number, (e) => new Seg({len:10, ang:0}));
-    for(let i = 0; i < number; i++){
-        body[i].prog = [
-            {"trans":{x:10*i, y:10*i}},
-            {"rotate":{"theta":3*i}},
-            {"scale":{"ratio":1+i*0.25}}
-        ];
-        body[i].modify();
-        body[i].draw(ctx, body[i].head);
-    }
-    
-    // console.log(body);
 }

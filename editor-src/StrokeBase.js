@@ -1,216 +1,71 @@
-import Input from "./Input.js";
-import StrokeSet from "./StrokeSet.js";
-import {fromJSONObject, toJSONText} from "./ION.js";
+import Radical from "./Radical.js";
+import Loadable from "./Loadable.js";
+import Voronoi from "./Voronoi.js";
+import Vec from "./Vec.js";
+import Lines from "./Lines.js";
 
-function dup(json){
-    return JSON.parse(JSON.stringify(json));
-}
 
-function getStrokeSpec(strokeName, base){
-    
-    var stroke = dup(base[strokeName]);
+export default class StrokeBase extends Loadable{
 
-    switch(stroke.type){
-        case "radical":
-            stroke.body = stroke.body.reduce(function(list, elem){
-                var strokeElem = getStrokeSpec(elem, base);
-                return (strokeElem.type == "radical") ? list.concat(strokeElem.body) : list.concat(strokeElem);
-            }, []);
-            return stroke;
-        case "compound":
-            stroke.body = stroke.body.reduce(function(list, elem){
-                var strokeElem = getStrokeSpec(elem, base);
+    constructor(){
+        
+        super();
 
-                // a note about recursive call:
-                // by this point, all elements in strokeElem body has been found.
-                // the lower level of flattening has been done in previous calls.
-                return (strokeElem.type == "compound") ? list.concat(strokeElem.body) : list.concat(strokeElem);
-            }, []);
-            return stroke;
-        case "simple":
-            return {type:"compound", body:[stroke]};
-    }
-}
+        this.initView();
+        this.lines =   new Lines(this.scene);
+        this.voronoi = new Voronoi(this.scene, 15);
 
-function addSlider(name, variable, func){
-    var x = document.createElement("INPUT");
-    x.setAttribute("type", "range");
-    x.classList.add("slider");
-
-    x.setAttribute("name", name);
-    x.setAttribute("min", variable.range.min);
-    x.setAttribute("max", variable.range.max);
-    x.setAttribute("value", variable.val);
-    x.setAttribute("step", 0.01);
-    x.addEventListener('input', func);
-    x.addEventListener('change', func);
-
-    return x;
-}
-
-function addLabel(name){
-    var x = document.createElement('label');
-    x.innerHTML = name;
-    x.setAttribute('for', name);
-    return x;
-}
-
-function addInput(name, variable, func){
-    var x = document.createElement("div");
-    x.appendChild(addLabel(name));
-    x.appendChild(addSlider(name, variable, func));
-    return x;
-}
-
-/**
- * load stroke base specification JSON from server
- */
-function loadStrokeBase () {
-
-    return new Promise(function (resolve, reject) {
-        var xhr = new XMLHttpRequest();
-        xhr.open('GET', "data/stroke-spec.json", true);
-
-        xhr.onload = function () {
-            if (this.status >= 200 && this.status < 300) {
-                resolve(xhr.response);
-            } else {
-                reject({
-                    status: this.status,
-                    statusText: xhr.statusText
-                });
-            }
-        };
-        xhr.onerror = function () {
-            reject({
-                status: this.status,
-                statusText: xhr.statusText
-            });
-        };
-        xhr.send();
-    });
-}
-
-function saveStrokeBase(payload) {
-    return new Promise(function (resolve, reject) {
-        var xhr = new XMLHttpRequest();
-        xhr.open('POST', "save", true);
-        xhr.setRequestHeader('content-type', 'application/json');
-
-        xhr.onload = function () {
-            if (this.status >= 200 && this.status < 300) {
-                resolve(xhr.response);
-            } else {
-                reject({
-                    status: this.status,
-                    statusText: xhr.statusText
-                });
-            }
-        };
-        xhr.onerror = function () {
-            reject({
-                status: this.status,
-                statusText: xhr.statusText
-            });
-        };
-        xhr.send(payload);
-    });
-}
-
-export default class StrokeBase {
-
-    constructor(ctx){
-        this.base  = {};
-        this.ctx   = ctx;
-        this.input = new Input(this);
-        this.currCharName = "";
-        this.currStrokeSpec = {};
     }
 
-    updateBase(){
-        loadStrokeBase()
-        .then(function(data){
-            this.base = JSON.parse(data);
-            this.updateUI(this.base);
-        }.bind(this));
+    initView(){
+        var width  =  470,
+            height =  470,
+            near   = -235,
+            far    =  235;
+            
+        this.renderer = new THREE.WebGLRenderer();
+        this.camera   = new THREE.OrthographicCamera( width/-2, width/2, height/-2, height/2, near, far);
+        this.scene    = new THREE.Scene();
+
+        this.renderer.setSize(width, height);
+        document.getElementById("canvas-wrap").appendChild(this.renderer.domElement);
+        
+        this.size = this.renderer.getSize();
+        
+        this.camera.lookAt( 0, 0, 0 );
+
     }
 
-    updateUI(chars){
-        var CharUI = document.getElementById("char-list");
-    
-        for(let char in chars) if (chars[char].type == "radical") {
-            var p = document.createElement('button')
-            p.appendChild(document.createTextNode(char));
-            p.classList.add('char-button'); 
-
-            p.onclick = function(e){
-                this.getStroke(char);
-                this.currCharName = char;
-                this.input.update(this.getStrokeSpecText(char));
-            }.bind(this);
-
-            CharUI.appendChild(p);
+    clearScene(){
+        this.lines.dispose();
+        this.voronoi.dispose();
+        
+        while (this.scene.children.length > 0){
+            this.scene.remove(this.scene.children[0]);
         }
     }
 
-    submit(){
-        var text = document.getElementById("stroke-list").value;
-        var updatedSpec = JSON.parse(toJSONText(text));
-        this.base[this.currCharName] = updatedSpec;
-        this.getStroke(this.currCharName);
-        this.base[this.currCharName].text = text;
-    }
-
-    save(){
-        var stringified = JSON.stringify(this.base, null, 2);
-        saveStrokeBase(stringified).then(function(e){
-            console.log("persisted");
-        }).catch(function(e){
-            console.log("error", e);
-        });
-    }
-
-    getStrokeSpec(strokeName){
-        this.currStrokeSpec = getStrokeSpec(strokeName, this.base);
-    }
-
-    getStrokeSpecText(strokeName){
-
-        var text = "";
-        if (this.base[strokeName].text === undefined){
-            text = fromJSONObject(this.base[strokeName]);
-        } else {
-            text = this.base[strokeName].text;
-        }
-
-        return text;
-    }
-
-    
-    initVariableControls(charName){
-        let varsDom = document.getElementById("var-bars");
-        while (varsDom.firstChild) {
-            varsDom.removeChild(varsDom.firstChild);
-        }
-        let vars = this.currStrokeSpec.vars;
-
-        for (let i in vars){
-            varsDom.appendChild(addInput(i, vars[i], function(e){
-                vars[i].val = parseFloat(e.target.value);
-                this.updateStroke();
-            }.bind(this)));
-        }
-    }
-
-    getStroke(charName){        
+    initStroke(charName){        
         this.getStrokeSpec(charName);
         this.initVariableControls();
+
+        this.clearScene();
+
+        let radical = new Radical(this.currSpec),
+            points  = radical.toPointList(this.size, 0.9);
+
+        this.lines.init(points);
+        this.voronoi.init(points, 10);
+
         this.updateStroke();
     }
 
     updateStroke(){
-        var stroke = new StrokeSet(this.currStrokeSpec);
-        stroke.draw(this.ctx);        
-        stroke.findCenterRect(this.ctx);
+        let radical = new Radical(this.currSpec),
+            points  = radical.toPointList(this.size, 0.9);
+
+        this.lines.update(points);
+        this.voronoi.update(points);
+        this.renderer.render(this.scene, this.camera);
     }
 }
