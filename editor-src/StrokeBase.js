@@ -10,9 +10,27 @@ export default class StrokeBase extends Loadable{
         super();
 
         this.initView();
-        this.lines =   new Lines(this.scene);
-        this.voronoi = new Voronoi(this.scene, 15);
+        this.initScreenShot();
 
+        this.lines =   new Lines(this.scene);
+        this.voronoi = new Voronoi(this.scene, 10);
+
+    }
+
+    initScreenShot(){
+        this.ctx = document.getElementById("screenshot").getContext("2d");
+        this.image = new Image;
+        this.imageData = [];
+
+        this.image.onload = function(){
+            this.ctx.drawImage(this.image, 0, 0);
+            this.imageData = this.ctx.getImageData(0, 0, 470, 470);
+        }.bind(this);
+
+    }
+
+    updateScreenShot(){
+        this.image.src = this.renderer.domElement.toDataURL();
     }
 
     initView(){
@@ -21,7 +39,7 @@ export default class StrokeBase extends Loadable{
             near   = -235,
             far    =  235;
             
-        this.renderer = new THREE.WebGLRenderer();
+        this.renderer = new THREE.WebGLRenderer({preserveDrawingBuffer: true });
         this.camera   = new THREE.OrthographicCamera( width/-2, width/2, height/-2, height/2, near, far);
         this.scene    = new THREE.Scene();
 
@@ -54,7 +72,7 @@ export default class StrokeBase extends Loadable{
             points  = radical.toPointList(this.size, 0.9);
 
         this.lines.init(points);
-        this.voronoi.init(points, 10);
+        this.voronoi.init(points);
 
         this.updateStroke();
     }
@@ -65,6 +83,9 @@ export default class StrokeBase extends Loadable{
 
         this.lines.update(points);
         this.voronoi.update(points);
+
         this.renderer.render(this.scene, this.camera);
+
+        this.updateScreenShot();
     }
 }

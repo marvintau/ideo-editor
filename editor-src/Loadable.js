@@ -157,6 +157,7 @@ export default class Loadable {
         var updatedSpec = JSON.parse(toJSONText(text));
         this.base[this.currCharName] = updatedSpec;
         this.base[this.currCharName].text = text;
+        this.initStroke(this.currCharName);
     }
 
     save(){
@@ -202,10 +203,6 @@ export default class Loadable {
 
     initStroke(charName){
         // should be specified in the extended class.
-    }
-
-    render(){
-        // specified in the extended class of this.
     }
 
 }

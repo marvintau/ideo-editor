@@ -24,8 +24,8 @@
 3. 自动在boundary内寻找所有参数组合，以及rect/centroid结果 [**ongoing**]
    * centroid方法[done]
    * Voronoi笔画分割方法[done]
-   * 获取canvas上的点阵信息[**ongoing**]
-   * 统计同种颜色pixel数
+   * 获取canvas上的点阵信息[done]
+   * 统计同种颜色pixel数[**ongoing**]
    
        
      
