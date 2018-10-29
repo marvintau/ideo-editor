@@ -1,7 +1,5 @@
 # TODO:
 
-check if seg modify really works
-
 1. UI便利性 [done]
    * 点击汉字的时候，对应的spec条目出现 [done]
    * 对spec和某种更简单的语言实现双向翻译 [done]
@@ -27,12 +25,7 @@ check if seg modify really works
    * centroid方法[done]
    * Voronoi笔画分割方法[done]
    * 获取canvas上的点阵信息[**ongoing**]
-     需要解决刷新时内存的问题
-     1.将按距离sample改为按比例sample [done]
-     2.首次初始化笔画点并初始化cones
-     3.
    * 统计同种颜色pixel数
-   * 用curve重新划分笔画并重新统计pixel数
    
        
      

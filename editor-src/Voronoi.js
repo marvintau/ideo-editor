@@ -1,3 +1,5 @@
+import Vec from "./Vec";
+
 /**
  * Create a ConeBufferGeometry object
  * @param {THREE.Material} material material of this cone
@@ -32,12 +34,11 @@ function createStrokeCone(coneNumber, material){
  * @param {[][]} radical array of array.
  */
 function createRadicalCone(radical, mats){
-    var cones = [],
-        len = radical.length;
-    for( let i = 0; i < len; i++){
-        cones.push(createStrokeCone(radical[i].length, mats[i]));
+    var cones = [];
+
+    for( let i = 0; i < radical.length; i++){
+        cones.push(radical[i].map((e, j) => createStrokeCone(e.length, mats[i][j])));
     }       
-    console.log("radical", cones);
     return cones;
 }
 
@@ -62,9 +63,14 @@ function strokeSample(stroke, resolution){
  * @param {*} resolution 
  */
 function radicalSample(strokeList, resolution){
+
     var res = [];
-    for (let i = 0; i < strokeList.length; i++)
-        res.push(strokeSample(strokeList[i], resolution));
+    for (let i = 0; i < strokeList.length; i++){
+        res.push([]);
+        for( let j = 0; j < strokeList[i].length; j++)
+            res[res.length-1].push(strokeSample(strokeList[i][j], resolution));
+    }
+        
     return res;
 }
 
@@ -75,14 +81,14 @@ function radicalSample(strokeList, resolution){
  * @param {THREE.scene} scene three.js scene object
  */
 function initVoronoiCones(radical, resolution, scene, mats){
-    var sampledRadical = radicalSample(radical, resolution),
-        cones = createRadicalCone(sampledRadical, mats);
+    var sampledRadical = radicalSample(radical, resolution);
+    var cones = createRadicalCone(sampledRadical, mats);
 
     for (let i = 0; i < sampledRadical.length; i++)
-    for (let j = 0; j < sampledRadical[i].length; j++){
-        scene.add(cones[i][j]);
-    }
-    
+    for (let j = 0; j < sampledRadical[i].length; j++)
+    for (let k = 0; k < sampledRadical[i][j].length; k++)
+        scene.add(cones[i][j][k]);
+        
     return cones;
 }
 
@@ -96,9 +102,10 @@ function updateVoronoiCones(radical, cones, resolution){
     var sampledRadical = radicalSample(radical, resolution);
 
     for (let i = 0; i < sampledRadical.length; i++)
-    for (let j = 0; j < sampledRadical[i].length; j++){
-        let point = sampledRadical[i][j];
-        cones[i][j].position.set(point.x, point.y, -100)
+    for (let j = 0; j < sampledRadical[i].length; j++)
+    for (let k = 0; k < sampledRadical[i][j].length; k++){
+        let point = sampledRadical[i][j][k];
+        cones[i][j][k].position.set(point.x, point.y, -100)
     }
 }
 
@@ -126,11 +133,13 @@ export default class Voronoi {
 
         this.mats = [];
         for (let i = 0; i < radical.length; i++){
-            var color = new THREE.Color(0, (i+1)/radical.length, (i+1)/radical.length);
-            this.mats.push(new THREE.MeshBasicMaterial({color: color, side:THREE.BackSide}));
+            this.mats.push([]);
+            for (let j = 0; j < radical[i].length; j++){
+                var color = new THREE.Color( "rgb(" + (255-j*20)+ ", "+ (255-i*20) +", "+ (255-i*20) + ")");
+                this.mats[i].push(new THREE.MeshBasicMaterial({color: color, side:THREE.BackSide}));    
+            }
         }
             
-    
         this.cones = initVoronoiCones(radical, this.resolution, this.scene, this.mats);
     }
 
@@ -143,10 +152,18 @@ export default class Voronoi {
     }
 
     dispose(){
+        for (let i = 0; i < this.cones.length; i++)
+        for (let j = 0; j < this.cones[i].length; j++)
+        for (let k = 0; k < this.cones[i][j].length; k++){
+            this.cones[i][j][k].geometry.dispose();
+            this.cones[i][j][k].material.dispose();
+            this.cones[i][j][k] = undefined;
+        }
+
         for(let i = 0; i < this.mats.length; i++)
-            this.mats.dispose();
-        for(let i = 0; i < this.cones.length; i++)
-            for (let j = 0; j < this.cones[i].length; j++)
-                this.cones[i][j].dispose();
+        for(let j = 0; j < this.mats[i].length; j++){
+            this.mats[i][j].dispose();
+            this.mats[i][j] = undefined;
+        }
     }
 }

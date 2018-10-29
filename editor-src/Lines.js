@@ -3,25 +3,30 @@
 function initLine(radical, scene, mat){
     var lines = [];
     for (let i = 0; i < radical.length; i++){
-        var line = new THREE.Line(new THREE.Geometry(), mat);
-        lines.push(line);
-        scene.add(line);
+        lines.push([]);
+        for (let j = 0; j < radical[i].length; j++){
+            var line = new THREE.Line(new THREE.Geometry(), mat);
+            lines[i].push(line);
+            scene.add(line);
+        }
     }
 
     return lines;
 }
 
 function updateLine(lines, radical){
-    for (let i = 0; i < radical.length; i++){
-        lines[i].geometry.vertices = radical[i].map(v => new THREE.Vector3(v.x, v.y, 0));
-        lines[i].geometry.verticesNeedUpdate = true;
+    for (let i = 0; i < radical.length; i++)
+    for (let j = 0; j < radical[i].length; j++){
+        lines[i][j].geometry.vertices = radical[i][j].map(v => new THREE.Vector3(v.x, v.y, 0));
+        lines[i][j].geometry.verticesNeedUpdate = true;
     }
 }
 
 function dispose(lines){
-    for (let i = 0; i < lines.length; i++){
-        lines[i].geometry.dispose();
-        lines[i] = undefined;
+    for (let i = 0; i < lines.length; i++)
+    for (let j = 0; j < lines[i].length; j++){
+        lines[i][j].geometry.dispose();
+        lines[i][j] = undefined;
     }
 }
 
@@ -30,7 +35,7 @@ export default class Lines {
     // do nothing when creating object
     constructor(scene){
         this.scene = scene;
-        this.mat  = new THREE.LineBasicMaterial( { color: 0xffffff} );
+        this.mat  = new THREE.LineBasicMaterial( { color: 0x000000} );
         this.lines = [];
     }
 
@@ -58,5 +63,6 @@ export default class Lines {
      */
     dispose(){
         dispose(this.lines);
+        this.lines = [];
     }
 }

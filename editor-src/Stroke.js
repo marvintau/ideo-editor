@@ -17,18 +17,18 @@ export default class Stroke extends CurveStructureBase{
         return this.body[spec.curve].at(spec.r);
     }
 
-    toPointList(points){
+    toPointList(){
         var thisPoints = [];
 
-        thisPoints.push(this.body[0].body[0].head);
-
         for(let i = 0; i < this.body.length; i++){
-            let curveBody = this.body[i].body;
+            let curveBody = this.body[i].body,
+                list = [curveBody[0].head];
             for (let j = 0; j < curveBody.length; j++)
-                thisPoints.push(curveBody[j].tail);
+                list.push(curveBody[j].tail);
+            thisPoints.push(list);
         } 
 
-        return points.concat(thisPoints);
+        return thisPoints;
     }
 
 }

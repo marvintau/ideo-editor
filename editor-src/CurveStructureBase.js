@@ -167,22 +167,4 @@ export default class CurveStructureBase{
 
         return newCurve;
     }
-
-    draw(pointList){
-
-        var thisList = [];
-        for(let component of this.body)
-            thisList = thisList.concat(component.draw(thisList));
-
-        return pointList.concat(thisList);
-    }
-
-    sample(step){
-        var self = this;
-
-        return this.body.reduce(function(list, comp){
-            // console.error(this);
-            return list.concat(comp.sample(step));
-        }, []);
-    }
 }

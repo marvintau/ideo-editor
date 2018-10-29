@@ -1,9 +1,7 @@
 import Radical from "./Radical.js";
 import Loadable from "./Loadable.js";
 import Voronoi from "./Voronoi.js";
-import Vec from "./Vec.js";
 import Lines from "./Lines.js";
-
 
 export default class StrokeBase extends Loadable{
 
@@ -36,13 +34,14 @@ export default class StrokeBase extends Loadable{
 
     }
 
-    clearScene(){
-        this.lines.dispose();
-        this.voronoi.dispose();
-        
+    clearScene(){        
         while (this.scene.children.length > 0){
             this.scene.remove(this.scene.children[0]);
         }
+
+        this.lines.dispose();
+        this.voronoi.dispose();
+
     }
 
     initStroke(charName){        
