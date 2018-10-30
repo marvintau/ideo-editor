@@ -170,7 +170,7 @@ export default class Loadable {
     }
 
     getStrokeSpec(strokeName){
-        console.log(strokeName);
+        document.getElementById("indicator").innerText = "loaded stroke " + strokeName;
         this.currSpec = getStrokeSpec(strokeName, this.base);
     }
 
