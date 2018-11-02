@@ -35,6 +35,10 @@ export default class Vec{
         return new Vec(this.x + vec.x, this.y + vec.y);
     }
 
+    iadd(vec){
+        this.x += vec.x;
+        this.y += vec.y;
+    }
     /**
      * 
      * @param {Vec} vec another vec to be subtracted
@@ -42,6 +46,11 @@ export default class Vec{
      */
     sub(vec){
         return new Vec(this.x - vec.x, this.y - vec.y);
+    }
+
+    isub(vec){
+        this.x -= vec.x;
+        this.y -= vec.y;
     }
 
     /**
@@ -55,6 +64,16 @@ export default class Vec{
             return new Vec(this.x * vec, this.y * vec);
         } else {
             return new Vec(this.x * vec.x, this.y * vec.y);
+        }
+    }
+
+    imult(vec){
+        if(vec.x === undefined){
+            this.y *= vec;
+            this.x *= vec;
+        } else {
+            this.x *= vec.x;
+            this.y *= vec.y;
         }
     }
 
@@ -125,8 +144,20 @@ export default class Vec{
             off = vec.sub(this);
 
         for (let i = 0; i < resolution; i++){
-            lis.push(this.add(off.mult(i/resolution)));
+            lis.push(this.add(off.mult((i+0.5)/resolution)));
         }
+        return lis;
+    }
+
+    sampleStepTo(vec, step){
+        var lis = [],
+            off = vec.sub(this),
+            dis = off.mag();
+
+        for (let i = 0; i < dis; i+= step){
+            lis.push(this.add(off.mult(i/dis)));
+        }
+        lis.push(vec);
         return lis;
     }
 }

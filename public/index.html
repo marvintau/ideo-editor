@@ -16,10 +16,11 @@ body{
 
 
 #canvas-wrap{
-    margin: 10px;
+    display: none;
+    /* margin: 10px;
     position: relative;
     float : left;
-    border-radius: 5px;
+    border-radius: 5px; */
 }
 
 textarea, code{
@@ -61,7 +62,7 @@ textarea{
 .slider{
     width : 200px;
     height : 30px;
-    display : block;
+    display : inline-block;
 }
 
 pre {
@@ -95,7 +96,11 @@ code{
 }
 
 #screenshot{
-    display: none;
+    /* display: none; */
+    margin: 10px;
+    position: relative;
+    float : left;
+    border-radius: 5px;
 }
 
 #indicator{
@@ -106,17 +111,21 @@ code{
     top:500px;
 }
 
+label {
+    display : block;
+}
+
 .keyword {
     color : #d33682;
 }
+
+
 
     </style>
     <body>
         <div id="char-list"></div>
         <div class="left-float">
-            <div id="canvas-wrap">
-                <!-- <canvas id="canvas" width="470" height="470" ></canvas> -->
-            </div>
+                <canvas id="screenshot" width="470" height="470"></canvas>
 
             <div class="left-float text">
                 <textarea id="stroke-list" spellcheck="false" class="editor allow-tabs"></textarea>
@@ -125,8 +134,8 @@ code{
             <div id="var-bars" class="left-float var-bar">
                     asdasdasd
             </div>
-            <canvas id="screenshot" width = "470" height="470"></canvas>
         </div>
+        <div id="canvas-wrap"></div>
         <div id="indicator"></div>
 
     </body>

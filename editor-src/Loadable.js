@@ -46,6 +46,14 @@ function addSlider(name, variable, func){
     return x;
 }
 
+function addNumberIndicator(name, val){
+    var x = document.createElement("SPAN");
+    x.setAttribute("id", name+"-indicator");
+    x.classList.add("indicator");
+    x.innerText = val;
+    return x;
+}
+
 function addLabel(name){
     var x = document.createElement('label');
     x.innerHTML = name;
@@ -57,6 +65,7 @@ function addInput(name, variable, func){
     var x = document.createElement("div");
     x.appendChild(addLabel(name));
     x.appendChild(addSlider(name, variable, func));
+    x.appendChild(addNumberIndicator(name, variable.val));
     return x;
 }
 
@@ -196,6 +205,7 @@ export default class Loadable {
         for (let i in vars){
             varsDom.appendChild(addInput(i, vars[i], function(e){
                 vars[i].val = parseFloat(e.target.value);
+                document.getElementById(e.target.name+"-indicator").innerText = vars[i].val;
                 this.updateStroke();
             }.bind(this)));
         }

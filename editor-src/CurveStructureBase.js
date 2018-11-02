@@ -70,7 +70,7 @@ export default class CurveStructureBase{
                     case "number":
                         return this.vars[item].val;
                     case "string":
-                        return eval(this.vars[item].val.replace(/@'(.*)'/, "this.getVariable('$1')"));
+                        return eval(this.vars[item].val.replace(/\$'(.*)'/, "this.getVariable('$1')"));
                 }
             case "object":
                 for (let key in item) item[key] = this.getVariable(item[key]);

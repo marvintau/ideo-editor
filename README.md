@@ -1,4 +1,10 @@
 # TODO:
+将bounding box对齐变为centroid对齐[done]
+通过convex hull计算出centroid，各点平均距离，各点距离方差[done]
+可以编辑单独笔画[**ongoing**]
+
+overall scale for every character[**ongoing**"]
+
 
 1. UI便利性 [done]
    * 点击汉字的时候，对应的spec条目出现 [done]
@@ -8,6 +14,7 @@
    * 提交代码 [done]
    * 将文本代码保存至服务器并persistent store [done]
    * 可以搞出变量的拖拽条 [done]
+   * 显示slider的实际值[done]
        
     
 2. 字拓扑结构的约束条件
@@ -16,17 +23,11 @@
    * 初始化对象时，变量列表将作为各层次对象的一个属性（即加入到CurveStructureBase中）[done]
    * prog读取变量表初始化其中的值[done]
    * 约束列表，列表内的条目包含比较运算符，getter和标的值。getter应该对应prog中的setter[done]
-       * 获得cross [done]
-       * 算术比较variable [done]
-       * 获取笔画总长度 [done]
-       * 获取某个笔画部件的长度 [done]
        
 3. 自动在boundary内寻找所有参数组合，以及rect/centroid结果 [**ongoing**]
    * centroid方法[done]
    * Voronoi笔画分割方法[done]
-   * 获取canvas上的点阵信息[done]
-   * 统计同种颜色pixel数[**ongoing**]
-   
+       
        
      
 

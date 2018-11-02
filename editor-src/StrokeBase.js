@@ -2,6 +2,36 @@ import Radical from "./Radical.js";
 import Loadable from "./Loadable.js";
 import Voronoi from "./Voronoi.js";
 import Lines from "./Lines.js";
+import Vec from "./Vec.js";
+
+
+function drawPolygon(ctx, bound, color){
+    
+    let points = bound.convexHull,
+        centroid = bound.centroid;
+
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 6;
+    ctx.translate(235, 235);
+    ctx.beginPath();
+    ctx.moveTo(points[0].x, points[0].y);
+    for(let i = 1; i < points.length; i++) ctx.lineTo(points[i].x, points[i].y);
+    // ctx.lineTo(points[0].x, points[0].y);
+    ctx.closePath();
+    ctx.stroke();
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+
+    ctx.beginPath();
+    ctx.arc(centroid.x + 235, centroid.y + 235, 3, 0, Math.PI * 2);
+    ctx.stroke();
+
+    ctx.strokeStyle = "black";
+    ctx.lineWidth = 1;
+
+    return centroid;
+}
+
+
 
 export default class StrokeBase extends Loadable{
 
@@ -10,27 +40,27 @@ export default class StrokeBase extends Loadable{
         super();
 
         this.initView();
-        this.initScreenShot();
 
         this.lines =   new Lines(this.scene);
         this.voronoi = new Voronoi(this.scene, 10);
 
-    }
+        this.snap = document.getElementById("screenshot").getContext('2d');
 
-    initScreenShot(){
-        this.ctx = document.getElementById("screenshot").getContext("2d");
         this.image = new Image;
-        this.imageData = [];
-
         this.image.onload = function(){
-            this.ctx.drawImage(this.image, 0, 0);
-            this.imageData = this.ctx.getImageData(0, 0, 470, 470);
+            this.snap.drawImage(this.image, 0, 0);
+
+            // let interior = getInterior(this.points);
+            drawPolygon(this.snap, this.radical.bounds.interior, "rgba(123,138,142, 0.9)");
+
+            // let medier = getMedier(this.points);
+            drawPolygon(this.snap, this.radical.bounds.median, "rgba(123,138,142, 0.9)");
+
+            // let outlier = getOutlier(this.points);
+            drawPolygon(this.snap, this.radical.bounds.outlier, "rgba(52,108,112, 0.4)");
+            
+
         }.bind(this);
-
-    }
-
-    updateScreenShot(){
-        this.image.src = this.renderer.domElement.toDataURL();
     }
 
     initView(){
@@ -68,24 +98,25 @@ export default class StrokeBase extends Loadable{
 
         this.clearScene();
 
-        let radical = new Radical(this.currSpec),
-            points  = radical.toPointList(this.size, 0.9);
+        this.radical = new Radical(this.currSpec);
 
-        this.lines.init(points);
-        this.voronoi.init(points);
+        this.lines.init(this.radical.points);
+        this.voronoi.init(this.radical.points);
 
-        this.updateStroke();
+        this.updateWithPoint();        
     }
 
     updateStroke(){
-        let radical = new Radical(this.currSpec),
-            points  = radical.toPointList(this.size, 0.9);
+        this.radical = new Radical(this.currSpec);
+        this.updateWithPoint();
+    }
 
+    updateWithPoint(){
+        let points = this.radical.points;
         this.lines.update(points);
         this.voronoi.update(points);
 
         this.renderer.render(this.scene, this.camera);
-
-        this.updateScreenShot();
+        this.image.src = this.renderer.domElement.toDataURL();
     }
 }

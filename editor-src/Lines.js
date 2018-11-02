@@ -1,10 +1,13 @@
 
 
-function initLine(radical, scene, mat){
+function initLine(radical, scene, mats){
     var lines = [];
     for (let i = 0; i < radical.length; i++){
         lines.push([]);
         for (let j = 0; j < radical[i].length; j++){
+
+            var mat = (radical[i][j].filter(e => e.intersect).length == 2) ? mats[0] : mats[1];
+            
             var line = new THREE.Line(new THREE.Geometry(), mat);
             lines[i].push(line);
             scene.add(line);
@@ -35,7 +38,10 @@ export default class Lines {
     // do nothing when creating object
     constructor(scene){
         this.scene = scene;
-        this.mat  = new THREE.LineBasicMaterial( { color: 0x000000} );
+        this.mats  = [
+            new THREE.LineBasicMaterial( { color: 0x000000} ),
+            new THREE.LineBasicMaterial( { color: 0xFF0000} )
+        ];
         this.lines = [];
     }
 
@@ -47,7 +53,7 @@ export default class Lines {
      * @param {THREE.scene} scene scene object
      */
     init(radical){
-        this.lines = initLine(radical, this.scene, this.mat);
+        this.lines = initLine(radical, this.scene, this.mats);
     }
 
     /**
