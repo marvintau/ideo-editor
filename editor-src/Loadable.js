@@ -39,7 +39,7 @@ function addSlider(name, variable, func){
     x.setAttribute("min", variable.range.min);
     x.setAttribute("max", variable.range.max);
     x.setAttribute("value", variable.val);
-    x.setAttribute("step", 0.01);
+    x.setAttribute("step", 0.001);
     x.addEventListener('input', func);
     x.addEventListener('change', func);
 

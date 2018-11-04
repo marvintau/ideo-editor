@@ -66,15 +66,22 @@ export default class CurveStructureBase{
             case "number" :
                 return item;
             case "string" :
-                switch(typeof this.vars[item].val){
-                    case "number":
-                        return this.vars[item].val;
-                    case "string":
-                        return eval(this.vars[item].val.replace(/\$'(.*)'/, "this.getVariable('$1')"));
+                if(item in this.vars)
+                    return this.vars[item].val;
+                else if(item.match(/@'\S*'/)){
+                    let s = item.replace(/@'([^']*)'/g, "this.getVariable('$1')");
+                    console.log(s);
+                    return eval(s);
                 }
+                else 
+                    throw {
+                        error: "ValueError", 
+                        message: "item " + item + "is neither an existing variable or an expression" 
+                    };
             case "object":
-                for (let key in item) item[key] = this.getVariable(item[key]);
-                return item;
+                let o = {};
+                for (let key in item) o[key] = this.getVariable(item[key]);
+                return o;
             default :
                 console.error("Key not found", item, typeof item);
         }

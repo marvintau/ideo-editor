@@ -4,29 +4,25 @@ import Voronoi from "./Voronoi.js";
 import Lines from "./Lines.js";
 import Vec from "./Vec.js";
 
+Array.prototype.last = function(){
+    return this[this.length - 1];
+}
 
-function drawPolygon(ctx, bound, color){
+function drawBound(ctx, bound, color){
     
-    let points = bound.convexHull,
-        centroid = bound.centroid;
+    let centroid = bound.centroid;
 
     ctx.strokeStyle = color;
-    ctx.lineWidth = 6;
-    ctx.translate(235, 235);
-    ctx.beginPath();
-    ctx.moveTo(points[0].x, points[0].y);
-    for(let i = 1; i < points.length; i++) ctx.lineTo(points[i].x, points[i].y);
-    // ctx.lineTo(points[0].x, points[0].y);
-    ctx.closePath();
-    ctx.stroke();
-    ctx.setTransform(1, 0, 0, 1, 0, 0);
-
+    ctx.lineWidth = 1;
     ctx.beginPath();
     ctx.arc(centroid.x + 235, centroid.y + 235, 3, 0, Math.PI * 2);
     ctx.stroke();
 
+    ctx.beginPath();
+    ctx.arc(centroid.x + 235, centroid.y + 235, bound.radius, 0, Math.PI * 2);
+    ctx.stroke();
+
     ctx.strokeStyle = "black";
-    ctx.lineWidth = 1;
 
     return centroid;
 }
@@ -50,14 +46,6 @@ export default class StrokeBase extends Loadable{
         this.image.onload = function(){
             this.snap.drawImage(this.image, 0, 0);
 
-            // let interior = getInterior(this.points);
-            drawPolygon(this.snap, this.radical.bounds.interior, "rgba(123,138,142, 0.9)");
-
-            // let medier = getMedier(this.points);
-            drawPolygon(this.snap, this.radical.bounds.median, "rgba(123,138,142, 0.9)");
-
-            // let outlier = getOutlier(this.points);
-            drawPolygon(this.snap, this.radical.bounds.outlier, "rgba(52,108,112, 0.4)");
             
 
         }.bind(this);
@@ -100,8 +88,8 @@ export default class StrokeBase extends Loadable{
 
         this.radical = new Radical(this.currSpec);
 
-        this.lines.init(this.radical.points);
-        this.voronoi.init(this.radical.points);
+        // this.lines.init(this.radical.points);
+        // this.voronoi.init(this.radical.points);
 
         this.updateWithPoint();        
     }
@@ -113,10 +101,44 @@ export default class StrokeBase extends Loadable{
 
     updateWithPoint(){
         let points = this.radical.points;
-        this.lines.update(points);
-        this.voronoi.update(points);
+        // this.lines.update(points);
+        // this.voronoi.update(points);
 
-        this.renderer.render(this.scene, this.camera);
-        this.image.src = this.renderer.domElement.toDataURL();
+        // this.renderer.render(this.scene, this.camera);
+        // this.image.src = this.renderer.domElement.toDataURL();
+
+        this.snap.fillStyle = "white";
+        this.snap.fillRect(0, 0, 470, 470);
+
+        drawBound(this.snap, this.radical.bounds.interior, "rgba(123,138,142, 0.9)");
+        drawBound(this.snap, this.radical.bounds.median, "rgba(123,138,142, 0.9)");
+        drawBound(this.snap, this.radical.bounds.outlier, "rgba(52,108,112, 0.4)");
+        
+        this.snap.translate(235, 235);
+        this.snap.strokeStyle = "rgb(128, 64, 0, 0.5)";
+        this.snap.lineCap = "round";
+        this.snap.lineWidth = 10;
+        for (let i = 0; i < points.length; i++)
+        for (let seg = 0; seg < points[i].length; seg++){
+            if((points[i][seg][0].intersect && points[i][seg].last().intersect)){
+                this.snap.beginPath();
+                this.snap.moveTo(points[i][seg][0].x, points[i][seg][0].y);
+                for ( let p = 1; p < points[i][seg].length; p++)
+                    this.snap.lineTo(points[i][seg][p].x, points[i][seg][p].y);
+                this.snap.stroke();    
+            }
+        }
+        this.snap.strokeStyle = "rgb(64, 64, 64, 0.5)";
+        for (let i = 0; i < points.length; i++)
+        for (let seg = 0; seg < points[i].length; seg++){
+            if(!(points[i][seg][0].intersect && points[i][seg].last().intersect)){
+                this.snap.beginPath();
+                this.snap.moveTo(points[i][seg][0].x, points[i][seg][0].y);
+                for ( let p = 1; p < points[i][seg].length; p++)
+                    this.snap.lineTo(points[i][seg][p].x, points[i][seg][p].y);
+                this.snap.stroke();    
+            }
+        }
+        this.snap.setTransform(1, 0, 0, 1, 0, 0);
     }
 }

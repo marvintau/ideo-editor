@@ -2,6 +2,22 @@ import Vec from "./Vec.js";
 import CurveStructureBase from "./CurveStructureBase.js";
 import Stroke from "./Stroke.js";
 
+Array.prototype.sum = function(){
+    return this.reduce((s, e) => s+e);
+}
+
+Array.prototype.mean = function(){
+    return this.sum() / this.length;
+}
+
+Array.prototype.min = function(){
+    return Math.min.apply(null, this);
+}
+
+Array.prototype.max = function(){
+    return Math.max.apply(null, this);
+}
+
 /**
  * intersection of two line segments
  * https://en.wikipedia.org/wiki/Line%E2%80%93line_intersection#Given_two_points_on_each_line
@@ -33,8 +49,8 @@ function findIntersections(pointList){
                 p.intersect = true;
                 q.intersect = true;
 
-                var s_norm = intersect.s >= -0.01 && intersect.s <= 1.01,
-                    t_norm = intersect.t >= -0.01 && intersect.t <= 1.01;
+                var s_norm = intersect.s >= -0.001 && intersect.s <= 1.001,
+                    t_norm = intersect.t >= -0.001 && intersect.t <= 1.001;
                    
                 if(s_norm && t_norm){
                     pointList[s].splice(i+++1, 0, p);
@@ -90,7 +106,7 @@ function convexHull(points) {
     return lower.concat(upper);
  }
 
-function getConvexHullCentroid(pointList){
+function getCentroid(pointList){
     var centroid  = new Vec(),
         totalMass = 0
     
@@ -129,14 +145,41 @@ function getBounds(pointList){
         medianConvexHull   = convexHull(median),
         outlierConvexHull  = convexHull(outlier);
     
-    var interiorConvexHullCentroid = getConvexHullCentroid(interiorConvexHull),
-        medianConvexHullCentroid   = getConvexHullCentroid(medianConvexHull),
-        outlierConvexHullCentroid  = getConvexHullCentroid(outlierConvexHull);
+    var interiorCentroid = getCentroid(interiorConvexHull),
+        medianCentroid   = getCentroid(medianConvexHull),
+        outlierCentroid  = getCentroid(outlierConvexHull);
+
+    var interiorRadii = interiorConvexHull.map(e=>e.sub(interiorCentroid).mag()),
+        medianRadii   = medianConvexHull.map(e=>e.sub(medianCentroid).mag()),
+        outlierRadii  = outlierConvexHull.map(e=>e.sub(outlierCentroid).mag());
+
+    var interiorRadius = interiorRadii.mean(),
+        medianRadius   = medianRadii.mean(),
+        outlierRadius  = outlierRadii.mean();
+    
+    var interiorExtrema = interiorRadii.max() - interiorRadii.min(),
+        medianExtrema   = medianRadii.max() - medianRadii.min(),
+        outlierExtrema  = outlierRadii.max() - outlierRadii.min();
 
     return {
-        interior : {convexHull : interiorConvexHull, centroid: interiorConvexHullCentroid},
-        median   : {convexHull : medianConvexHull,   centroid: medianConvexHullCentroid},
-        outlier  : {convexHull : outlierConvexHull,  centroid: outlierConvexHullCentroid}
+        interior : {
+            convexHull : interiorConvexHull,
+            centroid: interiorCentroid,
+            radius :interiorRadius,
+            extrema : interiorExtrema
+        },
+        median   : {
+            convexHull : medianConvexHull, 
+            centroid: medianCentroid,
+            radius : medianRadius,
+            extrema : medianExtrema
+        },
+        outlier  : {
+            convexHull : outlierConvexHull,
+            centroid: outlierCentroid,
+            radius : outlierRadius,
+            extrema : outlierExtrema
+        }
     };
 }
 

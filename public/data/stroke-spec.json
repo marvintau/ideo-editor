@@ -4,7 +4,7 @@
     "body": [
       {
         "len": 0.5,
-        "ang": 120
+        "ang": 125
       },
       {
         "len": 4,
@@ -21,7 +21,7 @@
     "body": [
       {
         "len": 0.5,
-        "ang": 120
+        "ang": 130
       },
       {
         "len": 3.5,
@@ -721,7 +721,7 @@
           "min": 0.6,
           "max": 1.5
         },
-        "val": 1
+        "val": 0.926
       },
       "pd-dian-rotate": {
         "range": {
@@ -729,6 +729,13 @@
           "max": 10
         },
         "val": 0
+      },
+      "pd-trans": {
+        "range": {
+          "min": 0.4,
+          "max": 0.55
+        },
+        "val": 0.45
       }
     },
     "prog": [
@@ -760,12 +767,12 @@
           "dest": {
             "ith": 0,
             "curve": 1,
-            "r": 0.45
+            "r": "pd-trans"
           },
           "self": {
             "ith": 1,
             "curve": 0,
-            "r": 0.5
+            "r": "0.05+@'pd-trans'"
           }
         }
       },
@@ -784,7 +791,7 @@
         }
       }
     ],
-    "text": "# type: radical\n  body: @ piedian wanpie heng\n  vars: # heng-scale: # range: # min: 1 max: 2\n                        val: 1.25\n          pie-scale: # range: # min: 1 max: 1.5\n                        val: 1.\n          pie-rotate: # range: # min: -45 max: -30\n                        val: -30\n          pd-pie-scale: # range: # min: 0.6 max: 1.5\n                          val: 1\n          pd-dian-rotate: # range: # min: -10 max: 10\n                            val: 0\n\n  prog: @ # ith: 0 prog: @ # ith: 0 \n                             scale: pd-pie-scale\n                           # ith: 1\n                             rotate: pd-dian-rotate\n          # ith: 1 scale: pie-scale rotate: pie-rotate\n          # ith: 2 scale: heng-scale rotate: 0\n          # cross: # dest: # ith: 0 curve: 1 r: 0.45\n                     self: # ith: 1 curve: 0 r: 0.5\n          # cross: # dest: # ith: 1 curve: 0 r: 0.1\n                     self: # ith: 2 curve: 0 r: 0.7"
+    "text": "# type: radical\n  body: @ piedian wanpie heng\n  vars: # heng-scale: # range: # min: 1 max: 2\n                        val: 1.25\n          pie-scale: # range: # min: 1 max: 1.5\n                        val: 1.\n          pie-rotate: # range: # min: -45 max: -30\n                        val: -30\n          pd-pie-scale: # range: # min: 0.6 max: 1.5\n                          val: 0.926\n          pd-dian-rotate: # range: # min: -10 max: 10\n                            val: 0\n          pd-trans: # range: # min: 0.4 max: 0.55\n                      val: 0.45\n\n  prog: @ # ith: 0 prog: @ # ith: 0 \n                             scale: pd-pie-scale\n                           # ith: 1\n                             rotate: pd-dian-rotate\n          # ith: 1 scale: pie-scale rotate: pie-rotate\n          # ith: 2 scale: heng-scale rotate: 0\n          # cross: # dest: # ith: 0 curve: 1 r: pd-trans\n                     self: # ith: 1 curve: 0\n                             r: \"0.05+@'pd-trans'\"\n          # cross: # dest: # ith: 1 curve: 0 r: 0.1\n                     self: # ith: 2 curve: 0 r: 0.7"
   },
   "木": {
     "type": "radical",
@@ -948,11 +955,11 @@
       },
       {
         "ith": 2,
-        "scale": 0.32
+        "scale": 0.27
       },
       {
         "ith": 3,
-        "scale": 0.32
+        "scale": 0.27
       },
       {
         "cross": {
@@ -983,7 +990,7 @@
         }
       }
     ],
-    "text": "# type: radical\n  body: @ shupie hengzhegou heng heng\n  prog: @ # scale: 1.2\n          # ith: 0 scale: 1.1 rotate: 2\n          # ith: 1\n            prog: @ # ith: 0 scale: 0.4 rotate: -1\n                    # ith: 1 scale: 1.\n          # ith: 2 scale: 0.32\n          # ith: 3 scale: 0.32\n          # cross: # dest: # ith: 0 curve: 0 r: 0.28\n                     self: # ith: 2 curve: 0 r: 0\n          # cross: # dest: # ith: 0 curve: 0 r: 0.52\n                     self: # ith: 3 curve: 0 r: 0"
+    "text": "# type: radical\n  body: @ shupie hengzhegou heng heng\n  prog: @ # scale: 1.2\n          # ith: 0 scale: 1.1 rotate: 2\n          # ith: 1\n            prog: @ # ith: 0 scale: 0.4 rotate: -1\n                    # ith: 1 scale: 1.\n          # ith: 2 scale: 0.27\n          # ith: 3 scale: 0.27\n          # cross: # dest: # ith: 0 curve: 0 r: 0.28\n                     self: # ith: 2 curve: 0 r: 0\n          # cross: # dest: # ith: 0 curve: 0 r: 0.52\n                     self: # ith: 3 curve: 0 r: 0"
   },
   "目": {
     "type": "radical",
