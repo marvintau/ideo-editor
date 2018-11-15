@@ -376,27 +376,13 @@ export default class Loadable {
         
         let width = document.createElement('div');
         width.appendChild(addLabel("笔画宽度"));
-        width.appendChild(addSlider(name, {val:1, range:{min:1, max:15}}, function(e){
+        this.strokeWidth = 8;
+        width.appendChild(addSlider(name, {val:4, range:{min:1, max:15}}, function(e){
             this.strokeWidth = parseFloat(e.target.value);
             this.updateStroke();
         }.bind(this)));
         varsDom.appendChild(width);
         // let widthDom = document.createElement(div)
-
-        let comp = document.createElement('div');
-        comp.appendChild(addLabel("比照字体（中宫由窄到宽）"));
-
-        let list = document.getElementById('font-list');
-        var x = document.createElement("INPUT");
-        x.classList.add("slider");
-        x.setAttribute("type", "range");
-        x.setAttribute("min", 1);
-        x.setAttribute("max", 6);
-        x.setAttribute("value", 0);
-        x.setAttribute("step", 1);
-        x.setAttribute("list", "font-list")
-        x.addEventListener('input', func);
-        x.addEventListener('change', func);
 
         if (this.currSpec.vars){
             let vars = this.currSpec.vars;

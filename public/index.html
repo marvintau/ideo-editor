@@ -54,7 +54,7 @@ textarea, code{
     left: 0;
     width: 550px;
     font-family : "TheSansMono Office";
-    font-size:13px;
+    font-size:12px;
     letter-spacing: -0.05em;
     line-height: 150%;
     padding:10px;
@@ -100,7 +100,6 @@ code{
 
 #char-list{
     margin : 10px;
-    width: 100px;
     height: 450;
     border-radius: 5px;
     overflow-y: scroll;
@@ -137,6 +136,9 @@ label {
     color : #d33682;
 }
 
+canvas {
+    background-color: #ffffff;
+}
 
     </style>
     <body>
@@ -147,7 +149,6 @@ label {
             
             <button id="generate-spec"><b>一键生成笔画描述（在添加完笔画之后点）</b></button>
             <button id="replace-vars" >一键替换笔画参数（在进行基本的拓扑修改后点）</button>
-            <button id="nudge">找最优解</button>
         </div>
         <div id="indicator" class="new-group"></div>
         <div class="main">

@@ -46,7 +46,11 @@ function lineLineIntersect(p1, p2, p3, p4){
 function findIntersections(pointListOrignal){
 
     // deep copy the pointList array
-    var pointList = pointListOrignal.map(e => e.slice(0));
+    var pointList = pointListOrignal.map(e => e.slice(0).map(v => {
+        let n = v.copy();
+        if (v.intersect) n.intersect = v.intersect;
+        return n;
+    }));
 
     for ( let s = 0; s < pointList.length; s++)
         for (let t = 0; t < s; t ++){
@@ -139,38 +143,43 @@ export function getBounds(pointListOriginal){
 
     for (let i = 0; i < pointList.length; i++)
     for (let j = 0; j < pointList[i].length; j++){
-        let l  = pointList[i][j],
-            ls = [];
-        if(l[0].intersect && l[l.length - 1].intersect){
-            interior = interior.concat(l);
-            median = median.concat(l);
-        } else {
-            if (l[l.length-1].intersect) l.reverse();
-            for (let k = 0; k < l.length-1; k++) ls = ls.concat(l[k].sampleStepTo(l[k+1], 0.1));
-            median.push(ls[Math.floor(ls.length*0.618)]);
-        }
+        let l  = pointList[i][j];
+        if(l[0].intersect && l[l.length - 1].intersect) interior = interior.concat(l);
         outlier = outlier.concat(l);
     }
 
     var interiorConvexHull = convexHull(interior),
-        medianConvexHull   = convexHull(median),
         outlierConvexHull  = convexHull(outlier);
     
     var interiorCentroid = getCentroid(interiorConvexHull),
-        medianCentroid   = getCentroid(medianConvexHull),
         outlierCentroid  = getCentroid(outlierConvexHull);
 
     var interiorRadii = interiorConvexHull.map(e=>e.sub(interiorCentroid).mag()),
-        medianRadii   = medianConvexHull.map(e=>e.sub(medianCentroid).mag()),
         outlierRadii  = outlierConvexHull.map(e=>e.sub(outlierCentroid).mag());
 
     var interiorRadius = interiorRadii.mean(),
-        medianRadius   = medianRadii.mean(),
         outlierRadius  = outlierRadii.mean();
     
     var interiorExtrema = interiorRadii.max() - interiorRadii.min(),
-        medianExtrema   = medianRadii.max() - medianRadii.min(),
         outlierExtrema  = outlierRadii.max() - outlierRadii.min();
+
+    for (let i = 0; i < pointList.length; i++)
+    for (let j = 0; j < pointList[i].length; j++){
+        let l = pointList[i][j], ls = [];
+        if(l[0].intersect && l[l.length - 1].intersect)
+            median = median.concat(l);
+        else{
+            if (l[l.length-1].intersect) l.reverse();
+            for (let k = 0; k < l.length-1; k++) ls = ls.concat(l[k].sampleStepTo(l[k+1], 0.1));
+            median.push(ls[Math.floor(ls.length*0.618)]);
+        }
+    }
+    
+    var medianConvexHull   = convexHull(median),
+        medianCentroid   = getCentroid(medianConvexHull),
+        medianRadii   = medianConvexHull.map(e=>e.sub(medianCentroid).mag()),
+        medianRadius   = medianRadii.mean(),
+        medianExtrema   = medianRadii.max() - medianRadii.min();
 
     return {
         interior : {
