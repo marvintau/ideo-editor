@@ -4,42 +4,66 @@
 body{
     background: #8abeb7;
     text-align: left;
+    overflow-x: scroll;
+    font-family : "TheSansMono Office";
+    font-size : 11px;
+    display: flex;
+    flex-direction: column;
 }
 
-.left-float {
-    position : relative;
-    float : left;
-    /* height : 600px; */
-    /* overflow-y:scroll; */
-
+.new-group {
+    margin-left : 20px;
 }
-
 
 #canvas-wrap{
-    display: none;
-    /* margin: 10px;
+    margin: 10px;
+    display: flex;
+    flex-direction : column;
+}
+
+canvas {
+    margin-top:10px;
+}
+
+.text-stuff{
+    margin: 10px;
+    display: flex;
+    flex-direction : column;
+}
+.text{
     position: relative;
-    float : left;
-    border-radius: 5px; */
+    margin: 10px;
+    width: 600px;
+}
+
+.text-gen{
+    margin: 10px;
+    position: relative;
+    top : 490px;
+}
+
+.main {
+    display:flex;
+    flex-direction: row;
+    overflow-x:scroll;
 }
 
 textarea, code{
     position: absolute;
-    top: 0px;
+    top: 0;
     left: 0;
-    width: 450px;
-    min-height: 450px;
-
+    width: 550px;
     font-family : "TheSansMono Office";
     font-size:13px;
     letter-spacing: -0.05em;
     line-height: 150%;
-    margin: 10px;
     padding:10px;
     resize: none;
     border : none;
     background: #fdf6e3;
     border-radius: 5px;
+    overflow-x: hidden;
+    overflow-y: scroll;
 }
 	
 textarea{
@@ -53,7 +77,6 @@ textarea{
 
 .var-bar{
     margin : 20px;
-    left : 460px;
     font-family: 'TheSansMono Office';
     font-size:13px;
     letter-spacing: -0.05em;
@@ -77,9 +100,10 @@ code{
 
 #char-list{
     margin : 10px;
-    position : relative;
-    float : left;
+    width: 100px;
+    height: 450;
     border-radius: 5px;
+    overflow-y: scroll;
 }
 
 .char-button{
@@ -95,20 +119,14 @@ code{
     font-weight : bold;
 }
 
-#screenshot{
-    /* display: none; */
-    margin: 10px;
-    position: relative;
-    float : left;
+#preview, #compare{
+    display: block;
     border-radius: 5px;
 }
 
 #indicator{
-    position: absolute;
-    font-family : "TheSansMono Office";
+    display: block;
     letter-spacing: -0.08em;
-    left : 30px;
-    top:500px;
 }
 
 label {
@@ -120,23 +138,43 @@ label {
 }
 
 
-
     </style>
     <body>
-        <div id="char-list"></div>
-        <div class="left-float">
-                <canvas id="screenshot" width="470" height="470"></canvas>
-
-            <div class="left-float text">
-                <textarea id="stroke-list" spellcheck="false" class="editor allow-tabs"></textarea>
-                <pre><code id="code-display" class="syntax-highight html"></code></pre>            
+        <div class="new-group">
+            新建： <input id="new-char-name">
+            <button id="create">创建新字</button>
+            <button id="show-stroke">显示笔画</button>
+            
+            <button id="generate-spec"><b>一键生成笔画描述（在添加完笔画之后点）</b></button>
+            <button id="replace-vars" >一键替换笔画参数（在进行基本的拓扑修改后点）</button>
+            <button id="nudge">找最优解</button>
+        </div>
+        <div id="indicator" class="new-group"></div>
+        <div class="main">
+            <div id="char-list"></div>
+            <div class="canvas-wrap">
+                <canvas id="preview" width="256" height="256"></canvas>
             </div>
-            <div id="var-bars" class="left-float var-bar">
-                    asdasdasd
+    
+            <div class="text-stuff">
+                <div class="text">
+                    <textarea id="stroke-list" spellcheck="false" class="editor allow-tabs"></textarea>
+                    <pre><code id="code-display" class="syntax-highight html"></code></pre>            
+                </div>
+            </div>
+            <div id="var-bars" class="var-bar">
+                </div>
             </div>
         </div>
-        <div id="canvas-wrap"></div>
-        <div id="indicator"></div>
+
+        <datalist id="font-list">
+            <option>Adobe Kaiti Std</option>
+            <option>HYShouJinShuF</option>
+            <option>Adobe Fangsong Std</option>
+            <option>Adobe Song Std</option>
+            <option>Source Han Serif CN</option>
+            <option>CloudRuiSongGBK</option>
+        </datalist>
 
     </body>
     <script src="./javascripts/three.script.js"></script>

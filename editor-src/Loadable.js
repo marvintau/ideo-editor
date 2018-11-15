@@ -5,19 +5,20 @@ function dup(json){
     return JSON.parse(JSON.stringify(json));
 }
 
-function getStrokeSpec(strokeName, base){
-    let stroke = dup(base[strokeName]);
+function getStrokeSpecRecur(strokeNextElem, base){
+    let stroke = dup(base[strokeNextElem]);
+    delete stroke.text;
 
     switch(stroke.type){
         case "radical":
             stroke.body = stroke.body.reduce(function(list, elem){
-                let strokeElem = getStrokeSpec(elem, base);
+                let strokeElem = getStrokeSpecRecur(elem, base);
                 return (strokeElem.type == "radical") ? list.concat(strokeElem.body) : list.concat(strokeElem);
             }, []);
             return stroke;
         case "compound":
             stroke.body = stroke.body.reduce(function(list, elem){
-                let strokeElem = getStrokeSpec(elem, base);
+                let strokeElem = getStrokeSpecRecur(elem, base);
 
                 // a note about recursive call:
                 // by this point, all elements in strokeElem body has been found.
@@ -28,6 +29,110 @@ function getStrokeSpec(strokeName, base){
         case "simple":
             return {type:"compound", body:[stroke]};
     }
+}
+
+function getStrokeSpec(strokeName, base){
+    
+    if (base[strokeName].type == "radical")
+        return getStrokeSpecRecur(strokeName, base);
+    else
+        return {type:"radical", vars:{}, body:[getStrokeSpecRecur(strokeName, base)]};
+}
+
+function suggestSpec(specOrig, specDeri){
+    console.log(specOrig, specDeri, "suggestSpec");
+    var newSpec = {body: specOrig.body, type: specOrig.type, prog:[]};
+
+    for (let i = 0; i < specDeri.body.length; i++){
+        let stroke = specDeri.body[i];
+        console.log(stroke, "suggestedSpec stroke");
+        if(stroke.body.length == 1)
+            newSpec.prog.push({ith:i, scale: 1, rotate:0, curl: 0});
+        else
+            newSpec.prog.push({
+                ith: i,
+                prog: stroke.body.map((e, j) => ({ith:j, scale: 1, rotate: 0, curl: 0}))
+            });
+    }
+
+    if(specDeri.body.length > 1) for (let i = 1; i < specDeri.body.length; i++){
+        newSpec.prog.push({cross:{
+            dest:{ith: i-1, curve: 0, r: 0},
+            self:{ith: i, curve: 0, r: 0}
+        }})
+    }
+
+    console.log(newSpec, "suggestedSpec");
+    return newSpec;
+}
+
+function replaceSingleVariable(key, val){
+    switch(key){
+        case "rotate":
+            return {val: val, range:{min: val-20, max: val+20}};
+        case "curl":
+            return {val: val, range:{min: val-10, max: val+10}};
+        case "scale":
+            return {val: val, range:{min: val*0.8, max:val/0.8}};
+        case "r":
+            return {val: val, range:{min: val-0.1, max:val+0.1}};
+    }
+}
+
+function replaceVariables(spec){
+    spec.vars = {};
+
+    let ithStroke = 0,
+        ithCurve = 0;
+    for (let is = 0; is < spec.prog.length; is++)
+        for (let key in spec.prog[is]){
+            if (key == "ith")
+                ithStroke = spec.prog[is].ith;
+            else if (key == "prog")
+                for (let ic = 0; ic < spec.prog[is].prog.length; ic++)
+                    for (let keyc in spec.prog[is].prog[ic])
+                        if (keyc == "ith")
+                            ithCurve = spec.prog[is].prog[ic].ith;
+                        // else if((keyc in ["rotate", "curl"] && keyc != 0) || keyc == "scale" && keyc != 1){
+                        else {
+                            let nonVars1 = (keyc in ["rotate", "curl"] && spec.prog[is].prog[ic][keyc] == 0),
+                                nonVars2 = (keyc == "scale" && spec.prog[is].prog[ic][keyc] == 1);
+                            if (!nonVars1 && !nonVars2){
+                                let varName = keyc + "-" + ithStroke + "-" + ithCurve;
+                                spec.vars[varName] = replaceSingleVariable(keyc, spec.prog[is].prog[ic][keyc]);
+                                spec.prog[is].prog[ic][keyc] = varName;    
+                            }
+                        }
+            else if (key == "cross"){
+                let cross = spec.prog[is].cross,
+                    varSelfName = "cross-"+ cross.self.ith + "-" + cross.dest.ith + "-" + "self",
+                    varDestName = "cross-"+ cross.self.ith + "-" + cross.dest.ith + "-" + "dest";
+
+                if(cross.self.r != 1 && cross.self.r != 0){
+                    spec.vars[varSelfName] = replaceSingleVariable("r", cross.self.r);
+                    spec.prog[is].cross.self.r = varSelfName;
+                }
+
+                if(cross.dest.r != 1 && cross.dest.r != 0){
+                    spec.vars[varDestName] = replaceSingleVariable("r", cross.dest.r);
+                    spec.prog[is].cross.dest.r = varDestName;
+                }
+            }
+            // else if((key in ["rotate", "curl"] && spec.proc[is][key] != 0) || key == "scale" && spec.prog[is][key] != 1){
+            else {
+                let nonVars1 = ((key == "rotate" || key == "curl") && spec.prog[is][key] == 0),
+                    nonVars2 = (key == "scale" && spec.prog[is][key] == 1),
+                    nonVars = nonVars1 || nonVars2;
+                    console.log(key, spec.prog[is][key], key in ["rotate", "curl"]);
+                if(!nonVars){
+                    let varName = key + "-" + ithStroke;
+                    spec.vars[varName] = replaceSingleVariable(key, spec.prog[is][key]);
+                    spec.prog[is][key] = varName;
+                }
+            }
+        }
+    
+    return spec;
 }
 
 function addSlider(name, variable, func){
@@ -64,8 +169,10 @@ function addLabel(name){
 function addInput(name, variable, func){
     var x = document.createElement("div");
     x.appendChild(addLabel(name));
-    x.appendChild(addSlider(name, variable, func));
-    x.appendChild(addNumberIndicator(name, variable.val));
+    if(variable.val != undefined){
+        x.appendChild(addSlider(name, variable, func));
+        x.appendChild(addNumberIndicator(name, variable.val));
+    }
     return x;
 }
 
@@ -132,6 +239,26 @@ export default class Loadable {
         this.input = new Input(this);
         this.currCharName = "";
         this.currSpec = {};
+
+        this.shouldShowStrokes = false;
+
+        document.getElementById('create').onclick = function(e){
+            this.create();
+        }.bind(this);
+
+        document.getElementById('show-stroke').onclick = function(e){
+            this.shouldShowStrokes = !this.shouldShowStrokes;
+            this.updateUI(this.base);
+        }.bind(this);
+
+        document.getElementById('generate-spec').onclick = function(e){
+            this.suggest();
+        }.bind(this);
+
+        document.getElementById('replace-vars').onclick = function(e){
+            this.replaceVars();
+        }.bind(this);
+
     }
 
     updateBase(){
@@ -143,9 +270,14 @@ export default class Loadable {
     }
 
     updateUI(chars){
-        var CharUI = document.getElementById("char-list");
+        var charUI = document.getElementById("char-list");
     
-        for(let charName in chars) if (chars[charName].type == "radical") {
+        while (charUI.firstChild) {
+            charUI.removeChild(charUI.firstChild);
+        }
+
+        for(let charName in chars)
+        if (this.shouldShowStrokes || this.base[charName].type === "radical"){
             
             var p = document.createElement('button')
             p.appendChild(document.createTextNode(charName));
@@ -157,7 +289,7 @@ export default class Loadable {
                 this.input.update(this.getStrokeSpecText(charName));
             }.bind(this);
 
-            CharUI.appendChild(p);
+            charUI.appendChild(p);
         }
     }
 
@@ -170,16 +302,57 @@ export default class Loadable {
     }
 
     save(){
-        var stringified = JSON.stringify(this.base, null, 2);
+        var stringified = JSON.stringify(this.base, null, 2),
+            charName    = this.currCharName;
         saveStrokeBase(stringified).then(function(e){
-            console.log("persisted");
+            document.getElementById("indicator").innerText = "『" + charName + "』字编辑已然保存";
         }).catch(function(e){
             console.log("error", e);
         });
     }
 
+    suggest(){
+
+        // right after submit, the current spec is the fresh and
+        // incomplete one. we get the full one through getStrokeSpec.
+        // then get the suggestedSpec from suggestSpec. Notably, we
+        // don't save this one, because it's used for deriving progs,
+        // and too detailed to save.
+        this.submit();
+        this.getStrokeSpec(this.currCharName);
+        this.base[this.currCharName] = suggestSpec(this.base[this.currCharName], this.currSpec);
+        this.base[this.currCharName].text = fromJSONObject(this.base[this.currCharName]);
+        this.input.update(this.base[this.currCharName].text);
+        this.initStroke(this.currCharName);
+    }
+
+    replaceVars(){
+        delete this.base[this.currCharName].text;
+        console.log(this.base[this.currCharName]);
+        this.base[this.currCharName] = replaceVariables(this.base[this.currCharName]);
+        this.base[this.currCharName].text = fromJSONObject(this.base[this.currCharName]);
+        this.input.update(this.base[this.currCharName].text);
+        this.initStroke(this.currCharName);
+    }
+
+    create(){
+        var charName = document.getElementById("new-char-name").value;
+        if(this.base[charName] !== undefined)
+            document.getElementById("indicator").innerText = "『" + charName + "』字已然存在了";
+        else{
+            this.base[charName] = {type:"radical", body:[], vars:{}, prog:[]};
+            this.currCharName = charName;
+            this.currSpec = this.base[charName];
+            this.updateUI(this.base);
+        }
+    }
+
     getStrokeSpec(strokeName){
-        document.getElementById("indicator").innerText = "loaded stroke " + strokeName;
+
+        var type = this.base[strokeName].type,
+            names = {"radical": "部首", "compound": "笔画", "simple": "简单笔画"};
+
+        document.getElementById("indicator").innerText = "载入" + names[type] + "『" + strokeName + "』";
         this.currSpec = getStrokeSpec(strokeName, this.base);
     }
 
@@ -191,7 +364,7 @@ export default class Loadable {
         } else {
             text = this.base[strokeName].text;
         }
-
+        
         return text;
     }
     
@@ -200,14 +373,42 @@ export default class Loadable {
         while (varsDom.firstChild) {
             varsDom.removeChild(varsDom.firstChild);
         }
-        let vars = this.currSpec.vars;
+        
+        let width = document.createElement('div');
+        width.appendChild(addLabel("笔画宽度"));
+        width.appendChild(addSlider(name, {val:1, range:{min:1, max:15}}, function(e){
+            this.strokeWidth = parseFloat(e.target.value);
+            this.updateStroke();
+        }.bind(this)));
+        varsDom.appendChild(width);
+        // let widthDom = document.createElement(div)
 
-        for (let i in vars){
-            varsDom.appendChild(addInput(i, vars[i], function(e){
-                vars[i].val = parseFloat(e.target.value);
-                document.getElementById(e.target.name+"-indicator").innerText = vars[i].val;
-                this.updateStroke();
-            }.bind(this)));
+        let comp = document.createElement('div');
+        comp.appendChild(addLabel("比照字体（中宫由窄到宽）"));
+
+        let list = document.getElementById('font-list');
+        var x = document.createElement("INPUT");
+        x.classList.add("slider");
+        x.setAttribute("type", "range");
+        x.setAttribute("min", 1);
+        x.setAttribute("max", 6);
+        x.setAttribute("value", 0);
+        x.setAttribute("step", 1);
+        x.setAttribute("list", "font-list")
+        x.addEventListener('input', func);
+        x.addEventListener('change', func);
+
+        if (this.currSpec.vars){
+            let vars = this.currSpec.vars;
+            for (let i in vars){
+                varsDom.appendChild(addInput(i, vars[i], function(e){
+                    if(vars[i].val != undefined){
+                        vars[i].val = parseFloat(e.target.value);
+                        document.getElementById(e.target.name+"-indicator").innerText = vars[i].val;    
+                    }
+                    this.updateStroke();
+                }.bind(this)));
+            }
         }
     }
 

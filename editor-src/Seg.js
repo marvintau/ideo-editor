@@ -13,7 +13,9 @@ export default class Seg extends CurveStructureBase{
         this.head = new Vec();
         this.tail = new Vec();
         this.box  = new Box();
-        
+
+        this.head.w = (spec.weight === undefined) ? 1: spec.weight[0];
+        this.tail.w = (spec.weight === undefined) ? 1: spec.weight[1];
         this.update();
     }
 

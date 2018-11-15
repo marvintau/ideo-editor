@@ -1,188 +1,6 @@
 import Vec from "./Vec.js";
 import CurveStructureBase from "./CurveStructureBase.js";
 import Stroke from "./Stroke.js";
-
-Array.prototype.sum = function(){
-    return this.reduce((s, e) => s+e);
-}
-
-Array.prototype.mean = function(){
-    return this.sum() / this.length;
-}
-
-Array.prototype.min = function(){
-    return Math.min.apply(null, this);
-}
-
-Array.prototype.max = function(){
-    return Math.max.apply(null, this);
-}
-
-/**
- * intersection of two line segments
- * https://en.wikipedia.org/wiki/Line%E2%80%93line_intersection#Given_two_points_on_each_line
- * @param {Vec} p1 start of a
- * @param {Vec} p2 end of a
- * @param {Vec} p3 start of b
- * @param {Vec} p4 end of b
- */
-function lineLineIntersect(p1, p2, p3, p4){
-    var det_s =  p1.sub(p3).cross(p3.sub(p4)),
-        det_t = -p1.sub(p2).cross(p1.sub(p3)),
-        det   =  p1.sub(p2).cross(p3.sub(p4));
-
-    var s = det_s/det,
-        t = det_t/det;
-
-    return {p: p1.add(p2.sub(p1).mult(s)), s:s, t:t};
-}
-
-function findIntersections(pointList){
-
-    for ( let s = 0; s < pointList.length; s++)
-        for (let t = 0; t < s; t ++){
-            for (let i = 0; i < pointList[s].length-1; i++)
-            for (let j = 0; j < pointList[t].length-1; j++){
-                var intersect   = lineLineIntersect(pointList[s][i], pointList[s][i+1], pointList[t][j], pointList[t][j+1]),
-                    p           = intersect.p,
-                    q           = intersect.p.copy();
-                p.intersect = true;
-                q.intersect = true;
-
-                var s_norm = intersect.s >= -0.001 && intersect.s <= 1.001,
-                    t_norm = intersect.t >= -0.001 && intersect.t <= 1.001;
-                   
-                if(s_norm && t_norm){
-                    pointList[s].splice(i+++1, 0, p);
-                    pointList[t].splice(j+++1, 0, q);
-                }
-            }
-        }
-
-    for (let s = 0; s < pointList.length; s++){
-        var segs = [[]];
-        for (let i = 0; i < pointList[s].length; i++){
-            segs[segs.length-1].push(pointList[s][i]);
-            if(pointList[s][i].intersect){
-                let p = pointList[s][i].copy();
-                p.intersect = true;
-                segs.push([p]);
-            }
-                
-        }
-        pointList[s] = segs;
-    }
-
-    return pointList;
-}
-
-function cross (o, a, b){
-    return a.sub(o).cross(b.sub(o));
-}
-
-function check(prev, curr){
-    return cross(prev[prev.length - 2], prev[prev.length - 1], curr);
-}
-
-function convexHull(points) {
-    points.sort(function(a, b) {
-       return a.x == b.x ? a.y - b.y : a.x - b.x;
-    });
- 
-    var lower = [];
-    for (var i = 0; i < points.length; i++) {
-        while(lower.length >= 2 && check(lower, points[i]) <= 0) lower.pop();
-        lower.push(points[i]);
-    }
- 
-    var upper = [];
-    for (var i = points.length - 1; i >= 0; i--) {
-        while(upper.length >= 2 && check(upper, points[i]) <= 0) upper.pop();
-        upper.push(points[i]);
-    }
- 
-    upper.pop();
-    lower.pop();
-    return lower.concat(upper);
- }
-
-function getCentroid(pointList){
-    var centroid  = new Vec(),
-        totalMass = 0
-    
-    for (let i = 0; i < pointList.length; i++){
-        var center = pointList[(i+1)%pointList.length].add(pointList[i]).mult(0.5),
-            mass   = pointList[(i+1)%pointList.length].sub(pointList[i]).mag();
-        centroid = centroid.add(center.mult(mass));
-        totalMass += mass;
-    }
-
-    return centroid.mult(1/totalMass);
-}
-
-function getBounds(pointList){
-
-    var interior = [],
-        median   = [],
-        outlier  = [];
-
-    for (let i = 0; i < pointList.length; i++)
-    for (let j = 0; j < pointList[i].length; j++){
-        let l  = pointList[i][j],
-            ls = [];
-        if(l[0].intersect && l[l.length - 1].intersect){
-            interior = interior.concat(l);
-            median = median.concat(l);
-        } else {
-            if (l[l.length-1].intersect) l.reverse();
-            for (let k = 0; k < l.length-1; k++) ls = ls.concat(l[k].sampleStepTo(l[k+1], 0.1));
-            median.push(ls[Math.floor(ls.length*0.618)]);
-        }
-        outlier = outlier.concat(l);
-    }
-
-    var interiorConvexHull = convexHull(interior),
-        medianConvexHull   = convexHull(median),
-        outlierConvexHull  = convexHull(outlier);
-    
-    var interiorCentroid = getCentroid(interiorConvexHull),
-        medianCentroid   = getCentroid(medianConvexHull),
-        outlierCentroid  = getCentroid(outlierConvexHull);
-
-    var interiorRadii = interiorConvexHull.map(e=>e.sub(interiorCentroid).mag()),
-        medianRadii   = medianConvexHull.map(e=>e.sub(medianCentroid).mag()),
-        outlierRadii  = outlierConvexHull.map(e=>e.sub(outlierCentroid).mag());
-
-    var interiorRadius = interiorRadii.mean(),
-        medianRadius   = medianRadii.mean(),
-        outlierRadius  = outlierRadii.mean();
-    
-    var interiorExtrema = interiorRadii.max() - interiorRadii.min(),
-        medianExtrema   = medianRadii.max() - medianRadii.min(),
-        outlierExtrema  = outlierRadii.max() - outlierRadii.min();
-
-    return {
-        interior : {
-            convexHull : interiorConvexHull,
-            centroid: interiorCentroid,
-            radius :interiorRadius,
-            extrema : interiorExtrema
-        },
-        median   : {
-            convexHull : medianConvexHull, 
-            centroid: medianCentroid,
-            radius : medianRadius,
-            extrema : medianExtrema
-        },
-        outlier  : {
-            convexHull : outlierConvexHull,
-            centroid: outlierCentroid,
-            radius : outlierRadius,
-            extrema : outlierExtrema
-        }
-    };
-}
-
 /**
  * Radical is such a structure that, it contains several strokes, including
  * their intersecting information, but not aligning. like 戈, 匕. 
@@ -192,6 +10,7 @@ export default class Radical extends CurveStructureBase{
     
     constructor(spec) {
         super(Stroke, spec);
+
         this.modify();
         this.toPointList();
     }
@@ -226,25 +45,14 @@ export default class Radical extends CurveStructureBase{
 
     toPointList(){
             
-        let ratio = 30;
+        let ratio = 16;
         for(let comp of this.body) comp.head = comp.head.mult(ratio);
 
         this.scale(ratio);
-        this.update();
+        this.trans(this.box.center().neg());
 
         this.points = [];
         for(let component of this.body)
-            this.points = this.points.concat(component.toPointList());
-
-        this.points = findIntersections(this.points);
-        this.bounds = getBounds(this.points);
-
-        for (let i = 0; i < this.points.length; i++)
-        for (let j = 0; j < this.points[i].length; j++)
-        for (let k = 0; k < this.points[i][j].length; k++){
-            this.points[i][j][k].isub(this.bounds.median.centroid);        
-        }
-
-        this.bounds = getBounds(this.points);
+            this.points = this.points.concat(component.toPointList());            
     }
 }

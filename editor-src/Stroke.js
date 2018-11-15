@@ -13,6 +13,12 @@ export default class Stroke extends CurveStructureBase{
         this.update();
     }
 
+    curl(angle){
+        if(this.body.length == 1){
+            this.body[0].curl(angle);
+        }
+    }
+
     at(spec){
         return this.body[spec.curve].at(spec.r);
     }

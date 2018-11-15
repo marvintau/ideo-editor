@@ -1,5 +1,5 @@
 var indentWidth = 4,
-    lineLength  = 80;
+    lineLength  = 120;
 
 Array.prototype.flatten = function(){
     return [].concat(...this);
@@ -103,7 +103,8 @@ function fromJSONObjectRecursive(object, remLen){
         case "string":
             return [quoteString(object)];
         case "number":
-            return [object.toString()];
+
+            return [ object % 1 == 0 ? object.toString() : object.toFixed(3)];
         case "object":
             var res = (Array.isArray(object)) 
                       ? handleArray(object, fromJSONObjectRecursive, remLen)

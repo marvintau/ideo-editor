@@ -26,4 +26,14 @@ export default class Curve extends CurveStructureBase{
         
         return currSeg.head.add(finalSeg);
     }
+
+    curl(curvature){
+        var accum = 0;
+        for (let i = 0; i < this.body.length; i++){
+            this.body[i].ang += accum;
+            accum += curvature;
+        }
+            
+        this.update();
+    }
 }

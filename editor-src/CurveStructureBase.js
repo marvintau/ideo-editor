@@ -67,10 +67,13 @@ export default class CurveStructureBase{
                 return item;
             case "string" :
                 if(item in this.vars)
-                    return this.vars[item].val;
+                    if (typeof this.vars[item] === 'string' && this.vars[item].match(/@'\S*'/)){
+                        let s = this.vars[item].replace(/@'([^']*)'/g, "this.getVariable('$1')");
+                        return eval(s);    
+                    } else 
+                        return this.vars[item].val;
                 else if(item.match(/@'\S*'/)){
                     let s = item.replace(/@'([^']*)'/g, "this.getVariable('$1')");
-                    console.log(s);
                     return eval(s);
                 }
                 else 
@@ -106,7 +109,7 @@ export default class CurveStructureBase{
         // have more specific meanings.
         if (vars === undefined) vars = this.vars; else vars = Object.assign(this.vars, vars);
         if (prog === undefined) prog = this.prog; //else prog = this.prog.concat(prog);
-        // console.log("modify prog: ", prog);
+
         // Typically the component curve object contains program
         // when instantiating. So now we apply the programs like
         // initialization. According to this order of calling.

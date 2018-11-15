@@ -77,6 +77,10 @@ export default class Vec{
         }
     }
 
+    neg(){
+        return new Vec(-this.x, -this.y);
+    }
+
     /**
      * returns the cross product between this and vec.
      * also is the result of det
@@ -159,5 +163,9 @@ export default class Vec{
         }
         lis.push(vec);
         return lis;
+    }
+
+    isNaN(){
+        return (isNaN(this.x) || isNaN(this.y));
     }
 }
