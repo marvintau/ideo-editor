@@ -1,27 +1,44 @@
+
+import Input from "./Input.js";
+import {fromJSONObject, toJSONText} from "./ION.js";
+import {getSpec} from "./Spec.js";
+import {addSlider, addLabel, addInput} from "./UIComponent.js";
+import {loadStrokeBase, saveStrokeBase} from "./Ajax.js";
+
 import Radical from "./Radical.js";
-import Loadable from "./Loadable.js";
 import { getBounds } from "./Interior.js";
+import {drawBound, drawRadical} from "./Draw.js";
 
-Array.prototype.sum = function(){
-    if (this.length == 0)
-        return 0;
-    else
-        return this.reduce((s, e) => s+e);
-}
-
-Array.prototype.mean = function(){
-    return this.sum() / this.length;
-}
-
-export default class StrokeBase extends Loadable{
+export default class StrokeBase{
 
     constructor(){
         
-        super();
+        this.base  = {};
+        this.input = new Input(this);
+        this.currCharName = "";
+        this.currSpec = {};
         this.preview = document.getElementById("preview").getContext('2d');
-        this.previewFont = "Source Han Serif CN";
-    }
 
+        this.shouldShowStrokes = false;
+
+        document.getElementById('create').onclick = function(e){
+            this.create();
+        }.bind(this);
+
+        document.getElementById('show-stroke').onclick = function(e){
+            this.shouldShowStrokes = !this.shouldShowStrokes;
+            this.updateUI(this.base);
+        }.bind(this);
+
+        document.getElementById('generate-spec').onclick = function(e){
+            this.suggest();
+        }.bind(this);
+
+        document.getElementById('replace-vars').onclick = function(e){
+            this.replaceVars();
+        }.bind(this);
+
+    }
 
     initStroke(charName){        
         this.getStrokeSpec(charName);
@@ -34,6 +51,137 @@ export default class StrokeBase extends Loadable{
     updateStroke(){
         this.radical = new Radical(this.currSpec);
         this.updateWithPoint();
+    }
+
+    updateBase(){
+        loadStrokeBase()
+        .then(function(data){
+            this.base = JSON.parse(data);
+            this.updateUI(this.base);
+        }.bind(this));
+    }
+
+    updateUI(chars){
+        var charUI = document.getElementById("char-list");
+    
+        while (charUI.firstChild) {
+            charUI.removeChild(charUI.firstChild);
+        }
+
+        for(let charName in chars)
+        if (this.shouldShowStrokes || this.base[charName].type === "radical"){
+            
+            var p = document.createElement('button')
+            p.appendChild(document.createTextNode(charName));
+            p.classList.add('char-button'); 
+
+            p.onclick = function(e){
+                this.currCharName = charName;
+                this.initStroke(charName);
+                this.input.update(this.getStrokeSpecText(charName));
+            }.bind(this);
+
+            charUI.appendChild(p);
+        }
+    }
+
+    submit(){
+        var text = document.getElementById("stroke-list").value;
+        var updatedSpec = JSON.parse(toJSONText(text));
+        this.base[this.currCharName] = updatedSpec;
+        this.base[this.currCharName].text = text;
+        this.initStroke(this.currCharName);
+    }
+
+    save(){
+        var stringified = JSON.stringify(this.base, null, 2),
+            charName    = this.currCharName;
+        saveStrokeBase(stringified).then(function(e){
+            document.getElementById("indicator").innerText = "『" + charName + "』字编辑已然保存";
+        }).catch(function(e){
+            console.log("error", e);
+        });
+    }
+
+    create(){
+        var charName = document.getElementById("new-char-name").value;
+        if(this.base[charName] !== undefined)
+            document.getElementById("indicator").innerText = "『" + charName + "』字已然存在了";
+        else{
+            this.base[charName] = {type:"radical", body:[], vars:{}, prog:[]};
+            this.currCharName = charName;
+            this.currSpec = this.base[charName];
+            this.updateUI(this.base);
+        }
+    }
+
+    suggest(){
+        this.submit();
+        this.getStrokeSpec(this.currCharName);
+        this.base[this.currCharName] = suggestSpec(this.base[this.currCharName], this.currSpec);
+        this.base[this.currCharName].text = fromJSONObject(this.base[this.currCharName]);
+        this.input.update(this.base[this.currCharName].text);
+        this.initStroke(this.currCharName);
+    }
+
+    replaceVars(){
+        delete this.base[this.currCharName].text;
+        console.log(this.base[this.currCharName]);
+        this.base[this.currCharName] = replaceVariables(this.base[this.currCharName]);
+        this.base[this.currCharName].text = fromJSONObject(this.base[this.currCharName]);
+        this.input.update(this.base[this.currCharName].text);
+        this.initStroke(this.currCharName);
+    }
+
+    getStrokeSpec(strokeName){
+
+        var type = this.base[strokeName].type,
+            names = {"radical": "部首", "compound": "笔画", "simple": "简单笔画"};
+
+        document.getElementById("indicator").innerText = "载入" + names[type] + "『" + strokeName + "』";
+        this.currSpec = getSpec(strokeName, this.base);
+    }
+
+    getStrokeSpecText(strokeName){
+
+        var text = "";
+        if (this.base[strokeName].text === undefined){
+            text = fromJSONObject(this.base[strokeName]);
+        } else {
+            text = this.base[strokeName].text;
+        }
+        
+        return text;
+    }
+    
+    initVariableControls(){
+        let varsDom = document.getElementById("var-bars");
+        while (varsDom.firstChild) {
+            varsDom.removeChild(varsDom.firstChild);
+        }
+        
+        let width = document.createElement('div');
+        width.appendChild(addLabel("笔画宽度"));
+        this.strokeWidth = 8;
+        width.appendChild(addSlider(name, {val:4, range:{min:1, max:15}}, function(e){
+            this.strokeWidth = parseFloat(e.target.value);
+            this.updateStroke();
+        }.bind(this)));
+        varsDom.appendChild(width);
+        // let widthDom = document.createElement(div)
+
+        if (this.currSpec.vars){
+            let vars = this.currSpec.vars;
+            for (let i in vars){
+                varsDom.appendChild(addInput(i, vars[i], function(e){
+                    if(vars[i].val != undefined){
+                        vars[i].val = parseFloat(e.target.value);
+                        document.getElementById(e.target.name+"-indicator").innerText = vars[i].val;    
+                    }
+                    this.updateStroke();
+                }.bind(this)));
+            }
+        }
     }
 
 
@@ -50,67 +198,16 @@ export default class StrokeBase extends Loadable{
             for (let p = 0; p < points[i].length; p++)
                 points[i][p].isub(center);
 
-        for (let i = 0; i < bounds.outlier.convexHull; i++)
-            bounds.outlier.convexHull[i].isub(center);
-        for (let i = 0; i < bounds.median.convexHull; i++)
-            bounds.median.convexHull[i].isub(center);
-        for (let i = 0; i < bounds.interior.convexHull; i++)
-            bounds.interior.convexHull[i].isub(center);
-
-
         this.preview.beginPath();
         this.preview.rect(16, 16, 224, 224);
         this.preview.stroke();
 
-        this.preview.translate(128, 128);
-        this.preview.lineWidth = this.strokeWidth;
-        this.preview.lineCap = "square";
-        this.preview.lineJoin = "miter";
-        this.preview.miterLimit = 3;
-        this.preview.strokeStyle = "black";
+        drawRadical(this.preview, this.strokeWidth, points);
 
-        for (let i = 0; i < points.length; i++){
-
-            let seg = 0;
-            this.preview.beginPath();
-            this.preview.moveTo(points[i][seg].x, points[i][seg].y);
-
-            for (; seg < points[i].length;){
-                if (points[i].length - seg > 3) {
-                    this.preview.bezierCurveTo(
-                        points[i][seg+1].x, points[i][seg+1].y,
-                        points[i][seg+2].x, points[i][seg+2].y,
-                        points[i][seg+3].x, points[i][seg+3].y
-                    );    
-                    seg += 3;
-                } else {
-                    let p = points[i][seg];
-                    this.preview.lineTo(p.x, p.y);
-                    seg += 1;
-                }
-            }
-            this.preview.stroke();    
-        }
 
         this.preview.translate(-center.x, -center.y);
-        this.preview.lineWidth = 1;
-        console.log(bounds.median.convexHull);
-        this.preview.beginPath();
-        this.preview.moveTo(bounds.median.convexHull[0].x, bounds.median.convexHull[0].y);
-        for (let i = 0; i < bounds.median.convexHull.length; i++){
-            this.preview.lineTo(bounds.median.convexHull[i].x, bounds.median.convexHull[i].y);
-        }
-        this.preview.closePath();
-        this.preview.stroke();
-
-        console.log(bounds.outlier.convexHull);
-        this.preview.beginPath();
-        this.preview.moveTo(bounds.outlier.convexHull[0].x, bounds.outlier.convexHull[0].y);
-        for (let i = 0; i < bounds.outlier.convexHull.length; i++){
-            this.preview.lineTo(bounds.outlier.convexHull[i].x, bounds.outlier.convexHull[i].y);
-        }
-        this.preview.closePath();
-        this.preview.stroke();
+        drawBound(this.preview, bounds, "median");
+        drawBound(this.preview, bounds, "outlier");
 
         this.preview.setTransform(1, 0, 0, 1, 0, 0);
     }
