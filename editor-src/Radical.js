@@ -1,18 +1,16 @@
-import Vec from "./Vec.js";
 import CurveStructureBase from "./CurveStructureBase.js";
+import { getCore } from "./Core.js";
 import Stroke from "./Stroke.js";
-/**
- * Radical is such a structure that, it contains several strokes, including
- * their intersecting information, but not aligning. like 戈, 匕. 
- * 
- */
+import Vec from "./Vec.js";
+
 export default class Radical extends CurveStructureBase{
     
     constructor(spec) {
         super(Stroke, spec);
+    }
 
-        this.modify();
-        this.toPointList();
+    at(spec){
+        this.body[spec.stroke].at(spec);
     }
 
     cross(spec){
@@ -31,28 +29,34 @@ export default class Radical extends CurveStructureBase{
     update(){        
         // first deal with the first component. 
         if(this.body.length > 0){
+            this.body[0].head.iadd(this.head);
             this.body[0].update();
             this.box  = this.body[0].box;
         }
         if(this.body.length > 1){
             for(let i = 1; i < this.body.length; i++){
+                this.body[i].head.iadd(this.head);
                 this.body[i].update();
                 this.box = this.box.union(this.body[i].box);
             }    
         }
+
+        this.head = new Vec();
     }
 
-
     toPointList(){
-            
-        let ratio = 16;
-        for(let comp of this.body) comp.head = comp.head.mult(ratio);
-
-        this.scale(ratio);
-        this.trans(this.box.center().neg());
 
         this.points = [];
         for(let component of this.body)
-            this.points = this.points.concat(component.toPointList());            
+            this.points = this.points.concat(component.toPointList());        
+        
+        this.core = getCore(this.points);
+
+        return this.points;
+    }
+
+    draw(ctx, strokeWidth, scale){
+        for (let component of this.body)
+            component.draw(ctx, strokeWidth, scale);
     }
 }

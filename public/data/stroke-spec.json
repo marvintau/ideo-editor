@@ -1,6 +1,6 @@
 {
   "pie": {
-    "type": "simple",
+    "type": "Curve",
     "body": [
       {
         "len": 3,
@@ -27,10 +27,10 @@
         ]
       }
     ],
-    "text": "# type: simple\n  body: @ # len: 3 ang: 120 weight: @ 2 1\n          # len: 3 ang: 135 weight: @ 1 1\n          # len: 3 ang: 150 weight: @ 1 1"
+    "text": "# type: Curve\n  body: @ # len: 3 ang: 120 weight: @ 2 1\n          # len: 3 ang: 135 weight: @ 1 1\n          # len: 3 ang: 150 weight: @ 1 1"
   },
   "na": {
-    "type": "simple",
+    "type": "Curve",
     "body": [
       {
         "len": 3,
@@ -57,10 +57,10 @@
         ]
       }
     ],
-    "text": "# type: simple\n  body: @ # len: 3 ang: 60 weight: @ 1 1\n          # len: 3 ang: 45 weight: @ 1 2\n          # len: 3 ang: 30 weight: @ 2 1"
+    "text": "# type: Curve\n  body: @ # len: 3 ang: 60 weight: @ 1 1\n          # len: 3 ang: 45 weight: @ 1 2\n          # len: 3 ang: 30 weight: @ 2 1"
   },
   "heng": {
-    "type": "simple",
+    "type": "Curve",
     "body": [
       {
         "len": 3,
@@ -87,10 +87,10 @@
         ]
       }
     ],
-    "text": "# type: simple\n  body: @ # len: 3 ang: 1  weight: @ 1 1\n          # len: 3 ang: -1 weight: @ 1 1\n          # len: 3 ang: 1  weight: @ 1 1"
+    "text": "# type: Curve\n  body: @ # len: 3 ang: 1  weight: @ 1 1\n          # len: 3 ang: -1 weight: @ 1 1\n          # len: 3 ang: 1  weight: @ 1 1"
   },
   "shu": {
-    "type": "simple",
+    "type": "Curve",
     "body": [
       {
         "len": 3,
@@ -117,10 +117,10 @@
         ]
       }
     ],
-    "text": "# type: simple\n  body: @ # len: 3 ang: 89 weight: @ 1 1\n          # len: 3 ang: 91 weight: @ 1 1\n          # len: 3 ang: 89 weight: @ 1 1"
+    "text": "# type: Curve\n  body: @ # len: 3 ang: 89 weight: @ 1 1\n          # len: 3 ang: 91 weight: @ 1 1\n          # len: 3 ang: 89 weight: @ 1 1"
   },
   "dian": {
-    "type": "simple",
+    "type": "Curve",
     "body": [
       {
         "len": 3,
@@ -147,10 +147,10 @@
         ]
       }
     ],
-    "text": "# type: simple\n  body: @ # len: 3 ang: 30 weight: @ 1 1\n          # len: 3 ang: 45 weight: @ 1 2\n          # len: 3 ang: 60 weight: @ 2 1"
+    "text": "# type: Curve\n  body: @ # len: 3 ang: 30 weight: @ 1 1\n          # len: 3 ang: 45 weight: @ 1 2\n          # len: 3 ang: 60 weight: @ 2 1"
   },
   "zuodian": {
-    "type": "simple",
+    "type": "Curve",
     "body": [
       {
         "len": 3,
@@ -165,10 +165,10 @@
         "ang": 105
       }
     ],
-    "text": "# type: simple\n  body: @ # len: 3 ang: 135\n          # len: 3 ang: 120\n          # len: 3 ang: 105"
+    "text": "# type: Curve\n  body: @ # len: 3 ang: 135\n          # len: 3 ang: 120\n          # len: 3 ang: 105"
   },
   "ti": {
-    "type": "simple",
+    "type": "Curve",
     "body": [
       {
         "len": 3,
@@ -183,10 +183,10 @@
         "ang": -10
       }
     ],
-    "text": "# type: simple\n  body: @ # len: 3 ang: 0\n          # len: 3 ang: -10\n          # len: 3 ang: -10"
+    "text": "# type: Curve\n  body: @ # len: 3 ang: 0\n          # len: 3 ang: -10\n          # len: 3 ang: -10"
   },
   "wan": {
-    "type": "simple",
+    "type": "Curve",
     "body": [
       {
         "len": 1,
@@ -201,10 +201,10 @@
         "ang": 105
       }
     ],
-    "text": "# type: simple\n  body: @ # len: 1 ang: 30\n          # len: 3 ang: 70\n          # len: 5 ang: 105\n"
+    "text": "# type: Curve\n  body: @ # len: 1 ang: 30\n          # len: 3 ang: 70\n          # len: 5 ang: 105\n"
   },
   "xie": {
-    "type": "simple",
+    "type": "Curve",
     "body": [
       {
         "len": 3,
@@ -221,7 +221,7 @@
     ]
   },
   "shupie": {
-    "type": "compound",
+    "type": "Stroke",
     "body": [
       "shu",
       "pie"
@@ -236,10 +236,10 @@
         "curl": 9
       }
     ],
-    "text": "# type: compound\n  body: @ shu pie\n\n  prog: @ # ith: 0\n          # ith: 1 rotate: -30\n                   curl: 9"
+    "text": "# type: Stroke\n  body: @ shu pie\n\n  prog: @ # ith: 0\n          # ith: 1 rotate: -30\n                   curl: 9"
   },
   "pingna": {
-    "type": "simple",
+    "type": "Curve",
     "body": [
       {
         "len": 3,
@@ -256,7 +256,7 @@
     ]
   },
   "-xieshuwan2": {
-    "type": "simple",
+    "type": "Curve",
     "body": [
       {
         "len": 7,
@@ -283,10 +283,10 @@
         "ang": -10
       }
     ],
-    "text": "# type: simple\n  body: @ # len: 7 ang: 140\n          # len: 1 ang: 70\n          # len: 5 ang: 0\n          # len: 0.3 ang: 0\n          # len: 0.3 ang: -10\n          # len: 0.3 ang: -10"
+    "text": "# type: Curve\n  body: @ # len: 7 ang: 140\n          # len: 1 ang: 70\n          # len: 5 ang: 0\n          # len: 0.3 ang: 0\n          # len: 0.3 ang: -10\n          # len: 0.3 ang: -10"
   },
   "-xieshuwan": {
-    "type": "simple",
+    "type": "Curve",
     "body": [
       {
         "len": 6,
@@ -303,7 +303,7 @@
     ]
   },
   "-shuwan": {
-    "type": "simple",
+    "type": "Curve",
     "body": [
       {
         "len": 5,
@@ -320,7 +320,7 @@
     ]
   },
   "-zhe-down": {
-    "type": "simple",
+    "type": "Curve",
     "body": [
       {
         "len": 3,
@@ -335,10 +335,10 @@
         "ang": 93
       }
     ],
-    "text": "# type: simple\n  body: @ # len: 3 ang: 93\n          # len: 3 ang: 93\n          # len: 3 ang: 93"
+    "text": "# type: Curve\n  body: @ # len: 3 ang: 93\n          # len: 3 ang: 93\n          # len: 3 ang: 93"
   },
   "-gou-down": {
-    "type": "simple",
+    "type": "Curve",
     "body": [
       {
         "len": 1,
@@ -353,10 +353,10 @@
         "ang": 153
       }
     ],
-    "text": "# type: simple\n  body: @ # len: 1 ang: 153\n          # len: 1 ang: 153\n          # len: 1 ang: 153"
+    "text": "# type: Curve\n  body: @ # len: 1 ang: 153\n          # len: 1 ang: 153\n          # len: 1 ang: 153"
   },
   "-gou-left": {
-    "type": "simple",
+    "type": "Curve",
     "body": [
       {
         "len": 1,
@@ -371,10 +371,10 @@
         "ang": -135
       }
     ],
-    "text": "# type: simple\n  body: @ # len: 1 ang: -120\n          # len: 1 ang: -135\n          # len: 1 ang: -135"
+    "text": "# type: Curve\n  body: @ # len: 1 ang: -120\n          # len: 1 ang: -135\n          # len: 1 ang: -135"
   },
   "-gou-up": {
-    "type": "simple",
+    "type": "Curve",
     "body": [
       {
         "len": 1,
@@ -389,18 +389,18 @@
         "ang": -101
       }
     ],
-    "text": "# type: simple\n  body: @ # len: 1 ang: -103\n          # len: 1 ang: -102\n          # len: 1 ang: -101"
+    "text": "# type: Curve\n  body: @ # len: 1 ang: -103\n          # len: 1 ang: -102\n          # len: 1 ang: -101"
   },
   "hengzhe-": {
-    "type": "compound",
+    "type": "Stroke",
     "body": [
       "heng",
       "-zhe-down"
     ],
-    "text": "# type: compound\n  body: @ heng -zhe-down"
+    "text": "# type: Stroke\n  body: @ heng -zhe-down"
   },
   "henggou": {
-    "type": "compound",
+    "type": "Stroke",
     "body": [
       "heng",
       "-gou-down"
@@ -410,18 +410,18 @@
         "ith": 1
       }
     ],
-    "text": "# type: compound\n  body: @ heng -gou-down\n  prog: @ # ith: 1"
+    "text": "# type: Stroke\n  body: @ heng -gou-down\n  prog: @ # ith: 1"
   },
   "hengzhe": {
-    "type": "compound",
+    "type": "Stroke",
     "body": [
       "heng",
       "shu"
     ],
-    "text": "# type: compound\n  body: @ heng shu"
+    "text": "# type: Stroke\n  body: @ heng shu"
   },
   "hengzhegou": {
-    "type": "compound",
+    "type": "Stroke",
     "body": [
       "hengzhe-",
       "-gou-left"
@@ -432,27 +432,27 @@
         "curl": -3
       }
     ],
-    "text": "# type: compound\n  body: @ hengzhe- -gou-left\n  prog: @ # ith: 1 curl: -3"
+    "text": "# type: Stroke\n  body: @ hengzhe- -gou-left\n  prog: @ # ith: 1 curl: -3"
   },
   "hengzhezhe": {
-    "type": "compound",
+    "type": "Stroke",
     "body": [
       "heng",
       "shu",
       "heng"
     ],
-    "text": "# type: compound\n  body: @ heng shu heng"
+    "text": "# type: Stroke\n  body: @ heng shu heng"
   },
   "hengzhezhezhe": {
-    "type": "compound",
+    "type": "Stroke",
     "body": [
       "hengzhezhe",
       "shu"
     ],
-    "text": "# type: compound\n  body: @ hengzhezhe shu"
+    "text": "# type: Stroke\n  body: @ hengzhezhe shu"
   },
   "hengzhezhepie": {
-    "type": "compound",
+    "type": "Stroke",
     "body": [
       "hengzhe-",
       "heng",
@@ -469,10 +469,10 @@
         "scale": 0.5
       }
     ],
-    "text": "# type: compound\n  body: @ hengzhe- heng pie\n  prog: @ # ith: 1 scale: 0.6 rotate: 10\n          # ith: 2 scale: 0.5"
+    "text": "# type: Stroke\n  body: @ hengzhe- heng pie\n  prog: @ # ith: 1 scale: 0.6 rotate: 10\n          # ith: 2 scale: 0.5"
   },
   "hengzhezhezhegou": {
-    "type": "compound",
+    "type": "Stroke",
     "body": [
       "hengzhe-",
       "heng",
@@ -494,10 +494,10 @@
         "rotate": -15
       }
     ],
-    "text": "# type: compound\n  body: @ hengzhe- heng pie -gou-left\n  prog: @ # ith: 1 scale: 0.5 rotate: 10\n          # ith: 2 scale: 0.5\n          # ith: 3 rotate: -15"
+    "text": "# type: Stroke\n  body: @ hengzhe- heng pie -gou-left\n  prog: @ # ith: 1 scale: 0.5 rotate: 10\n          # ith: 2 scale: 0.5\n          # ith: 3 rotate: -15"
   },
   "hengzhewangou": {
-    "type": "compound",
+    "type": "Stroke",
     "body": [
       "heng",
       "-xieshuwan2",
@@ -515,49 +515,49 @@
     ]
   },
   "hengshuwangou": {
-    "type": "compound",
+    "type": "Stroke",
     "body": [
       "heng",
       "-shuwan",
       "-gou-up"
     ],
-    "text": "# type: compound\n  body: @ heng -shuwan -gou-up"
+    "text": "# type: Stroke\n  body: @ heng -shuwan -gou-up"
   },
   "hengxiegou": {
-    "type": "compound",
+    "type": "Stroke",
     "body": [
       "heng",
       "xie",
       "-gou-up"
     ],
-    "text": "# type: compound\n  body: @ heng xie -gou-up"
+    "text": "# type: Stroke\n  body: @ heng xie -gou-up"
   },
   "shugou": {
-    "type": "compound",
+    "type": "Stroke",
     "body": [
       "shu",
       "-gou-left"
     ],
-    "text": "# type: compound\n  body: @ shu -gou-left"
+    "text": "# type: Stroke\n  body: @ shu -gou-left"
   },
   "shuzhe": {
-    "type": "compound",
+    "type": "Stroke",
     "body": [
       "shu",
       "heng"
     ],
-    "text": "# type: compound\n  body: @ shu heng"
+    "text": "# type: Stroke\n  body: @ shu heng"
   },
   "shuzhezhe": {
-    "type": "compound",
+    "type": "Stroke",
     "body": [
       "shuzhe",
       "shu"
     ],
-    "text": "# type: compound\n  body: @ shuzhe shu"
+    "text": "# type: Stroke\n  body: @ shuzhe shu"
   },
   "shuzhezhegou": {
-    "type": "compound",
+    "type": "Stroke",
     "body": [
       "shuzhe",
       "pie",
@@ -575,36 +575,36 @@
     ]
   },
   "shuwan": {
-    "type": "compound",
+    "type": "Stroke",
     "body": [
       "-shuwan"
     ]
   },
   "shuwangou": {
-    "type": "compound",
+    "type": "Stroke",
     "body": [
       "-shuwan",
       "-gou-up"
     ]
   },
   "hengpie": {
-    "type": "compound",
+    "type": "Stroke",
     "body": [
       "heng",
       "pie"
     ],
-    "text": "# type: compound\n  body: @ heng pie"
+    "text": "# type: Stroke\n  body: @ heng pie"
   },
   "hengpiewan": {
-    "type": "compound",
+    "type": "Stroke",
     "body": [
       "hengpie",
       "wan"
     ],
-    "text": "# type: compound\n  body: @ hengpie wan"
+    "text": "# type: Stroke\n  body: @ hengpie wan"
   },
   "piezhe": {
-    "type": "compound",
+    "type": "Stroke",
     "body": [
       "pie",
       "heng"
@@ -617,7 +617,7 @@
     ]
   },
   "piedian": {
-    "type": "compound",
+    "type": "Stroke",
     "body": [
       "pie",
       "dian"
@@ -635,14 +635,14 @@
     ]
   },
   "xiegou": {
-    "type": "compound",
+    "type": "Stroke",
     "body": [
       "xie",
       "-gou-up"
     ]
   },
   "wogou": {
-    "type": "compound",
+    "type": "Stroke",
     "body": [
       "xiegou"
     ],
@@ -654,10 +654,10 @@
         "scale": 1.2
       }
     ],
-    "text": "# type: compound\n  body: @ xiegou\n  prog: @ # ith: 0 rotate: -10 curl: -20 scale: 1.2"
+    "text": "# type: Stroke\n  body: @ xiegou\n  prog: @ # ith: 0 rotate: -10 curl: -20 scale: 1.2"
   },
   "xieshu": {
-    "type": "compound",
+    "type": "Stroke",
     "body": [
       "shu"
     ],
@@ -669,20 +669,13 @@
     ]
   },
   "女": {
-    "type": "radical",
+    "type": "Radical",
     "body": [
       "piedian",
       "pie",
       "heng"
     ],
     "vars": {
-      "total-scale": {
-        "val": 1,
-        "range": {
-          "min": 0.9,
-          "max": 1.2
-        }
-      },
       "width": {
         "val": 0,
         "range": {
@@ -702,9 +695,6 @@
       "rot-0-1": "-@'width'*5"
     },
     "prog": [
-      {
-        "scale": "total-scale"
-      },
       {
         "ith": 0,
         "prog": [
@@ -765,8 +755,7 @@
           }
         }
       }
-    ],
-    "text": "# type: radical\n  body: @ piedian pie heng\n  vars: # total-scale: # val: 1 range: # min:0.9 max: 1.2\n          width: # val: 0 range: # min: 0 max: 1\n          height: # val: 0 range: # min: 0 max: 1\n\n          rot-0-0: \"5+@'width'*3.2\"\n          sca-0-1: \"0.3+@'width'*0.15\"\n          rot-0-1: \"-@'width'*5\"                           \n\n  prog: @ # scale: total-scale\n          # ith: 0\n            prog: @ # ith: 0 rotate: rot-0-0\n                      curl: -8 scale: \"0.83-@'width'*0.1\"\n                    # ith: 1 scale: sca-0-1\n                             rotate: rot-0-1\n          # ith: 1 \n            rotate: \"-22.2+@'width'*4.3\"\n            scale:  \"1.1+@'width'*0.2\"\n            prog: @ # ith: 0 curl: \"20.7-@'width'*1.1\"\n          # ith: 2 scale: 1.25 rotate: 0\n          # cross: # dest: # ith: 2 curve: 0 r: \"0.4 -@'width'*0.1\"\n                     self: # ith: 0 curve: 0 r: \"0.65-@'width'*0.13\"\n          # cross: # dest: # ith: 2 curve: 0 r: \"0.65+@'width'*0.11\"\n                     self: # ith: 1 curve: 0 r: 0.05\n"
+    ]
   },
   "木": {
     "body": [
@@ -775,30 +764,45 @@
       "pie",
       "na"
     ],
-    "type": "radical",
+    "type": "Radical",
+    "vars": {
+      "aspect": {
+        "val": 0.493,
+        "range": {
+          "min": 0,
+          "max": 1
+        }
+      },
+      "cross-pos": {
+        "val": 0.2,
+        "range": {
+          "min": 0.2,
+          "max": 0.25
+        }
+      },
+      "fanning": "(0.3-@'aspect'+(@'cross-pos'-0.2)*7.5)*20",
+      "stem-len": "0.8+0.5*@'aspect'",
+      "beam-len": "1-@'aspect'*0.3"
+    },
     "prog": [
       {
         "ith": 0,
-        "scale": 1,
-        "rotate": 0,
-        "curl": 0
+        "scale": "beam-len"
       },
       {
         "ith": 1,
-        "scale": 1,
-        "rotate": 0,
-        "curl": 0
+        "scale": "stem-len"
       },
       {
         "ith": 2,
-        "scale": 1,
-        "rotate": 0,
+        "scale": 0.8,
+        "rotate": "fanning",
         "curl": 0
       },
       {
         "ith": 3,
-        "scale": 1,
-        "rotate": 0,
+        "scale": 0.8,
+        "rotate": "-@'fanning'",
         "curl": 0
       },
       {
@@ -806,12 +810,12 @@
           "dest": {
             "ith": 0,
             "curve": 0,
-            "r": "cross-1-0-dest"
+            "r": 0.5
           },
           "self": {
             "ith": 1,
             "curve": 0,
-            "r": "cross-1-0-self"
+            "r": "cross-pos"
           }
         }
       },
@@ -820,7 +824,7 @@
           "dest": {
             "ith": 1,
             "curve": 0,
-            "r": "cross-2-1-dest"
+            "r": "cross-pos"
           },
           "self": {
             "ith": 2,
@@ -843,64 +847,85 @@
           }
         }
       }
-    ],
-    "vars": {
-      "cross-1-0-self": {
-        "val": 0.2,
-        "range": {
-          "min": 0.1,
-          "max": 0.30000000000000004
-        }
-      },
-      "cross-1-0-dest": {
-        "val": 0.5,
-        "range": {
-          "min": 0.4,
-          "max": 0.6
-        }
-      },
-      "cross-2-1-dest": {
-        "val": 0.2,
-        "range": {
-          "min": 0.1,
-          "max": 0.30000000000000004
-        }
-      }
-    },
-    "text": "# body: @ heng shu pie na\n  type: radical\n  prog: @ # ith: 0 scale: 1 rotate: 0 curl: 0\n          # ith: 1 scale: 1 rotate: 0 curl: 0\n          # ith: 2 scale: 1 rotate: 0 curl: 0\n          # ith: 3 scale: 1 rotate: 0 curl: 0\n          # cross: # dest: # ith: 0 curve: 0 r: cross-1-0-dest\n                     self: # ith: 1 curve: 0 r: cross-1-0-self\n          # cross: # dest: # ith: 1 curve: 0 r: cross-2-1-dest\n                     self: # ith: 2 curve: 0 r: 0\n          # cross: # dest: # ith: 2 curve: 0 r: 0\n                     self: # ith: 3 curve: 0 r: 0\n  vars: # cross-1-0-self: # val: 0.200\n                            range: # min: 0.100 max: 0.300\n          cross-1-0-dest: # val: 0.500\n                            range: # min: 0.400 max: 0.600\n          cross-2-1-dest: # val: 0.200\n                            range: # min: 0.100 max: 0.300"
+    ]
   },
   "日": {
-    "type": "radical",
+    "type": "Radical",
     "body": [
       "shu",
       "hengzhe",
       "heng",
       "heng"
     ],
+    "vars": {
+      "horizontal": {
+        "val": 0.618,
+        "range": {
+          "min": 0.48,
+          "max": 0.75
+        }
+      },
+      "vertical": {
+        "val": 1,
+        "range": {
+          "min": 0.9,
+          "max": 1.1
+        }
+      },
+      "inner-hori": {
+        "val": 0.8,
+        "range": {
+          "min": 0.6,
+          "max": 1
+        }
+      },
+      "center-ratio": {
+        "val": 0.5,
+        "range": {
+          "min": 0.4,
+          "max": 0.6
+        }
+      },
+      "bottom-ratio": {
+        "val": 0.95,
+        "range": {
+          "min": 0.9,
+          "max": 1
+        }
+      }
+    },
     "prog": [
+      {
+        "ith": 0,
+        "scale": "vertical"
+      },
       {
         "ith": 1,
         "prog": [
           {
             "ith": 0,
-            "scale": "scale-1-0"
+            "scale": "horizontal"
+          },
+          {
+            "ith": 1,
+            "scale": "vertical"
           }
         ]
       },
       {
         "ith": 2,
-        "scale": "scale-2"
+        "scale": "@'inner-hori' * @'horizontal'"
       },
       {
         "ith": 3,
-        "scale": "scale-3"
+        "scale": "horizontal"
       },
       {
         "cross": {
           "dest": {
             "ith": 0,
             "curve": 0,
-            "r": "cross-2-0-dest"
+            "r": "@'center-ratio' * @'bottom-ratio'"
           },
           "self": {
             "ith": 2,
@@ -914,7 +939,7 @@
           "dest": {
             "ith": 0,
             "curve": 0,
-            "r": 1
+            "r": "bottom-ratio"
           },
           "self": {
             "ith": 3,
@@ -923,55 +948,61 @@
           }
         }
       }
-    ],
-    "vars": {
-      "scale-1-0": {
-        "val": 0.6,
-        "range": {
-          "min": 0.48,
-          "max": 0.75
-        }
-      },
-      "scale-2": {
-        "val": 0.4,
-        "range": {
-          "min": 0.32,
-          "max": 0.5
-        }
-      },
-      "scale-3": {
-        "val": 0.6,
-        "range": {
-          "min": 0.48,
-          "max": 0.75
-        }
-      },
-      "cross-2-0-dest": {
-        "val": 0.5,
-        "range": {
-          "min": 0.4,
-          "max": 0.6
-        }
-      }
-    },
-    "text": "# type: radical\n  body: @ shu hengzhe heng heng\n  prog: @ # ith: 1\n            prog: @ # ith: 0 scale: scale-1-0\n          # ith: 2 scale: scale-2\n          # ith: 3 scale: scale-3\n          # cross: # dest: # ith: 0 curve: 0 r: cross-2-0-dest\n                     self: # ith: 2 curve: 0 r: 0\n          # cross: # dest: # ith: 0 curve: 0 r: 1\n                     self: # ith: 3 curve: 0 r: 0\n  vars: # scale-1-0: # val: 0.600\n                       range: # min: 0.480 max: 0.750\n          scale-2: # val: 0.400\n                     range: # min: 0.320 max: 0.500\n          scale-3: # val: 0.600\n                     range: # min: 0.480 max: 0.750\n          cross-2-0-dest: # val: 0.500\n                            range: # min: 0.400 max: 0.600"
+    ]
   },
   "月": {
-    "type": "radical",
+    "type": "Radical",
     "body": [
       "shupie",
       "hengzhegou",
       "heng",
       "heng"
     ],
+    "vars": {
+      "vertical": {
+        "val": 0.606,
+        "range": {
+          "min": 0.44,
+          "max": 0.688
+        }
+      },
+      "horizontal": {
+        "val": 0.6,
+        "range": {
+          "min": 0.5,
+          "max": 0.75
+        }
+      },
+      "inner-hori": {
+        "val": 0.8,
+        "range": {
+          "min": 0.7,
+          "max": 0.9
+        }
+      },
+      "cross-2-0-dest": {
+        "val": 0.58,
+        "range": {
+          "min": 0.48,
+          "max": 0.68
+        }
+      },
+      "cross-3-0-dest": {
+        "val": 0.12,
+        "range": {
+          "min": 0.07,
+          "max": 0.27
+        }
+      }
+    },
     "prog": [
       {
         "ith": 0,
-        "scale": "scale-0",
+        "scale": "vertical",
         "prog": [
           {
             "ith": 1,
-            "scale": "scale-0-1"
+            "scale": 1.08
           }
         ]
       },
@@ -980,25 +1011,21 @@
         "prog": [
           {
             "ith": 0,
-            "scale": "scale-1-0"
+            "scale": "horizontal"
           },
           {
             "ith": 1,
-            "scale": "scale-1-1"
-          },
-          {
-            "ith": 2,
-            "scale": "scale-1-2"
+            "scale": "@'vertical'*2"
           }
         ]
       },
       {
         "ith": 2,
-        "scale": "scale-2"
+        "scale": "@'inner-hori' * @'horizontal'"
       },
       {
         "ith": 3,
-        "scale": "scale-3"
+        "scale": "@'inner-hori' * @'horizontal'"
       },
       {
         "cross": {
@@ -1028,76 +1055,10 @@
           }
         }
       }
-    ],
-    "vars": {
-      "scale-0": {
-        "val": 0.55,
-        "range": {
-          "min": 0.44,
-          "max": 0.688
-        }
-      },
-      "scale-0-1": {
-        "val": 0.9,
-        "range": {
-          "min": 0.72,
-          "max": 1.125
-        }
-      },
-      "scale-1-0": {
-        "val": 0.4,
-        "range": {
-          "min": 0.32,
-          "max": 0.5
-        }
-      },
-      "scale-1-1": {
-        "val": 1.1,
-        "range": {
-          "min": 0.88,
-          "max": 1.375
-        }
-      },
-      "scale-1-2": {
-        "val": 0.7,
-        "range": {
-          "min": 0.56,
-          "max": 0.875
-        }
-      },
-      "scale-2": {
-        "val": 0.27,
-        "range": {
-          "min": 0.216,
-          "max": 0.338
-        }
-      },
-      "scale-3": {
-        "val": 0.27,
-        "range": {
-          "min": 0.216,
-          "max": 0.338
-        }
-      },
-      "cross-2-0-dest": {
-        "val": 0.58,
-        "range": {
-          "min": 0.48,
-          "max": 0.68
-        }
-      },
-      "cross-3-0-dest": {
-        "val": 0.17,
-        "range": {
-          "min": 0.07,
-          "max": 0.27
-        }
-      }
-    },
-    "text": "# type: radical\n  body: @ shupie hengzhegou heng heng\n  prog: @ # ith: 0\n            scale: scale-0\n            prog: @ # ith: 1 scale: scale-0-1\n          # ith: 1\n            prog: @ # ith: 0 scale: scale-1-0\n                    # ith: 1 scale: scale-1-1\n                    # ith: 2 scale: scale-1-2\n          # ith: 2 scale: scale-2\n          # ith: 3 scale: scale-3\n          # cross: # dest: # ith: 0 curve: 0 r: cross-2-0-dest\n                     self: # ith: 2 curve: 0 r: 0\n          # cross: # dest: # ith: 0 curve: 1 r: cross-3-0-dest\n                     self: # ith: 3 curve: 0 r: 0\n  vars: # scale-0: # val: 0.550\n                     range: # min: 0.440 max: 0.688\n          scale-0-1: # val: 0.900\n                       range: # min: 0.720 max: 1.125\n          scale-1-0: # val: 0.400\n                       range: # min: 0.320 max: 0.500\n          scale-1-1: # val: 1.100\n                       range: # min: 0.880 max: 1.375\n          scale-1-2: # val: 0.700\n                       range: # min: 0.560 max: 0.875\n          scale-2: # val: 0.270\n                     range: # min: 0.216 max: 0.338\n          scale-3: # val: 0.270\n                     range: # min: 0.216 max: 0.338\n          cross-2-0-dest: # val: 0.580\n                            range: # min: 0.480 max: 0.680\n          cross-3-0-dest: # val: 0.170\n                            range: # min: 0.070 max: 0.270"
+    ]
   },
   "目": {
-    "type": "radical",
+    "type": "Radical",
     "body": [
       "shu",
       "hengzhe",
@@ -1105,38 +1066,79 @@
       "heng",
       "heng"
     ],
+    "vars": {
+      "horizontal": {
+        "val": 0.618,
+        "range": {
+          "min": 0.48,
+          "max": 0.75
+        }
+      },
+      "vertical": {
+        "val": 1.1,
+        "range": {
+          "min": 0.9,
+          "max": 1.2
+        }
+      },
+      "inner-hori": {
+        "val": 0.8,
+        "range": {
+          "min": 0.6,
+          "max": 1
+        }
+      },
+      "center-ratio": {
+        "val": 0.33,
+        "range": {
+          "min": 0.4,
+          "max": 0.6
+        }
+      },
+      "bottom-ratio": {
+        "val": 0.95,
+        "range": {
+          "min": 0.9,
+          "max": 1
+        }
+      }
+    },
     "prog": [
+      {
+        "ith": 0,
+        "scale": "vertical"
+      },
       {
         "ith": 1,
         "prog": [
           {
             "ith": 0,
-            "scale": "scale-1-0"
+            "scale": "horizontal"
           },
           {
             "ith": 1,
-            "scale": 1
+            "scale": "vertical"
           }
         ]
       },
       {
         "ith": 2,
-        "scale": "scale-2"
+        "scale": "@'inner-hori' * @'horizontal'"
       },
       {
         "ith": 3,
-        "scale": "scale-3"
+        "scale": "@'inner-hori' * @'horizontal'"
       },
       {
         "ith": 4,
-        "scale": "scale-4"
+        "scale": "horizontal"
       },
       {
         "cross": {
           "dest": {
             "ith": 0,
             "curve": 0,
-            "r": "cross-2-0-dest"
+            "r": "@'center-ratio' * @'bottom-ratio'"
           },
           "self": {
             "ith": 2,
@@ -1150,7 +1152,7 @@
           "dest": {
             "ith": 0,
             "curve": 0,
-            "r": "cross-3-0-dest"
+            "r": "@'center-ratio' * @'bottom-ratio' * 2"
           },
           "self": {
             "ith": 3,
@@ -1164,7 +1166,7 @@
           "dest": {
             "ith": 0,
             "curve": 0,
-            "r": 1
+            "r": "bottom-ratio"
           },
           "self": {
             "ith": 4,
@@ -1173,55 +1175,10 @@
           }
         }
       }
-    ],
-    "vars": {
-      "scale-1-0": {
-        "val": 0.6,
-        "range": {
-          "min": 0.48,
-          "max": 0.75
-        }
-      },
-      "scale-2": {
-        "val": 0.42,
-        "range": {
-          "min": 0.336,
-          "max": 0.525
-        }
-      },
-      "scale-3": {
-        "val": 0.42,
-        "range": {
-          "min": 0.336,
-          "max": 0.525
-        }
-      },
-      "scale-4": {
-        "val": 0.6,
-        "range": {
-          "min": 0.48,
-          "max": 0.75
-        }
-      },
-      "cross-2-0-dest": {
-        "val": 0.33,
-        "range": {
-          "min": 0.23,
-          "max": 0.43
-        }
-      },
-      "cross-3-0-dest": {
-        "val": 0.66,
-        "range": {
-          "min": 0.56,
-          "max": 0.76
-        }
-      }
-    },
-    "text": "# type: radical\n  body: @ shu hengzhe heng heng heng\n  prog: @ # ith: 1\n            prog: @ # ith: 0 scale: scale-1-0\n                    # ith: 1 scale: 1\n          # ith: 2 scale: scale-2\n          # ith: 3 scale: scale-3\n          # ith: 4 scale: scale-4\n          # cross: # dest: # ith: 0 curve: 0 r: cross-2-0-dest\n                     self: # ith: 2 curve: 0 r: 0\n          # cross: # dest: # ith: 0 curve: 0 r: cross-3-0-dest\n                     self: # ith: 3 curve: 0 r: 0\n          # cross: # dest: # ith: 0 curve: 0 r: 1\n                     self: # ith: 4 curve: 0 r: 0\n  vars: # scale-1-0: # val: 0.600\n                       range: # min: 0.480 max: 0.750\n          scale-2: # val: 0.420\n                     range: # min: 0.336 max: 0.525\n          scale-3: # val: 0.420\n                     range: # min: 0.336 max: 0.525\n          scale-4: # val: 0.600\n                     range: # min: 0.480 max: 0.750\n          cross-2-0-dest: # val: 0.330\n                            range: # min: 0.230 max: 0.430\n          cross-3-0-dest: # val: 0.660\n                            range: # min: 0.560 max: 0.760"
+    ]
   },
   "世": {
-    "type": "radical",
+    "type": "Radical",
     "body": [
       "heng",
       "shuzhe",
@@ -1366,11 +1323,10 @@
           "max": 0.3
         }
       }
-    },
-    "text": "# type: radical\n  body: @ heng shuzhe shu shuzhe\n  prog: @ # ith: 0 scale: scale-0\n          # ith: 1\n            prog: @ # ith: 0 scale: scale-1-0\n                    # ith: 1 scale: scale-1-1\n          # ith: 2 scale: scale-2\n          # ith: 3\n            prog: @ # ith: 0 scale: scale-3-0\n          # cross: # dest: # ith: 0 curve: 0 r: cross-1-0-dest\n                     self: # ith: 1 curve: 0 r: cross-1-0-self\n          # cross: # dest: # ith: 1 curve: 1 r: 1\n                     self: # ith: 2 curve: 0 r: 1\n          # cross: # dest: # ith: 0 curve: 0 r: cross-3-0-dest\n                     self: # ith: 3 curve: 0 r: cross-3-0-self\n  vars: # scale-0: # val: 1.500\n                     range: # min: 1.200 max: 1.875\n          scale-1-0: # val: 0.880\n                       range: # min: 0.704 max: 1.100\n          scale-1-1: # val: 0.400\n                       range: # min: 0.320 max: 0.500\n          scale-2: # val: 0.880\n                     range: # min: 0.704 max: 1.100\n          scale-3-0: # val: 1.100\n                       range: # min: 0.880 max: 1.375\n          cross-1-0-self: # val: 0.500\n                            range: # min: 0.400 max: 0.600\n          cross-1-0-dest: # val: 0.450\n                            range: # min: 0.350 max: 0.550\n          cross-3-0-self: # val: 0.300\n                            range: # min: 0.200 max: 0.400\n          cross-3-0-dest: # val: 0.200\n                            range: # min: 0.100 max: 0.300"
+    }
   },
   "牛": {
-    "type": "radical",
+    "type": "Radical",
     "body": [
       "pie",
       "heng",
@@ -1393,7 +1349,7 @@
         }
       },
       "scale-1": {
-        "val": 0.9,
+        "val": 0.777,
         "range": {
           "min": 0.72,
           "max": 1.125
@@ -1421,16 +1377,16 @@
         }
       },
       "cross-2-1-self": {
-        "val": 0.3,
+        "val": 0.311,
         "range": {
           "min": 0.2,
           "max": 0.4
         }
       },
       "cross-2-1-dest": {
-        "val": 0.5,
+        "val": 0.434,
         "range": {
-          "min": 0.4,
+          "min": 0.3,
           "max": 0.6
         }
       },
@@ -1509,7 +1465,478 @@
           }
         }
       }
+    ]
+  },
+  "且": {
+    "type": "Radical",
+    "body": [
+      "shu",
+      "hengzhe",
+      "heng",
+      "heng",
+      "heng"
     ],
-    "text": "# type: radical\n  body: @ pie heng shu heng\n  vars: # scale-0: # val: 0.480\n                     range: # min: 0.384 max: 0.600\n          rotate-0: # val: -15\n                      range: # min: -35 max: 5\n          scale-1: # val: 0.900\n                     range: # min: 0.720 max: 1.125\n          scale-2: # val: 1.400\n                     range: # min: 1.120 max: 1.750\n          scale-3: # val: 1.200\n                     range: # min: 0.960 max: 1.500\n          cross-0-1-self: # val: 0.500\n                            range: # min: 0.400 max: 0.600\n          cross-2-1-self: # val: 0.300\n                            range: # min: 0.200 max: 0.400\n          cross-2-1-dest: # val: 0.500\n                            range: # min: 0.400 max: 0.600\n          cross-3-2-self: # val: 0.500\n                            range: # min: 0.400 max: 0.600\n          cross-3-2-dest: # val: 0.600\n                            range: # min: 0.500 max: 0.700\n  prog: @ # ith: 0 scale: scale-0 rotate: rotate-0\n          # ith: 1 scale: scale-1\n          # ith: 2 scale: scale-2\n          # ith: 3 scale: scale-3\n          # cross: # self: # ith: 0 curve: 0 r: cross-0-1-self\n                     dest: # ith: 1 curve: 0 r: 0\n          # cross: # self: # ith: 2 curve: 0 r: cross-2-1-self\n                     dest: # ith: 1 curve: 0 r: cross-2-1-dest\n          # cross: # self: # ith: 3 curve: 0 r: cross-3-2-self\n                     dest: # ith: 2 curve: 0 r: cross-3-2-dest"
+    "vars": {
+      "horizontal": {
+        "val": 0.618,
+        "range": {
+          "min": 0.48,
+          "max": 0.75
+        }
+      },
+      "vertical": {
+        "val": 1.05,
+        "range": {
+          "min": 0.9,
+          "max": 1.1
+        }
+      },
+      "inner-hori": {
+        "val": 0.8,
+        "range": {
+          "min": 0.6,
+          "max": 1
+        }
+      },
+      "outer-hori": {
+        "val": 0.3,
+        "range": {
+          "min": 0.2,
+          "max": 0.4
+        }
+      },
+      "center-ratio": {
+        "val": 0.33,
+        "range": {
+          "min": 0.4,
+          "max": 0.6
+        }
+      },
+      "bottom-pos": "@'outer-hori'/(@'horizontal'+@'outer-hori'*2)"
+    },
+    "prog": [
+      {
+        "ith": 0,
+        "scale": "vertical"
+      },
+      {
+        "ith": 1,
+        "prog": [
+          {
+            "ith": 0,
+            "scale": "horizontal"
+          },
+          {
+            "ith": 1,
+            "scale": "vertical"
+          }
+        ]
+      },
+      {
+        "ith": 2,
+        "scale": "@'inner-hori' * @'horizontal'"
+      },
+      {
+        "ith": 3,
+        "scale": "@'inner-hori' * @'horizontal'"
+      },
+      {
+        "ith": 4,
+        "scale": "@'horizontal' + @'outer-hori'*2"
+      },
+      {
+        "cross": {
+          "dest": {
+            "ith": 0,
+            "curve": 0,
+            "r": "@'center-ratio'"
+          },
+          "self": {
+            "ith": 2,
+            "curve": 0,
+            "r": 0
+          }
+        }
+      },
+      {
+        "cross": {
+          "dest": {
+            "ith": 0,
+            "curve": 0,
+            "r": "@'center-ratio' * 2"
+          },
+          "self": {
+            "ith": 3,
+            "curve": 0,
+            "r": 0
+          }
+        }
+      },
+      {
+        "cross": {
+          "dest": {
+            "ith": 0,
+            "curve": 0,
+            "r": 1
+          },
+          "self": {
+            "ith": 4,
+            "curve": 0,
+            "r": "bottom-pos"
+          }
+        }
+      }
+    ]
+  },
+  "直": {
+    "type": "Radical",
+    "body": [
+      "shu",
+      "hengzhe",
+      "heng",
+      "heng",
+      "heng",
+      "heng"
+    ],
+    "vars": {
+      "horizontal": {
+        "val": 0.618,
+        "range": {
+          "min": 0.48,
+          "max": 0.75
+        }
+      },
+      "vertical": {
+        "val": 1.05,
+        "range": {
+          "min": 0.9,
+          "max": 1.1
+        }
+      },
+      "inner-hori": {
+        "val": 0.8,
+        "range": {
+          "min": 0.6,
+          "max": 1
+        }
+      },
+      "outer-hori": {
+        "val": 0.3,
+        "range": {
+          "min": 0.2,
+          "max": 0.4
+        }
+      },
+      "center-ratio": {
+        "val": 0.25,
+        "range": {
+          "min": 0.4,
+          "max": 0.6
+        }
+      },
+      "bottom-pos": "@'outer-hori'/(@'horizontal'+@'outer-hori'*2)"
+    },
+    "prog": [
+      {
+        "ith": 0,
+        "scale": "vertical"
+      },
+      {
+        "ith": 1,
+        "prog": [
+          {
+            "ith": 0,
+            "scale": "horizontal"
+          },
+          {
+            "ith": 1,
+            "scale": "vertical"
+          }
+        ]
+      },
+      {
+        "ith": 2,
+        "scale": "@'inner-hori' * @'horizontal'"
+      },
+      {
+        "ith": 3,
+        "scale": "@'inner-hori' * @'horizontal'"
+      },
+      {
+        "ith": 4,
+        "scale": "@'inner-hori' * @'horizontal'"
+      },
+      {
+        "ith": 5,
+        "scale": "@'horizontal' + @'outer-hori'*2"
+      },
+      {
+        "cross": {
+          "dest": {
+            "ith": 0,
+            "curve": 0,
+            "r": "@'center-ratio'"
+          },
+          "self": {
+            "ith": 2,
+            "curve": 0,
+            "r": 0
+          }
+        }
+      },
+      {
+        "cross": {
+          "dest": {
+            "ith": 0,
+            "curve": 0,
+            "r": "@'center-ratio' * 2"
+          },
+          "self": {
+            "ith": 3,
+            "curve": 0,
+            "r": 0
+          }
+        }
+      },
+      {
+        "cross": {
+          "dest": {
+            "ith": 0,
+            "curve": 0,
+            "r": "@'center-ratio' * 3"
+          },
+          "self": {
+            "ith": 4,
+            "curve": 0,
+            "r": 0
+          }
+        }
+      },
+      {
+        "cross": {
+          "dest": {
+            "ith": 0,
+            "curve": 0,
+            "r": 1
+          },
+          "self": {
+            "ith": 5,
+            "curve": 0,
+            "r": "bottom-pos"
+          }
+        }
+      }
+    ]
+  },
+  "具": {
+    "type": "Radical",
+    "body": [],
+    "vars": {},
+    "prog": []
+  },
+  "真": {
+    "type": "Radical",
+    "body": [],
+    "vars": {},
+    "prog": []
+  },
+  "白": {
+    "type": "Radical",
+    "body": [],
+    "vars": {},
+    "prog": []
+  },
+  "百": {
+    "type": "Radical",
+    "body": [],
+    "vars": {},
+    "prog": []
+  },
+  "王": {
+    "type": "Radical",
+    "body": [],
+    "vars": {},
+    "prog": []
+  },
+  "主": {
+    "type": "Radical",
+    "body": [],
+    "vars": {},
+    "prog": []
+  },
+  "土": {
+    "type": "Radical",
+    "body": [],
+    "vars": {},
+    "prog": []
+  },
+  "圭": {
+    "type": "Radical",
+    "body": [],
+    "vars": {},
+    "prog": []
+  },
+  "~且多一横": {
+    "type": "Radical",
+    "body": [
+      "shu",
+      "hengzhe",
+      "heng",
+      "heng",
+      "heng",
+      "heng"
+    ],
+    "vars": {
+      "horizontal": {
+        "val": 0.618,
+        "range": {
+          "min": 0.48,
+          "max": 0.75
+        }
+      },
+      "vertical": {
+        "val": 1.05,
+        "range": {
+          "min": 0.9,
+          "max": 1.1
+        }
+      },
+      "inner-hori": {
+        "val": 0.8,
+        "range": {
+          "min": 0.6,
+          "max": 1
+        }
+      },
+      "outer-hori": {
+        "val": 0.3,
+        "range": {
+          "min": 0.2,
+          "max": 0.4
+        }
+      },
+      "center-ratio": {
+        "val": 0.25,
+        "range": {
+          "min": 0.4,
+          "max": 0.6
+        }
+      },
+      "bottom-pos": "@'outer-hori'/(@'horizontal'+@'outer-hori'*2)"
+    },
+    "prog": [
+      {
+        "ith": 0,
+        "scale": "vertical"
+      },
+      {
+        "ith": 1,
+        "prog": [
+          {
+            "ith": 0,
+            "scale": "horizontal"
+          },
+          {
+            "ith": 1,
+            "scale": "vertical"
+          }
+        ]
+      },
+      {
+        "ith": 2,
+        "scale": "@'inner-hori' * @'horizontal'"
+      },
+      {
+        "ith": 3,
+        "scale": "@'inner-hori' * @'horizontal'"
+      },
+      {
+        "ith": 4,
+        "scale": "@'inner-hori' * @'horizontal'"
+      },
+      {
+        "ith": 5,
+        "scale": "@'horizontal' + @'outer-hori'*2"
+      },
+      {
+        "cross": {
+          "dest": {
+            "ith": 0,
+            "curve": 0,
+            "r": "@'center-ratio'"
+          },
+          "self": {
+            "ith": 2,
+            "curve": 0,
+            "r": 0
+          }
+        }
+      },
+      {
+        "cross": {
+          "dest": {
+            "ith": 0,
+            "curve": 0,
+            "r": "@'center-ratio' * 2"
+          },
+          "self": {
+            "ith": 3,
+            "curve": 0,
+            "r": 0
+          }
+        }
+      },
+      {
+        "cross": {
+          "dest": {
+            "ith": 0,
+            "curve": 0,
+            "r": "@'center-ratio' * 3"
+          },
+          "self": {
+            "ith": 4,
+            "curve": 0,
+            "r": 0
+          }
+        }
+      },
+      {
+        "cross": {
+          "dest": {
+            "ith": 0,
+            "curve": 0,
+            "r": 1
+          },
+          "self": {
+            "ith": 5,
+            "curve": 0,
+            "r": "bottom-pos"
+          }
+        }
+      }
+    ],
+    "unnamed": "true"
+  },
+  "相": {
+    "type": "Char",
+    "body": [
+      "木",
+      "目"
+    ],
+    "vars": {},
+    "prog": [
+      {
+        "place": {
+          "dest": {
+            "ith": 0
+          },
+          "self": {
+            "ith": 1
+          },
+          "spacing": 0.3,
+          "pos": 0
+        }
+      }
+    ]
   }
 }

@@ -2,28 +2,38 @@ export default class Vec{
     /**
      * Simple Vector class.
      * 
-     * @param {number} x x coordinate. When y is undefined, x denotes the angle of the desired vector.
+     * @param {number} x x coordinate. When y is undefined, x denotes the angle (degree) of the desired vector.
      * @param {number} y y coordinate.
      */
-    constructor(x, y){
-        if (y === undefined){
-            if(x === undefined) {
-                // for nothing given.
-                this.x = 0;
-                this.y = 0;
-            } else if (x.x !== undefined && x.y !== undefined){
-                // if x is something like {x:1, y:1}
-                this.x = x.x;
-                this.y = x.y;
-            } else if (typeof x === 'number'){
-                // if x is a number
-                this.x = Math.cos(x*Math.PI/180);
-                this.y = Math.sin(x*Math.PI/180);
+    constructor(x, y, attr){
+        if(attr === undefined){
+            this.attr = {};
+
+            if (y === undefined){
+                if(x === undefined) {
+                    // for nothing given.
+                    this.x = 0;
+                    this.y = 0;
+                } else if (x.x !== undefined && x.y !== undefined){
+                    // if x is something like {x:1, y:1}
+                    this.x = x.x;
+                    this.y = x.y;
+                } else if (typeof x === 'number'){
+                    // if x is a number 
+                    this.x = Math.cos(x*Math.PI/180);
+                    this.y = Math.sin(x*Math.PI/180);
+                }
+            } else {
+                this.x = x;
+                this.y = y;
             }
         } else {
+            this.attr = attr;
             this.x = x;
             this.y = y;
         }
+
+        
     }
 
     /**
@@ -131,16 +141,12 @@ export default class Vec{
         return this.x > vec.x && this.y > vec.y;
     }
 
-    /**
-     * copy: duplicate an object instance of this.
-     * @returns {Vec}
-     */
-    copy(){
-        return new Vec(this.x, this.y);
-    }
-
     mag(){
         return Math.hypot(this.x, this.y);
+    }
+
+    angle(){
+        return Math.atan2(this.y, this.x) / Math.PI * 180;
     }
 
     sampleTo(vec, resolution){
@@ -168,4 +174,29 @@ export default class Vec{
     isNaN(){
         return (isNaN(this.x) || isNaN(this.y));
     }
+
+    addAttr(attr){
+        this.attr.push(attr);
+    }
+
+    /**
+     * Set attribute to Vector. overwrite existing attributes.
+     * @param {object} attrObject 
+     */
+    setAttr(attrObject){
+        Object.assign(this.attr, attrObject);
+    }
+
+    removeAttr(attrKey){
+        this.attr[attrKey] = undefined;
+    }
+
+    /**
+     * copy: duplicate an object instance of this.
+     * @returns {Vec}
+     */
+    copy(){
+        return new Vec(this.x, this.y, JSON.parse(JSON.stringify(this.attr)));
+    }
+
 }

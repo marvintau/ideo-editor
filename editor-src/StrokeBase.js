@@ -5,9 +5,9 @@ import {getSpec} from "./Spec.js";
 import {addSlider, addLabel, addInput} from "./UIComponent.js";
 import {loadStrokeBase, saveStrokeBase} from "./Ajax.js";
 
-import Radical from "./Radical.js";
-import { getBounds } from "./Interior.js";
-import {drawBound, drawRadical} from "./Draw.js";
+import Char from "./Char.js";
+import { getBounds } from "./Core.js";
+import {drawBound, drawRadical, drawFrame, drawBBox} from "./Draw.js";
 
 export default class StrokeBase{
 
@@ -27,7 +27,7 @@ export default class StrokeBase{
 
         document.getElementById('show-stroke').onclick = function(e){
             this.shouldShowStrokes = !this.shouldShowStrokes;
-            this.updateUI(this.base);
+            this.updateCharList(this.base);
         }.bind(this);
 
         document.getElementById('generate-spec').onclick = function(e){
@@ -44,12 +44,12 @@ export default class StrokeBase{
         this.getStrokeSpec(charName);
         this.initVariableControls();
 
-        this.radical = new Radical(this.currSpec);
+        this.char = new Char(this.currSpec);
         this.updateWithPoint();        
     }
 
     updateStroke(){
-        this.radical = new Radical(this.currSpec);
+        this.char = new Char(this.currSpec);
         this.updateWithPoint();
     }
 
@@ -57,11 +57,11 @@ export default class StrokeBase{
         loadStrokeBase()
         .then(function(data){
             this.base = JSON.parse(data);
-            this.updateUI(this.base);
+            this.updateCharList(this.base);
         }.bind(this));
     }
 
-    updateUI(chars){
+    updateCharList(chars){
         var charUI = document.getElementById("char-list");
     
         while (charUI.firstChild) {
@@ -69,7 +69,7 @@ export default class StrokeBase{
         }
 
         for(let charName in chars)
-        if (this.shouldShowStrokes || this.base[charName].type === "radical"){
+        if (this.shouldShowStrokes || this.base[charName].type === "Radical" || this.base[charName].type === "Char"){
             
             var p = document.createElement('button')
             p.appendChild(document.createTextNode(charName));
@@ -89,7 +89,6 @@ export default class StrokeBase{
         var text = document.getElementById("stroke-list").value;
         var updatedSpec = JSON.parse(toJSONText(text));
         this.base[this.currCharName] = updatedSpec;
-        this.base[this.currCharName].text = text;
         this.initStroke(this.currCharName);
     }
 
@@ -108,10 +107,13 @@ export default class StrokeBase{
         if(this.base[charName] !== undefined)
             document.getElementById("indicator").innerText = "『" + charName + "』字已然存在了";
         else{
-            this.base[charName] = {type:"radical", body:[], vars:{}, prog:[]};
+            this.base[charName] = {type:"Radical", body:[], vars:{}, prog:[]};
+
+            if(charName[0] == '~') this.base[charName].unnamed = "true";
+
             this.currCharName = charName;
             this.currSpec = this.base[charName];
-            this.updateUI(this.base);
+            this.updateCharList(this.base);
         }
     }
 
@@ -136,22 +138,18 @@ export default class StrokeBase{
     getStrokeSpec(strokeName){
 
         var type = this.base[strokeName].type,
-            names = {"radical": "部首", "compound": "笔画", "simple": "简单笔画"};
+            names = {"Char": "全字", "Radical": "部首", "Compound": "笔画", "Curve": "简单笔画"};
 
         document.getElementById("indicator").innerText = "载入" + names[type] + "『" + strokeName + "』";
         this.currSpec = getSpec(strokeName, this.base);
+        console.log("currSpec", this.currSpec);
     }
 
     getStrokeSpecText(strokeName){
 
-        var text = "";
-        if (this.base[strokeName].text === undefined){
-            text = fromJSONObject(this.base[strokeName]);
-        } else {
-            text = this.base[strokeName].text;
-        }
-        
-        return text;
+        if(this.base[strokeName].text)
+            delete this.base[strokeName].text;
+        return fromJSONObject(this.base[strokeName]);
     }
     
     initVariableControls(){
@@ -171,13 +169,14 @@ export default class StrokeBase{
         // let widthDom = document.createElement(div)
 
         if (this.currSpec.vars){
-            let vars = this.currSpec.vars;
-            for (let i in vars){
-                varsDom.appendChild(addInput(i, vars[i], function(e){
-                    if(vars[i].val != undefined){
-                        vars[i].val = parseFloat(e.target.value);
-                        document.getElementById(e.target.name+"-indicator").innerText = vars[i].val;    
+            for (let i in this.currSpec.vars){
+                varsDom.appendChild(addInput(i, this.currSpec.vars[i], function(e){
+                    if(this.currSpec.vars[i].val != undefined){
+                        this.currSpec.vars[i].val = parseFloat(e.target.value);
+                        document.getElementById(e.target.name+"-indicator").innerText = this.currSpec.vars[i].val;    
                     }
+                    this.base[this.currCharName].vars = this.currSpec.vars;
+                    this.input.update(fromJSONObject(this.base[this.currCharName]));
                     this.updateStroke();
                 }.bind(this)));
             }
@@ -186,30 +185,34 @@ export default class StrokeBase{
 
 
     updateWithPoint(){
-        let points = this.radical.points,
-            bounds = getBounds(points),
-            center = bounds.median.centroid.isNaN() ? bounds.outlier.centroid : bounds.median.centroid;
+        
+        let points = this.char.points,
+            center = this.char.box.center();
+        
+        if(points.length > 0){
+            
+            let width = this.preview.canvas.width,
+                height = this.preview.canvas.height;
+            this.preview.clearRect(0, 0, width, height);
+            
+            drawFrame(this.preview, width, height);
+            
+            // Make sure align the char to the center of canvas before
+            // calling this.
+            var scale = 16;
+            this.preview.translate(128 - center.x * scale, 128 - center.y * scale);
+            console.log(this.char);
+            this.char.draw(this.preview, this.strokeWidth, scale);
 
-        console.log(center, bounds);
+            drawBound(this.preview, this.char.core, scale, "rgb(64, 32, 32, 0.4)");
+            // drawRadical(this.preview, this.strokeWidth, points, scale);
+            
+            for (let r of this.char.body){
+                drawBBox(this.preview, r.box, scale);
+            }
 
-        this.preview.clearRect(-128, -128, 384, 384);
-
-        for (let i = 0; i < points.length; i++)
-            for (let p = 0; p < points[i].length; p++)
-                points[i][p].isub(center);
-
-        this.preview.beginPath();
-        this.preview.rect(16, 16, 224, 224);
-        this.preview.stroke();
-
-        drawRadical(this.preview, this.strokeWidth, points);
-
-
-        this.preview.translate(-center.x, -center.y);
-        drawBound(this.preview, bounds, "median");
-        drawBound(this.preview, bounds, "outlier");
-
-        this.preview.setTransform(1, 0, 0, 1, 0, 0);
+            this.preview.setTransform(1, 0, 0, 1, 0, 0);
+        }
     }
 
 }

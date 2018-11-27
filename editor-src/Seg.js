@@ -8,19 +8,78 @@ export default class Seg extends CurveStructureBase{
         
         super();
         
-        this.len  = spec.len;
-        this.ang  = spec.ang;
+        this.len  = (spec && spec.len) ? spec.len : 0;
+        this.ang  = (spec && spec.ang) ? spec.ang : 0;
         this.head = new Vec();
         this.tail = new Vec();
         this.box  = new Box();
 
-        this.head.w = (spec.weight === undefined) ? 1: spec.weight[0];
-        this.tail.w = (spec.weight === undefined) ? 1: spec.weight[1];
+        // this.head.w = (spec.weight === undefined) ? 1: spec.weight[0];
+        // this.tail.w = (spec.weight === undefined) ? 1: spec.weight[1];
         this.update();
+    }
+
+    /**
+     * intersect
+     * @param {Seg} s1 first seg
+     * @param {Seg} s2 second seg
+     * 
+     * @returns the p and q are the intersection point, but they are identical.
+     */
+    static intersect(s1, s2){
+
+        var p1 = s1.head,
+            p2 = s1.tail,
+            p3 = s2.head,
+            p4 = s2.tail;
+
+        var det_s =  p1.sub(p3).cross(p3.sub(p4)),
+            det_t = -p1.sub(p2).cross(p1.sub(p3)),
+            det   =  p1.sub(p2).cross(p3.sub(p4));
+
+        var s = det_s/det,
+            t = det_t/det,
+            p = p1.add(p2.sub(p1).mult(s));
+        
+        return {
+            p: p,
+            s: s, t: t,
+            s1: s1.splitAt(s),
+            s2: s2.splitAt(t),
+        };
+
     }
 
     copy(){
         return new Seg({len:this.len, ang:this.ang, head:this.head});
+    }
+
+    at(ratio){
+        return this.head.add(this.tail.sub(this.head).mult(ratio));
+    }
+
+    setLenAngFromEnds(){
+        var dir = this.tail.sub(this.head);
+        this.len = dir.mag();
+        this.ang = dir.angle();
+    }
+
+    splitAt(ratio){
+        var segs = [new Seg(), new Seg()],
+            mid  = this.splitAt(ratio);
+        
+        segs[0].head = this.head;
+        segs[0].tail = segs[1].head = mid;
+        segs[1].tail = this.tail;
+        
+        segs[0].setLenAngFromEnds();
+        segs[1].setLenAngFromEnds();
+
+        return segs;
+    }
+
+    splitAtLength(len){
+        return this.splitAt(this.len/len);
     }
 
     /**
@@ -81,4 +140,22 @@ export default class Seg extends CurveStructureBase{
 
         this.box  = new Box(boxHead, boxTail);
     }
+
 }
+
+
+// function test(){
+//     var seg1 = new Seg(),
+//         seg2 = new Seg();
+    
+//     seg1.head = new Vec(0, 0);
+//     seg1.tail = new Vec(10, 10);
+//     seg2.head = new Vec(10, 0);
+//     seg2.tail = new Vec(0, 10);
+//     seg1.setLenAngFromEnds();
+//     seg2.setLenAngFromEnds();
+
+//     var inter = Seg.intersect(seg1, seg2);
+//     console.log(inter);
+// }
+// test();

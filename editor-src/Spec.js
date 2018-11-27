@@ -7,7 +7,8 @@ function dup(json){
  * 递归地获得完整的部件描述。
  * 由于在部件索引中对其它部件是通过名称引用，因此要不断将引用的
  * 部件名称替换为实际的描述，这是一个递归调用的过程，因此应当注
- * 意，如果一个描述中引用了自身的名称，就会造成无限递归错误。
+ * 意，如果一个描述中引用了自身的名称或其它循环引用的情况，就会
+ * 造成无限递归错误。
  *
  * @param {string} strokeNextElem 部件的名称
  * @param {object} base 部件索引
@@ -18,22 +19,24 @@ function getSpecRecursive(strokeNextElem, base){
 
     switch(stroke.type){
 
-        // 考虑进行扩展，就是一个radical和一个stroke构成一个新的radical
-        case "radical":
+        case "Char":
+            // console.log("getSpecRecursive, Char");
+        case "Radical":
             stroke.body = stroke.body.reduce(function(list, elem){
                 return list.concat(getSpecRecursive(elem, base));
             }, []);
+            console.log(stroke.body, "getSpecRecursive");
             return stroke;
 
         // 一个简单笔画返回的是一个仅包含它的复杂笔画，也是递归的终点
-        case "simple":
-            return {type:"compound", body:[stroke]};
+        case "Curve":
+            return {type:"Stroke", body:[stroke]};
 
         // 一个复杂笔画引用的可能是另一个复杂笔画，也可能是若干个简单笔画，
         // 但是因为在上面简单笔画也返回复杂笔画，因而最终返回的都是复杂笔
         // 画。因此最终得到的是将各复杂笔画合成后的新的复杂笔画。而复杂笔
         // 画内的引用关系也因为这部操作而丢失了。
-        case "compound":
+        case "Stroke":
             stroke.body = stroke.body.reduce(function(list, elem){
                 return list.concat(getSpecRecursive(elem, base).body);
             }, []);
@@ -44,21 +47,34 @@ function getSpecRecursive(strokeNextElem, base){
 /**
  * 
  * 获取部件详细描述的方法，同时也是部件的递归入口。
- * 如果获取的不是一个radical，那么就造出一个radical出来。
+ * 我们需要能够显示Stroke，Radical和Char，而Stroke和Radical最终都需要转换成
+ * Char。Stroke会先转换成Radical，无论spec本身就是Radical还是由Stroke转换成
+ * 了Radical，都会套一层spec变成Char，而如果spec本身就是Char则直接调用递归的
+ * getSpecRecursive。
  * 
  * @param {string} strokeName 部件名称
  * @param {object} base 部件索引
  */
 export function getSpec(strokeName, base){
     
-    if (base[strokeName].type == "radical")
-        return getSpecRecursive(strokeName, base);
-    else
-        return {
-            type:"radical",
-            vars:{},
-            body:[getSpecRecursive(strokeName, base)]
-        };
+    var res = base[strokeName];
+    console.log(base);
+    
+    if (res.type == "Stroke")
+    res = {type:"Radical", vars:{}, body:[getSpecRecursive(strokeName, base)]};
+    
+    if (res.type == "Radical"){
+        res = {type: "Char", vars: {}, body:[getSpecRecursive(strokeName, base)]};
+        for (let comp of res.body)
+        for (let thevar in comp.vars)
+        res.vars[thevar] = comp.vars[thevar];
+        
+    } else if (res.type == "Char"){
+        console.log("getSpec", res.type);
+        res = getSpecRecursive(strokeName, base);
+    }
+
+    return res;
 }
 
 export function suggestSpec(specOrig, specDeri){

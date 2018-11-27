@@ -21,12 +21,23 @@ export default class CurveStructureBase{
         this.box  = new Box();
     }
 
+    static intersect(c1, c2){
+        if(c1.prototype.constructor !== c2.prototype.constructor){
+            throw new Exception()
+        }
+        for (let i = 0; i < c1.body.length; i++)
+        for (let j = 0; j < c2.body.length; j++){
+            // let intersectRes = c1.constructor.intersect()
+        }
+    }
+
     /**
      * rotate
      * @param {number} theta angle to rotate.
      */
-    rotate(theta){
-        this.body.forEach(elem => elem.rotate(theta));
+    rotate(theta, start){
+        if (start === undefined) start = 0;
+        for (let i = start; i < this.body.length; i++) this.body[i].rotate(theta);
         this.update();
     }
 
@@ -34,8 +45,9 @@ export default class CurveStructureBase{
      * 
      * @param {number} ratio ratio to scale
      */
-    scale(ratio){
-        this.body.forEach(elem => elem.scale(ratio));
+    scale(ratio, start){
+        if (start === undefined) start = 0;
+        for (let i = start; i < this.body.length; i++) this.body[i].scale(ratio);
         this.update();
     }
 
@@ -99,34 +111,19 @@ export default class CurveStructureBase{
      */
     modify(prog, vars){
 
-        // modify uses program and variables from external, but
-        // if they are not given, the program and variables in
-        // itself will be used.
-
-        // Notably, since vars is a dictionary, outer variables
-        // with same name will overwrite the inner variables.
-        // This is reasonable because outer variables typically
-        // have more specific meanings.
+        // Modify使用外部的variables，如果存在重名的情况则本实例中的
+        // vars中的同名变量会被覆盖掉。
         if (vars === undefined) vars = this.vars; else vars = Object.assign(this.vars, vars);
-        if (prog === undefined) prog = this.prog; //else prog = this.prog.concat(prog);
+        if (prog === undefined) prog = this.prog;
 
-        // Typically the component curve object contains program
-        // when instantiating. So now we apply the programs like
-        // initialization. According to this order of calling.
-        // The lowest component will be applied operations first. 
+        // 先对本实例所有的组件应用modify操作，就是说如果组件本身含有prog会
+        // 先被执行。
         for (let elem of this.body) elem.modify(undefined, vars);
 
-        // Then apply the programs in current level.
-        // the rule is, if prog.ith is specified, other methods
-        // that will be executed at same level will not be
-        // executed, except what specified in its prog, and vice
-        // versa.
-
+        // 然后再执行本实例的prog
         for (let instr of prog){
 
-            // apply all operations at this level. this can be
-            // considered as a short hand of specifying things
-            // in prog list. saves some typing.
+            // 执行instr中的每个method，如果method中包含ith，则所有的操作将应用于它的第ith个组件。
             for (let method in instr){
                 var instance = (instr.ith === undefined) ? this : this.body[instr.ith];
 

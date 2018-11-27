@@ -21,10 +21,46 @@ export default class Curve extends CurveStructureBase{
             currLen   += this.body[i].len;
         }
 
-        var segRatio = (ratioLen - currLen)/currSeg.len,
-            finalSeg = currSeg.tail.sub(currSeg.head).mult(segRatio);
-        
-        return currSeg.head.add(finalSeg);
+        return currSeg.at((ratioLen - currLen)/currSeg.len);
+    }
+
+    /**
+     * different version of splitSegAt, but accepts ratio of length.
+     */
+    splitSegAt(ratio){
+        let totalLen = this.body.reduce((sum, e) => sum + e.len, 0);
+        return this.splitSegAtLength(ratio * totalLen);
+    }
+
+    /**
+     * splitSegAt doesn't produce more Curves, but make another Seg at 
+     * the length ratio.
+     * 
+     * WARNING: IN-PLACE OPERATION
+     */
+    splitSegAtLength(len){
+        var cumuLength = 0,
+            i = 0;
+
+        for (; i < this.body.length; i++){
+            if (cumuLength + this.body[i].len > len){
+                this.body = [].concat(
+                    this.body.slice(0, i-1),
+                    this.body[i].splitAtLength(len - cumuLength),
+                    this.body.slice(i+1));
+                break;
+            }
+            cumuLength += this.body[i].len;
+        }
+
+        return i;
+    }
+
+    /**
+     * merge the ith seg and ith+1 seg into one.
+     */
+    mergeSegAt(){
+
     }
 
     curl(curvature){
@@ -35,5 +71,20 @@ export default class Curve extends CurveStructureBase{
         }
             
         this.update();
+    }
+
+    draw(ctx, strokeWidth, scale){
+        
+        ctx.moveToVec(this.body[0].head, scale);
+        for (var currSeg = 0; currSeg < this.body.length;currSeg++) {
+        
+            if (this.body.length - currSeg > 2){
+                ctx.bezierCurveToVec(this.body.slice(currSeg, currSeg+3).map(e=>e.tail), scale);
+                currSeg += 2;
+            } else {
+                ctx.lineToVec(this.body[currSeg].tail, scale);
+                currSeg += 1;
+            }
+        }
     }
 }
