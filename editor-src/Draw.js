@@ -2,6 +2,12 @@ CanvasRenderingContext2D.prototype.moveToVec = function(vec, scale){
     this.moveTo(vec.x * scale, vec.y * scale);
 }
 
+CanvasRenderingContext2D.prototype.circle = function(vec, radius, scale){
+    this.beginPath();
+    this.arc(vec.x * scale, vec.y * scale, radius, 0, Math.PI*2);
+    this.stroke();
+}
+
 CanvasRenderingContext2D.prototype.lineToVec = function(vec, scale){
     this.lineTo(vec.x * scale, vec.y * scale);
 }

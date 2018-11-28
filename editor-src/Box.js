@@ -30,6 +30,11 @@ export default class Box{
 
     }
 
+    iunion(box){
+        this.head = this.head.head(box.head);
+        this.tail = this.tail.tail(box.tail);
+    }
+
     /**
      * copy: duplicate this object instance
      * @returns {Box}

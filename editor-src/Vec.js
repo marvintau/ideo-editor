@@ -87,6 +87,13 @@ export default class Vec{
         }
     }
 
+    iscale(ratio, about){
+        // console.log(this, ratio, about, "iscale");
+        this.isub(about);
+        this.imult(ratio);
+        this.iadd(about);
+    }
+
     neg(){
         return new Vec(-this.x, -this.y);
     }
@@ -184,7 +191,7 @@ export default class Vec{
      * @param {object} attrObject 
      */
     setAttr(attrObject){
-        Object.assign(this.attr, attrObject);
+        return Object.assign(this.attr, attrObject);
     }
 
     removeAttr(attrKey){

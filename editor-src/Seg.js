@@ -14,8 +14,6 @@ export default class Seg extends CurveStructureBase{
         this.tail = new Vec();
         this.box  = new Box();
 
-        // this.head.w = (spec.weight === undefined) ? 1: spec.weight[0];
-        // this.tail.w = (spec.weight === undefined) ? 1: spec.weight[1];
         this.update();
     }
 
@@ -28,6 +26,7 @@ export default class Seg extends CurveStructureBase{
      */
     static intersect(s1, s2){
 
+        if(s1.constructor.name !== s2.constructor.name) throw {name:"intersect with Segs only"};
         var p1 = s1.head,
             p2 = s1.tail,
             p3 = s2.head,
@@ -43,9 +42,9 @@ export default class Seg extends CurveStructureBase{
         
         return {
             p: p,
-            s: s, t: t,
-            s1: s1.splitAt(s),
-            s2: s2.splitAt(t),
+            crossing: s > -0.0001 && s < 1.0001 && t > -0.0001 && t < 1.0001,
+            s1: s1.splitAt(s, {intersection: true}),
+            s2: s2.splitAt(t, {intersection: true}),
         };
 
     }
@@ -58,55 +57,63 @@ export default class Seg extends CurveStructureBase{
         return this.head.add(this.tail.sub(this.head).mult(ratio));
     }
 
-    setLenAngFromEnds(){
-        var dir = this.tail.sub(this.head);
-        this.len = dir.mag();
-        this.ang = dir.angle();
-    }
-
-    splitAt(ratio){
-        var segs = [new Seg(), new Seg()],
-            mid  = this.splitAt(ratio);
-        
-        segs[0].head = this.head;
-        segs[0].tail = segs[1].head = mid;
-        segs[1].tail = this.tail;
-        
-        segs[0].setLenAngFromEnds();
-        segs[1].setLenAngFromEnds();
-
-        return segs;
-    }
-
-    splitAtLength(len){
-        return this.splitAt(this.len/len);
+    splitAt(ratio, midAttr){
+        if (ratio < 0 || ratio > 1){
+            return [this];
+        } else if (ratio == 0){
+            this.head.setAttr(midAttr);
+            return [this];
+        } else if (ratio == 1){
+            this.tail.setAttr(midAttr);
+            return [this];
+        } else {
+            var segs = [new Seg(), new Seg()],
+                mid  = this.at(ratio);
+            
+            mid.setAttr(midAttr);
+    
+            segs[0].head = this.head;
+            segs[0].tail = segs[1].head = mid;
+            segs[1].tail = this.tail;
+            
+            segs[0].updateByPoints();
+            segs[1].updateByPoints();
+    
+            return segs;
+        }
     }
 
     /**
      * rotate the line segment
-     * @param {number} rotate angle to be rotated with
+     * @param {number} angle angle to be rotated with
      */
-    rotate(rotate){
-        this.ang += rotate;
+    rotate(angle){
+        this.ang += angle;
         this.update();
     }
 
     /**
      * translate
+     * translate不会改变len和angle，因此凡是和trans有关的操作其实都不需要
+     * update。
      * @param {Vec} vec vector to be translated with
      */
     trans(trans){
-        this.head = this.head.add(new Vec(trans));
-        this.update();
+        this.head.iadd(trans);
+        this.tail.iadd(trans);
     }
     
     /**
      * stretch
      * @param {number} ratio ratio to stretch with
      */
-    scale(scale){
-        this.len *= scale;
+    scale(ratio){
+        this.len *= ratio;
         this.update();
+    }
+
+    length(){
+        return this.len;
     }
 
     modify(prog){
@@ -141,21 +148,15 @@ export default class Seg extends CurveStructureBase{
         this.box  = new Box(boxHead, boxTail);
     }
 
+
+    updateByPoints(){
+        var dir = this.tail.sub(this.head);
+        this.len = dir.mag();
+        this.ang = dir.angle();
+
+        var boxHead = this.head.head(this.tail),
+            boxTail = this.tail.tail(this.head);
+
+        this.box  = new Box(boxHead, boxTail);
+    }
 }
-
-
-// function test(){
-//     var seg1 = new Seg(),
-//         seg2 = new Seg();
-    
-//     seg1.head = new Vec(0, 0);
-//     seg1.tail = new Vec(10, 10);
-//     seg2.head = new Vec(10, 0);
-//     seg2.tail = new Vec(0, 10);
-//     seg1.setLenAngFromEnds();
-//     seg2.setLenAngFromEnds();
-
-//     var inter = Seg.intersect(seg1, seg2);
-//     console.log(inter);
-// }
-// test();

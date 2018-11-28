@@ -9,8 +9,15 @@ import Curve from "./Curve.js"
 export default class Stroke extends CurveStructureBase{
 
     constructor(spec) {
-        super(Curve, spec);
+        super(spec);
+        this.body = spec.body.map(comp => new Curve(comp));
         this.update();
+    }
+
+    static intersect(s1, s2){
+        for (let i = 0; i < s1.body.length; i++)
+        for (let j = 0; j < s2.body.length; j++)
+            Curve.intersect(s1.body[i], s2.body[j]);
     }
 
     curl(angle){
@@ -23,35 +30,33 @@ export default class Stroke extends CurveStructureBase{
         return this.body[spec.curve].at(spec.r);
     }
 
-    toPointList(){
 
-        var thisPoints = [this.body[0].body[0].head];
+    update(){
+        
+        for (let curve of this.body) curve.update();
+        
+        if(this.body.length > 0){
+            this.box  = this.body[0].box;
+        }
 
-        for(let i = 0; i < this.body.length; i++){
-            var curveBody = this.body[i].body;
-            for (let j = 1; j < curveBody.length; j++)
-                thisPoints.push(curveBody[j].head);
-            
-            if(i != this.body.length - 1)
-                curveBody[curveBody.length - 1].tail.attr.intersect = true;
-            thisPoints.push(curveBody[curveBody.length - 1].tail);
-        } 
+        if(this.body.length > 1){
+            for(let i = 1; i < this.body.length; i++){
+                let head = this.body[i].body[0].head,
+                    tail = this.body[i-1].body.last().tail,
+                    transVec = tail.sub(head);
+                
+                this.body[i].trans(transVec);
+                head.setAttr({joint: true});
 
-        return [thisPoints];
+                this.box.iunion(this.body[i].box);
+            }    
+        }
     }
 
     draw(ctx, strokeWidth, scale){
 
-        ctx.lineWidth = strokeWidth;
-        ctx.lineCap = "square";
-        ctx.lineJoin = "miter";
-        ctx.miterLimit = 3;
-        ctx.strokeStyle = "black";
-
-        ctx.beginPath();
         for (let curve of this.body)
             curve.draw(ctx, strokeWidth, scale);
-        ctx.stroke();
     }
 
 }

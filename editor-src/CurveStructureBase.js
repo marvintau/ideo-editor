@@ -11,24 +11,34 @@ export default class CurveStructureBase{
      * @param {Class} Constructor The constructor that instantiates the elements in the body
      * @param {Object} spec the JSON Object specifies this curve structure.
      */
-    constructor(Constructor, spec){
+    constructor(spec){
 
         // console.log("CurveStructureBase", spec);
-        this.body = (spec=== undefined || spec.body === undefined) ? [] : spec.body.map(comp => new Constructor(comp));
-        this.head = (spec=== undefined || spec.head === undefined) ? new Vec() : spec.head;
         this.prog = (spec=== undefined || spec.prog === undefined) ? [] : spec.prog;
         this.vars = (spec=== undefined || spec.vars === undefined) ? {} : spec.vars;
         this.box  = new Box();
     }
+    getInnerRatio(ratio){
 
-    static intersect(c1, c2){
-        if(c1.prototype.constructor !== c2.prototype.constructor){
-            throw new Exception()
-        }
-        for (let i = 0; i < c1.body.length; i++)
-        for (let j = 0; j < c2.body.length; j++){
-            // let intersectRes = c1.constructor.intersect()
-        }
+        if(this.body.length < 1) throw "empty structure has no inner ratio";
+
+        var total = ratio * this.len(),
+            curr  = 0,
+            index = 0;
+
+        if(ratio < 0) return {
+            index: 0,
+            ratio: total / this.body[0].len()
+        };
+        
+        for (; index < this.body.length; index++)
+            if (curr + this.body[index].len() > total) break;
+            else curr += this.body[index].len();
+
+        return {
+            index : index,
+            ratio: (total - curr) / this.body[index].len()
+        };
     }
 
     /**
@@ -55,14 +65,29 @@ export default class CurveStructureBase{
      * trans
      * @param {Vec} vec vector to translate.
      */
-    trans(vec){
-        this.head = this.head.add(vec);
+    trans(vec, start){
+        if (start === undefined) start = 0;
+        for (let i = start; i < this.body.length; i++) this.body[i].trans(vec);
         this.update();
     }
 
-    len(){
-        return this.body.reduce((l, e) => l + e.len(), 0);
+    length(){
+        return this.body.reduce((l, e) => l + e.length(), 0);
     }
+
+    stretch(ratioVec){
+        let center = this.box.center(),
+            segs = this.flattenToSegs();
+        
+        for (let seg of segs){
+            seg.head.iscale(ratioVec, center);
+            seg.tail.iscale(ratioVec, center);
+            seg.updateByPoints();
+        }
+
+        this.update();
+    }
+
 
     /**
      * get variable from variable table.
@@ -135,43 +160,38 @@ export default class CurveStructureBase{
             
         }
 
+        console.log("modify");
         this.update();
     }
 
 
     ith() {/*dummy*/}
 
-    update(){
-        
-        // first deal with the first component. 
+    update(){        
+
         if(this.body.length > 0){
-            this.body[0].head = this.head.copy();
             this.body[0].update();
-
             this.box  = this.body[0].box;
-            this.tail = this.body[0].tail;
         }
-
         if(this.body.length > 1){
             for(let i = 1; i < this.body.length; i++){
-                try{
-                    this.body[i].head = this.body[i-1].tail.copy();
-                    this.body[i].update();
-                    this.tail = this.body[i].tail;
-                    this.box = this.box.union(this.body[i].box);
-                } catch(TypeError){
-                    // console.error("update", this.box);
-                }
+                this.body[i].update();
+                this.box.iunion(this.body[i].box);
             }    
         }
     }
 
-    copy(){
-        
-        var newCurve = new this.constructor();
-        newCurve.body = this.body.map(seg => seg.copy());
-        newCurve.head = this.head.copy();
+    flattenToSegs(){
+        const stack = [...this.body];
+        const res = [];
 
-        return newCurve;
+        while (stack.length) {
+            const next = stack.pop();
+            if (next.body)
+                stack.push(...next.body);
+            else
+                res.push(next);
+        }
+        return res.reverse();
     }
 }

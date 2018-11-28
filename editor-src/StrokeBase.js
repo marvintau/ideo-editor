@@ -186,33 +186,21 @@ export default class StrokeBase{
 
     updateWithPoint(){
         
-        let points = this.char.points,
-            center = this.char.box.center();
+        let center = this.char.box.center();
+
+        let width = this.preview.canvas.width,
+            height = this.preview.canvas.height;
+        this.preview.clearRect(0, 0, width, height);
         
-        if(points.length > 0){
-            
-            let width = this.preview.canvas.width,
-                height = this.preview.canvas.height;
-            this.preview.clearRect(0, 0, width, height);
-            
-            drawFrame(this.preview, width, height);
-            
-            // Make sure align the char to the center of canvas before
-            // calling this.
-            var scale = 16;
-            this.preview.translate(128 - center.x * scale, 128 - center.y * scale);
-            console.log(this.char);
-            this.char.draw(this.preview, this.strokeWidth, scale);
+        drawFrame(this.preview, width, height);
 
-            drawBound(this.preview, this.char.core, scale, "rgb(64, 32, 32, 0.4)");
-            // drawRadical(this.preview, this.strokeWidth, points, scale);
-            
-            for (let r of this.char.body){
-                drawBBox(this.preview, r.box, scale);
-            }
+        var scale = 15;
+        this.preview.translate(128 - center.x * scale, 128 - center.y * scale);
+                
+        this.char.draw(this.preview, this.strokeWidth, scale);
 
-            this.preview.setTransform(1, 0, 0, 1, 0, 0);
-        }
+        this.preview.setTransform(1, 0, 0, 1, 0, 0);
+    
     }
 
 }
