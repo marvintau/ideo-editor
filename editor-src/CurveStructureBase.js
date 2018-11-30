@@ -14,9 +14,11 @@ export default class CurveStructureBase{
     constructor(spec){
 
         // console.log("CurveStructureBase", spec);
+        this.type = "CurveStructureBase";
         this.prog = (spec=== undefined || spec.prog === undefined) ? [] : spec.prog;
         this.vars = (spec=== undefined || spec.vars === undefined) ? {} : spec.vars;
         this.box  = new Box();
+
     }
     getInnerRatio(ratio){
 
@@ -42,22 +44,11 @@ export default class CurveStructureBase{
     }
 
     /**
-     * rotate
-     * @param {number} theta angle to rotate.
-     */
-    rotate(theta, start){
-        if (start === undefined) start = 0;
-        for (let i = start; i < this.body.length; i++) this.body[i].rotate(theta);
-        this.update();
-    }
-
-    /**
      * 
      * @param {number} ratio ratio to scale
      */
-    scale(ratio, start){
-        if (start === undefined) start = 0;
-        for (let i = start; i < this.body.length; i++) this.body[i].scale(ratio);
+    scale(ratio){
+        for (let elem of this.body) elem.scale(ratio);
         this.update();
     }
 
@@ -65,9 +56,8 @@ export default class CurveStructureBase{
      * trans
      * @param {Vec} vec vector to translate.
      */
-    trans(vec, start){
-        if (start === undefined) start = 0;
-        for (let i = start; i < this.body.length; i++) this.body[i].trans(vec);
+    trans(vec){
+        for (let elem of this.body) elem.trans(vec);
         this.update();
     }
 
@@ -76,15 +66,16 @@ export default class CurveStructureBase{
     }
 
     stretch(ratioVec){
-        let center = this.box.center(),
-            segs = this.flattenToSegs();
-        
-        for (let seg of segs){
-            seg.head.iscale(ratioVec, center);
-            seg.tail.iscale(ratioVec, center);
-            seg.updateByPoints();
-        }
 
+        let center = this.box.center(),
+            points = this.flatten();
+        
+            
+        for (let p of points){
+            p.iscale(ratioVec, center);
+            p.iscale(ratioVec, center);
+        }
+        
         this.update();
     }
 
@@ -152,15 +143,15 @@ export default class CurveStructureBase{
             for (let method in instr){
                 var instance = (instr.ith === undefined) ? this : this.body[instr.ith];
 
-                if(method != 'prog')
+                if(method != 'prog'){
+                    // console.log(instance, method, instance[method], "modify");
                     instance[method](this.getVariable(instr[method]));
-                else
+                }else
                     instance.modify(instr[method]);
             }
             
         }
 
-        console.log("modify");
         this.update();
     }
 
@@ -168,20 +159,22 @@ export default class CurveStructureBase{
     ith() {/*dummy*/}
 
     update(){        
+        // console.log(this.postUpdate, this.type);
+        if (this.preUpdate) this.preUpdate();
+        for (let elem of this.body)
+            elem.update();
 
-        if(this.body.length > 0){
-            this.body[0].update();
-            this.box  = this.body[0].box;
-        }
-        if(this.body.length > 1){
-            for(let i = 1; i < this.body.length; i++){
-                this.body[i].update();
+        if (this.duringUpdate) this.duringUpdate();
+        
+        if(this.body.length > 0) this.box  = this.body[0].box;
+        if(this.body.length > 1)
+            for(let i = 1; i < this.body.length; i++)
                 this.box.iunion(this.body[i].box);
-            }    
-        }
+
+        if(this.postUpdate) this.postUpdate();
     }
 
-    flattenToSegs(){
+    flatten(){
         const stack = [...this.body];
         const res = [];
 

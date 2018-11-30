@@ -21,18 +21,38 @@ export default class Box{
      * @param {Box} box another box
      * @returns {Box}
      */
-    union(box){
+    union(next){
 
-        var head = this.head.head(box.head),
-            tail = this.tail.tail(box.tail);
+        var head, tail;
+        
+        if (next.x){
+            head = next;
+            tail = next;
+        } else {
+            head = next.head;
+            tail = next.tail;
+        }
+
+        head = this.head.head(head);
+        tail = this.tail.tail(tail);
 
         return new Box(head, tail);
 
     }
 
-    iunion(box){
-        this.head = this.head.head(box.head);
-        this.tail = this.tail.tail(box.tail);
+    iunion(next){
+
+        var head, tail;
+        if (next.x){
+            head = next;
+            tail = next;
+        } else {
+            head = next.head;
+            tail = next.tail;
+        }
+
+        this.head = this.head.head(head);
+        this.tail = this.tail.tail(tail);
     }
 
     /**
@@ -65,7 +85,7 @@ export default class Box{
      * @param {Vec} vec the vec to be tested
      * @returns {boolean}
      */
-    include(vec){
+    includeQ(vec){
         return (vec.isTailerTo(this.head) && vec.isHeaderTo(this.tail));
     }
 

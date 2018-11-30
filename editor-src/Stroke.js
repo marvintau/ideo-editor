@@ -10,6 +10,7 @@ export default class Stroke extends CurveStructureBase{
 
     constructor(spec) {
         super(spec);
+        this.type = "Stroke";
         this.body = spec.body.map(comp => new Curve(comp));
         this.update();
     }
@@ -18,6 +19,18 @@ export default class Stroke extends CurveStructureBase{
         for (let i = 0; i < s1.body.length; i++)
         for (let j = 0; j < s2.body.length; j++)
             Curve.intersect(s1.body[i], s2.body[j]);
+    }
+
+    deintersect(){
+        for (let curve of this.body) curve.deintersect();
+    }
+
+    rotate(angle){
+        for(let elem of this.body){
+            elem.rotate(angle);
+        }
+    
+        this.update();
     }
 
     curl(angle){
@@ -31,26 +44,22 @@ export default class Stroke extends CurveStructureBase{
     }
 
 
-    update(){
-        
-        for (let curve of this.body) curve.update();
-        
-        if(this.body.length > 0){
-            this.box  = this.body[0].box;
-        }
-
-        if(this.body.length > 1){
+    duringUpdate(){
+        if (this.body.length > 1)
             for(let i = 1; i < this.body.length; i++){
-                let head = this.body[i].body[0].head,
-                    tail = this.body[i-1].body.last().tail,
-                    transVec = tail.sub(head);
-                
-                this.body[i].trans(transVec);
-                head.setAttr({joint: true});
+                if(this.body[i].body.length > 1 && this.body[i-1].body.length){
+                    let last = this.body[i-1],
+                        tail = last.body.last(),
+                        curr = this.body[i],
+                        head = curr.body[0];
 
-                this.box.iunion(this.body[i].box);
-            }    
-        }
+                    curr.trans(tail.sub(head));
+
+                    tail.setAttr({joint: true});
+                    head.setAttr({joint: true});    
+                }
+                
+            }
     }
 
     draw(ctx, strokeWidth, scale){

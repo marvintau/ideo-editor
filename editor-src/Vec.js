@@ -87,11 +87,50 @@ export default class Vec{
         }
     }
 
+    /**
+     * transform point in polar manner. returns a new vector relative
+     * to this one.
+     * @param {number} len length
+     * @param {number} ang angle in degree
+     */
+    polar(vec){
+        return new Vec(
+            this.x + vec.len * Math.cos(vec.ang * Math.PI/180),
+            this.y + vec.len * Math.sin(vec.ang * Math.PI/180)
+        )
+    };
+
+    ipolar(vec){
+        this.x += vec.len * Math.cos(vec.ang * Math.PI/180);
+        this.y += vec.len * Math.sin(vec.ang * Math.PI/180);
+    }
+
     iscale(ratio, about){
         // console.log(this, ratio, about, "iscale");
         this.isub(about);
         this.imult(ratio);
         this.iadd(about);
+    }
+
+        /**
+     * rotate
+     * @param {number} theta angle to rotate in degree.
+     */
+    rotate(theta){
+        let rad = theta / 180 * Math.PI,
+            sin = Math.sin(rad),
+            cos = Math.cos(rad);
+
+        return new Vec(
+            this.x * cos - this.y * sin,
+            this.x * sin + this.y * cos
+        )
+    }
+
+    irotate(theta){
+        let vec = this.rotate(theta);
+        this.x = vec.x;
+        this.y = vec.y;
     }
 
     neg(){

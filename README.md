@@ -1,8 +1,12 @@
-TODO:
+#TODO:
 
-如果
+对于每个radical，通过intersect获取控制outlier的点。得到了这些点之后就不再使用intersect了，
+因此需要将笔画复员回来。所以大致方法如下：
 
-1. 
+对于radical，
+在第一次modify之后，得到intersect
+基于intersect计算outlier
+保存outlier的点，去掉intersect的点。需要注意的是outlier的点都是本来就在笔画中的
 
 汉字的主要参数：
 

@@ -22,10 +22,8 @@ export default class Char extends CurveStructureBase{
             else if (elem.type === "Char")
                 this.body.push(new Char(elem));
 
+        this.type = "Char";
         this.modify();
-        // this.intersect();
-        console.log(this.flattenToSegs(), "segs");
-
     }
 
     /**
@@ -41,6 +39,7 @@ export default class Char extends CurveStructureBase{
     }
 
     place(spec){
+
         var self = this.body[spec.self.ith],
             dest = this.body[spec.dest.ith];
         
@@ -65,6 +64,10 @@ export default class Char extends CurveStructureBase{
 
     intersect(){
         for (let elem of this.body) elem.intersect();
+    }
+
+    deintersect(){
+        for (let elem of this.body) elem.deintersect();
     }
 
     draw(ctx, strokeWidth, scale){
