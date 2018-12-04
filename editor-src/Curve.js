@@ -2,42 +2,6 @@ import CurveStructureBase from "./CurveStructureBase.js";
 import Vec from "./Vec.js";
 import Box from "./Box.js";
 
-function intersect(p1, p2, p3, p4){
-
-    const e = 0.00000001;
-
-    var det_s =  p1.sub(p3).cross(p3.sub(p4)),
-        det_t = -p1.sub(p2).cross(p1.sub(p3)),
-        det   =  p1.sub(p2).cross(p3.sub(p4));
-
-    var s = det_s/det,
-        t = det_t/det,
-        p = p1.add(p2.sub(p1).mult(s)),
-        q = p.copy();
-
-    p.setAttr({intersection:true});
-    q.setAttr({intersection:true});
-
-    return {
-        isCrossing: s > e && s < 1 - e && t > e && t < 1 - e,
-        p:p, q: q,
-        s:s, t: t,
-        e:e
-    };
-
-}
-
-function polygonArea(pointList){
-    
-    // 复制一个Array并且把第一个点追加至末尾使之成为闭合多边形
-    var pointListCopy = pointList.slice(0).concat(pointList[0]);
-
-    var area = 0;
-    for (let i = 0; i < pointListCopy.length-1; i++)
-        area += pointListCopy[i].cross(pointListCopy[i+1])/2;
-
-    return Math.abs(area);
-}
 
 export default class Curve extends CurveStructureBase{
     constructor(spec){
@@ -45,58 +9,16 @@ export default class Curve extends CurveStructureBase{
         this.type = "Curve";
         
         this.body = [new Vec()];
-        for (let elem of spec.body){
-            this.body.push(this.body.last().polar(elem));
-        }
+
+        if(spec){
+            if (spec.body) for (let elem of spec.body){
+                this.body.push(this.body.last().polar(elem));
+                this.body.last().setAttr({original:true})
+            } else if (Array.isArray(spec))
+                this.body = spec;
+        }        
 
         this.update();
-    }
-
-    static intersect(c1, c2){
-            
-        for (var i = 0; i < c1.body.length-1; i++)
-        for (var j = 0; j < c2.body.length-1; j++){
-            var inter = intersect(c1.body[i], c1.body[i+1], c2.body[j], c2.body[j+1]);
-            if(inter.isCrossing) {
-                c1.body.splice(i+1, 0, inter.p)
-                c2.body.splice(j+1, 0, inter.q);
-                return;
-            } else {
-                if (i == 0 && inter.s < inter.e && inter.s > -inter.e ) c1.body[i].setAttr({intersection:true});
-                if (i == c1.body.length-2 && inter.s < 1+inter.e && inter.s > 1-inter.e ) c1.body[i+1].setAttr({intersection:true});
-                
-                if (j == 0 && inter.t < inter.t && inter.t > -inter.t ) c2.body[j].setAttr({intersection:true});
-                if (j == c2.body.length-2 && inter.t > 1+inter.t && inter.t > 1-inter.t ) c2.body[j+1].setAttr({intersection:true});
-                
-            }
-        }
-    }
-
-    deintersect(){
-
-        // 头尾因为相接而标注为intersection的直接抹去
-        if(this.body.length > 0){
-            this.body[0].attr.intersection = undefined;
-            this.body.last().attr.intersection = undefined;
-        }
-
-        // 中间因为交叉而插入的intersection点在这里被移除
-        if (this.body.length > 1)
-            for (let i = 1; i < this.body.length-1; i++){
-
-                if (this.body[i].attr.intersection){
-                    this.body.splice(i, 1);
-                    i--;
-                }
-            }
-    }
-
-    head(){
-        return this.body[0];
-    }
-
-    tail(){
-        return this.body.last();
     }
 
     trans(vec){
@@ -113,9 +35,12 @@ export default class Curve extends CurveStructureBase{
         this.update();
     }
 
-    scale(ratio){
+    scale(ratio, anchor){
+
+        if (anchor === undefined) anchor = this.body[0];
+
         for (let elem of this.body){
-            let vec = elem.sub(this.body[0]);
+            let vec = elem.sub(anchor);
             elem.isub(vec);
             elem.iadd(vec.mult(ratio));
         }
@@ -126,7 +51,7 @@ export default class Curve extends CurveStructureBase{
         if(this.body.length > 1)
             for (let i = 1; i < this.body.length; i++){
                 this.body[i].isub(this.body[i-1]);
-                this.body[i].irotate(curvature*(i-1));
+                this.body[i].irotate(curvature*(i-1)*(i-1));
                 this.body[i].iadd(this.body[i-1]);
             }
         this.update();
@@ -165,10 +90,75 @@ export default class Curve extends CurveStructureBase{
         if(this.postUpdate) this.postUpdate();
     }
 
+    convexHull() {
 
-    at(ithRatio){
+        const cross = (o, a, b) => a.sub(o).cross(b.sub(o)),
+              check = (prev, curr) => cross(prev[prev.length - 2], prev[prev.length - 1], curr);
+    
+        this.body.sort(function(a, b) {
+           return a.x == b.x ? a.y - b.y : a.x - b.x;
+        });
+     
+        var lower = [];
+        for (var i = 0; i < this.body.length; i++) {
+            while(lower.length >= 2 && check(lower, this.body[i]) <= 0) lower.pop();
+            lower.push(this.body[i]);
+        }
+     
+        var upper = [];
+        for (var i = this.body.length - 1; i >= 0; i--) {
+            while(upper.length >= 2 && check(upper, this.body[i]) <= 0) upper.pop();
+            upper.push(this.body[i]);
+        }
+     
+        upper.pop();
+        lower.pop();
+        this.body = lower.concat(upper);
+        this.update();
+    }
+    
+    area(){
+        if(this.body.length > 3){
+            var pointListCopy = this.body.concat(this.body[0].copy());
+            return pointListCopy.part(2, 1).map(p => p[0].cross(p[1])/2).sum();
+        } else {
+            return 0;
+        }
+    }
 
-        var ratioLen   = ithRatio * this.length(),
+    massCenter(){
+
+        if (this.body.length > 2){
+            var pointListCopy = this.body.concat(this.body[0].copy());
+        
+            let momentX = pointListCopy.part(2, 1).map(p => (p[0].x+p[1].x) * p[0].cross(p[1])/6).sum(),
+                momentY = pointListCopy.part(2, 1).map(p => (p[0].y+p[1].y) * p[0].cross(p[1])/6).sum(),
+                area = this.area();
+        
+            return new Vec(momentX/area, momentY/area);
+        } else {
+            throw "massCenter needs at least two points over the curve";
+        }
+
+    }
+
+    includes(p){
+    
+        var points = this.body.concat(this.body[0].copy());
+
+        const cross = (p, a, b) => a.sub(p).cross(b.sub(p)),
+              first = cross(p, points[0], points[1]);
+        
+        for (let i = 1; i < points.length-1; i++)
+            if (first * cross(p, points[i], points[i+1]) <= 0)
+                return false;
+        
+        return true;
+    }
+
+    at(ratio){
+
+        var ratioLen   = ratio * this.length(),
             currLen    = 0,
             currPoint  = null,
             currVec    = null,
@@ -188,18 +178,50 @@ export default class Curve extends CurveStructureBase{
         return currPoint.add(currVec.mult(segRatio));
     }
 
+    insertAt(ratio, attr){
+
+        var ratioLen   = ratio * this.length(),
+            currLen    = 0,
+            currPoint  = null,
+            currVec    = null,
+            currSegLen = 0;
+
+        for(var i = 0; i < this.body.length-1; i++){
+            
+            currPoint  = this.body[i],
+            currVec    = this.body[i+1].sub(currPoint),
+            currSegLen = currVec.mag();
+
+            if (currLen + currSegLen >= ratioLen) break;
+            currLen += currSegLen;
+        }
+
+        let segRatio = (ratioLen - currLen)/currSegLen,
+            point = currPoint.add(currVec.mult(segRatio));
+
+        if (attr !== undefined) point.setAttr(attr);
+
+        this.body.splice(i+1, 0, point);
+
+        return point;
+    }
+
     draw(ctx, strokeWidth, scale){
         
         ctx.beginPath();
         ctx.moveToVec(this.body[0], scale);
-        for (var curr = 0; curr < this.body.length; curr++) {
+
+        let points = this.body.filter(e=>e.attr.original);
+
+        for (var curr = 0; curr < points.length;) {
         
-            // if (this.body.length - currSeg > 2){
-            //     ctx.bezierCurveToVec(this.body.slice(currSeg, currSeg+3).map(e=>e.tail), scale);
-            //     currSeg += 2;
-            // } else {
-                ctx.lineToVec(this.body[curr], scale);
-            // }
+            if (points.length - curr > 3){
+                ctx.bezierCurveToVec(points.slice(curr+1, curr+4), scale);
+                curr += 4;
+            } else {
+                ctx.lineToVec(points[curr], scale);
+                curr += 1;
+            }
         }
         ctx.stroke();
         

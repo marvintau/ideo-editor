@@ -46,8 +46,8 @@ export default class Char extends CurveStructureBase{
         var transVec = dest.box.center();
         switch(spec.pos){
             case 0:
-                self.stretch(new Vec(0.7, 1));
-                dest.stretch(new Vec(0.7, 1));
+                self.stretch(new Vec(0.6, 1));
+                dest.stretch(new Vec(0.6, 1));
                 transVec.x += self.box.size().add(dest.box.size()).mult(0.55).x;
                 transVec = transVec.sub(self.box.center());
                 break;

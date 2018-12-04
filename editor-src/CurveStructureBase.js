@@ -73,7 +73,6 @@ export default class CurveStructureBase{
             
         for (let p of points){
             p.iscale(ratioVec, center);
-            p.iscale(ratioVec, center);
         }
         
         this.update();
@@ -110,9 +109,16 @@ export default class CurveStructureBase{
                         message: "item " + item + "is neither an existing variable or an expression" 
                     };
             case "object":
-                let o = {};
-                for (let key in item) o[key] = this.getVariable(item[key]);
-                return o;
+
+                if (Array.isArray(item)){
+                    return item.map(function(e){return this.getVariable(e)}.bind(this));
+                }
+                else {
+                    let o = {};
+                    for (let key in item) o[key] = this.getVariable(item[key]);
+                    return o;    
+                }
+
             default :
                 console.error("Key not found", item, typeof item);
         }
@@ -175,16 +181,6 @@ export default class CurveStructureBase{
     }
 
     flatten(){
-        const stack = [...this.body];
-        const res = [];
-
-        while (stack.length) {
-            const next = stack.pop();
-            if (next.body)
-                stack.push(...next.body);
-            else
-                res.push(next);
-        }
-        return res.reverse();
+        return this.body.flatten(next=>next.body, next=>next.body);
     }
 }

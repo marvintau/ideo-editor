@@ -43,6 +43,20 @@ export default class Stroke extends CurveStructureBase{
         return this.body[spec.curve].at(spec.r);
     }
 
+    insertAt(spec, attr){
+        return this.body[spec.curve].insertAt(spec.r, attr);
+    }
+
+    remove(func){
+        for (let curve of this.body){
+            for (let i = 0; i < curve.body.length;){
+                if (func(curve.body[i])){
+                    curve.body.splice(i, 1);
+                } else
+                    i += 1;
+            }
+        }
+    }
 
     duringUpdate(){
         if (this.body.length > 1)

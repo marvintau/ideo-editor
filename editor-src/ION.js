@@ -1,13 +1,6 @@
 var indentWidth = 4,
     lineLength  = 120;
 
-Array.prototype.flatten = function(){
-    return [].concat(...this);
-}
-
-Array.prototype.last = function(){
-    return this[this.length - 1];
-}
 
 /**
  * determine whether a string should be quoted.

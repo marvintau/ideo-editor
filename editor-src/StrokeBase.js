@@ -1,4 +1,4 @@
-
+import "./ArrayExtension.js";
 import Input from "./Input.js";
 import {fromJSONObject, toJSONText} from "./ION.js";
 import {getSpec} from "./Spec.js";
@@ -6,7 +6,6 @@ import {addSlider, addLabel, addInput} from "./UIComponent.js";
 import {loadStrokeBase, saveStrokeBase} from "./Ajax.js";
 
 import Char from "./Char.js";
-// import { getBounds } from "./Core.js";
 import {drawBound, drawRadical, drawFrame, drawBBox} from "./Draw.js";
 
 export default class StrokeBase{
@@ -28,14 +27,6 @@ export default class StrokeBase{
         document.getElementById('show-stroke').onclick = function(e){
             this.shouldShowStrokes = !this.shouldShowStrokes;
             this.updateCharList(this.base);
-        }.bind(this);
-
-        document.getElementById('generate-spec').onclick = function(e){
-            this.suggest();
-        }.bind(this);
-
-        document.getElementById('replace-vars').onclick = function(e){
-            this.replaceVars();
         }.bind(this);
 
     }
@@ -161,8 +152,8 @@ export default class StrokeBase{
         
         let width = document.createElement('div');
         width.appendChild(addLabel("笔画宽度"));
-        this.strokeWidth = 15;
-        width.appendChild(addSlider(name, {val:4, range:{min:10, max:30}}, function(e){
+        this.strokeWidth = 25;
+        width.appendChild(addSlider(name, {val:25, range:{min:10, max:50}}, function(e){
             console.clear();
             this.strokeWidth = parseFloat(e.target.value);
             this.updateStroke();
@@ -188,11 +179,8 @@ export default class StrokeBase{
 
     updateWithPoint(){
         
+         
         let center = this.char.box.center();
-
-        for (let rad of this.char.body){
-            // console.log("segs", rad.body.map(st => st.flattenToSegs().map(s => JSON.stringify([s.head.attr, s.tail.attr]))));
-        }
 
         let width = this.preview.canvas.width,
             height = this.preview.canvas.height;
@@ -200,7 +188,7 @@ export default class StrokeBase{
         
         drawFrame(this.preview, width, height);
 
-        var scale = 35;
+        var scale = 45;
         this.preview.translate(width/2 - center.x * scale, height/2 - center.y * scale);
                 
         this.char.draw(this.preview, this.strokeWidth, scale);

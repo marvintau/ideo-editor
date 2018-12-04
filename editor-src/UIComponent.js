@@ -18,7 +18,7 @@ function addNumberIndicator(name, val){
     var x = document.createElement("SPAN");
     x.setAttribute("id", name+"-indicator");
     x.classList.add("indicator");
-    x.innerText = val;
+    x.innerText = val.toFixed(3);
     return x;
 }
 
