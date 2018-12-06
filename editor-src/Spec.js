@@ -25,7 +25,6 @@ function getSpecRecursive(strokeNextElem, base){
             stroke.body = stroke.body.reduce(function(list, elem){
                 return list.concat(getSpecRecursive(elem, base));
             }, []);
-            console.log(stroke.body, "getSpecRecursive");
             return stroke;
 
         // 一个简单笔画返回的是一个仅包含它的复杂笔画，也是递归的终点

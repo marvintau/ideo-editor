@@ -108,7 +108,7 @@ code{
 }
 
 .char-button{
-    font-size: 200%;
+    /* font-size: 200%; */
     font-family:"Kaiti SC";
     margin : 10px;
     display : block;
@@ -126,7 +126,7 @@ code{
 }
 
 #indicator{
-    display: block;
+    display: inline-block;
     letter-spacing: -0.08em;
 }
 
@@ -148,9 +148,10 @@ canvas {
             新建： <input id="new-char-name">
             <button id="create">创建新字</button>
             <button id="show-stroke">显示笔画</button>
-            
+            <span id="indicator">就绪</span>    
         </div>
-        <div id="indicator" class="new-group"></div>
+        
+
         <div class="main">
             <div id="char-list"></div>
             <div class="canvas-wrap">

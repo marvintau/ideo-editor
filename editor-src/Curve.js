@@ -9,11 +9,12 @@ export default class Curve extends CurveStructureBase{
         this.type = "Curve";
         
         this.body = [new Vec()];
+        this.body[0].setAttr({original:true});
 
         if(spec){
             if (spec.body) for (let elem of spec.body){
                 this.body.push(this.body.last().polar(elem));
-                this.body.last().setAttr({original:true})
+                this.body.last().setAttr({original:true});
             } else if (Array.isArray(spec))
                 this.body = spec;
         }        
@@ -77,7 +78,6 @@ export default class Curve extends CurveStructureBase{
 
 
     update(){        
-        // console.log(this.postUpdate, this.type);
         if (this.preUpdate) this.preUpdate();
 
         if (this.duringUpdate) this.duringUpdate();
@@ -208,9 +208,6 @@ export default class Curve extends CurveStructureBase{
 
     draw(ctx, strokeWidth, scale){
         
-        ctx.beginPath();
-        ctx.moveToVec(this.body[0], scale);
-
         let points = this.body.filter(e=>e.attr.original);
 
         for (var curr = 0; curr < points.length;) {
@@ -223,7 +220,7 @@ export default class Curve extends CurveStructureBase{
                 curr += 1;
             }
         }
-        ctx.stroke();
+
         
     }
 }

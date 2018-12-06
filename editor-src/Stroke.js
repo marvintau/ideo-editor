@@ -15,16 +15,6 @@ export default class Stroke extends CurveStructureBase{
         this.update();
     }
 
-    static intersect(s1, s2){
-        for (let i = 0; i < s1.body.length; i++)
-        for (let j = 0; j < s2.body.length; j++)
-            Curve.intersect(s1.body[i], s2.body[j]);
-    }
-
-    deintersect(){
-        for (let curve of this.body) curve.deintersect();
-    }
-
     rotate(angle){
         for(let elem of this.body){
             elem.rotate(angle);
@@ -78,8 +68,13 @@ export default class Stroke extends CurveStructureBase{
 
     draw(ctx, strokeWidth, scale){
 
+        ctx.beginPath();
+        ctx.moveToVec(this.body[0].body[0], scale);
+
         for (let curve of this.body)
             curve.draw(ctx, strokeWidth, scale);
+
+        ctx.stroke();
     }
 
 }

@@ -179,19 +179,24 @@ export default class StrokeBase{
 
     updateWithPoint(){
         
-         
-        let center = this.char.box.center();
-
         let width = this.preview.canvas.width,
             height = this.preview.canvas.height;
         this.preview.clearRect(0, 0, width, height);
-        
         drawFrame(this.preview, width, height);
 
-        var scale = 45;
+        let center;
+        if (this.char.massCenter){       
+            center = this.char.massCenter.add(this.char.geomCenter).mult(0.5);        
+        } else {
+            center = this.char.box.center();
+        }
+
+        let scale = 45;
+
         this.preview.translate(width/2 - center.x * scale, height/2 - center.y * scale);
                 
         this.char.draw(this.preview, this.strokeWidth, scale);
+
 
         this.preview.setTransform(1, 0, 0, 1, 0, 0);
     

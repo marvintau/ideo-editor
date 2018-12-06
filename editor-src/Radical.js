@@ -50,16 +50,33 @@ export default class Radical extends CurveStructureBase{
                 return res;
             });
 
-        this.outliers = [].concat(...points.map(stroke=>[stroke[0], stroke[2].reverse()]))
-                        .map(outlier => new Curve(outlier));
+        let outlierPoints = [].concat(...points.map(stroke=>[stroke[0], stroke[2].reverse()]))
+                            // .map(points => points.filter(point => this.corebound.includes(point)))
+                            .map(outlier => new Curve(outlier.reverse()))
+                            .filter(outCurve => outCurve.length() > 0.01);
 
-        // for (let stroke of this.body){
-        //     stroke.remove(e=>e.attr.corebound);
-        // }
+        console.log(outlierPoints, "outlierPoints");
+        this.outliers = {l:[], r:[], t:[], b:[]};
+        for (let outlierCurve of outlierPoints){
+            if (outlierCurve.body.length >= 2){
+                let p1 = outlierCurve.body[0],
+                    p2 = outlierCurve.body[1],
+                    angle = p2.sub(p1).angle();
+                console.log(outlierCurve, angle, "angle");
+                if (45 > angle && angle >= -45)   this.outliers.r.push(outlierCurve);
+                if (135 > angle && angle >= 45)   this.outliers.b.push(outlierCurve);
+                if (angle >= 135 || angle < -135) this.outliers.l.push(outlierCurve);
+                if (-45 > angle && angle >= -135)  this.outliers.t.push(outlierCurve);
+            }
+        }
+        console.log(this.outliers);
 
         this.massCenter = this.corebound.massCenter();
 
-        console.log(this.outliers.map(e => e.body));
+        this.outline = new Curve(this.flatten());
+        this.outline.convexHull();
+        this.geomCenter = this.outline.massCenter();
+
     }
 
     draw(ctx, strokeWidth, scale){
@@ -73,35 +90,35 @@ export default class Radical extends CurveStructureBase{
         for (let component of this.body)
             component.draw(ctx, strokeWidth, scale);
 
-        let points = this.flatten();
-        // console.log(this.body.map(s => s.flatten().map(e=>[e.x, e.y, e.attr.intersection])));
-        for (let p of points){
-            ctx.lineWidth = 2;
-            ctx.strokeStyle = "red";
-            if (p.attr.intersection) ctx.circle(p, 7, scale);
-            
+        if(this.outline){
             ctx.lineWidth = 1;
-            ctx.strokeStyle = "yellow";
-            ctx.fillStyle = "yellow"
-            if (p.attr.joint) ctx.circle(p, 4, scale, true);    
-        };
-
-        let outline = new Curve(points);
-        outline.convexHull();
-
-        ctx.strokeStyle = "black";
-        ctx.moveToVec(outline.body[0], scale);
-        for (let p of outline.body){
-            ctx.lineToVec(p, scale);
+            ctx.strokeStyle = "black";
+            ctx.moveToVec(this.outline.body[0], scale);
+            for (let p of this.outline.body){
+                ctx.lineToVec(p, scale);
+            }
+            ctx.closePath();
+            ctx.stroke();
         }
-        ctx.closePath();
-        ctx.stroke();
 
         if(this.outliers){
-            ctx.strokeStyle = "white";
-            for (let outlier of this.outliers)
-                for (let point of outlier.body)
-                    ctx.circle(point, 3, scale);
+            let color = {
+                r : ["red", "右"],
+                l : ["green", "左"],
+                t : ["blue", "上"],
+                b : ["yellow", "下"]
+            };
+            for (let t in this.outliers){
+                ctx.strokeStyle = color[t][0];
+                ctx.fillStyle = color[t][0];
+                ctx.font = "30px Helvetica";
+                for (let curve of this.outliers[t]){
+                    ctx.circle(curve.body[0].mult(scale), 5, true);
+                    for (let point of curve.body)
+                        ctx.fillText(color[t][1], point.x * scale - 6.5, point.y * scale - 6.5);
+                }
+                
+            }
         }
         
         if(this.corebound){
@@ -117,8 +134,8 @@ export default class Radical extends CurveStructureBase{
             ctx.strokeStyle = "black";
             ctx.fillStyle = "black";
             let boxCenter = this.box.center();
-            ctx.circle(this.massCenter.mult(scale), 25, true);
-            ctx.circle(boxCenter.mult(scale), 25, true);
+            ctx.circle(this.massCenter.mult(scale), 5, true);
+            ctx.circle(boxCenter.mult(scale), 5, true);
             console.log(boxCenter, this.massCenter);
         }
 
