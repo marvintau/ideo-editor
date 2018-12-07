@@ -45,33 +45,34 @@ export default class Char extends CurveStructureBase{
             dest = this.body[spec.dest.ith],
             selfCoreArea = self.corebound.area(),
             destCoreArea = dest.corebound.area(),
-            selfRatio = Math.sqrt(selfCoreArea / destCoreArea),
-            destRatio = Math.sqrt(destCoreArea / selfCoreArea),
-            maxRatio = Math.max(selfRatio, destRatio);
+            // selfRatio = Math.sqrt(selfCoreArea / destCoreArea),
+            // destRatio = Math.sqrt(destCoreArea / selfCoreArea),
+            // maxRatio = Math.max(selfRatio, destRatio);
+            maxRatio = 1.2;
         
         console.log(selfCoreArea, destCoreArea, "area");
 
         var transVec = dest.massCenter;
         switch(spec.pos){
             case 0:
-                self.stretch(new Vec(0.65 * selfRatio, 1));
-                dest.stretch(new Vec(0.65 * destRatio, 1));
+                self.stretch(new Vec(0.65, 1));
+                dest.stretch(new Vec(0.65, 1));
                 
                 for (let k in self.outliers)
                     for (let curve of self.outliers[k]){
-                        if (k == "r") curve.scale(maxRatio * maxRatio);
+                        if (k == "r") curve.scale(maxRatio);
                         if (k == "l") curve.scale(1/maxRatio/maxRatio);
                     }
 
                 for (let k in dest.outliers)
                     for (let curve of dest.outliers[k]){
                         console.log(k);
-                        if (k == "l") curve.scale(maxRatio * maxRatio);
+                        if (k == "l") curve.scale(maxRatio);
                         if (k == "r") curve.scale(1/maxRatio/maxRatio);
                     }
                             
 
-                transVec.x += self.box.size().add(dest.box.size()).mult(0.48*maxRatio).x;
+                transVec.x += self.corebound.box.size().add(dest.corebound.box.size()).mult(0.5).x-2.5;
                 transVec = transVec.sub(self.massCenter);
                 break;
             case 1:

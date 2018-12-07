@@ -109,13 +109,15 @@ export default class Radical extends CurveStructureBase{
                 b : ["yellow", "下"]
             };
             for (let t in this.outliers){
-                ctx.strokeStyle = color[t][0];
-                ctx.fillStyle = color[t][0];
-                ctx.font = "30px Helvetica";
+                ctx.strokeStyle = "black";
+                ctx.fillStyle = "white";
+                ctx.font = "bold 20px Helvetica";
                 for (let curve of this.outliers[t]){
                     ctx.circle(curve.body[0].mult(scale), 5, true);
-                    for (let point of curve.body)
-                        ctx.fillText(color[t][1], point.x * scale - 6.5, point.y * scale - 6.5);
+                    for (let point of curve.body){
+                        ctx.fillText(color[t][1],   point.x * scale - 10, point.y * scale + 10);
+                        ctx.strokeText(color[t][1], point.x * scale - 10, point.y * scale + 10);
+                    }
                 }
                 
             }

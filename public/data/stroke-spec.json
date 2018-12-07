@@ -2433,6 +2433,560 @@
     "vars": {},
     "prog": [
       {
+        "ith": 1,
+        "scale": 1.05
+      },
+      {
+        "place": {
+          "dest": {
+            "ith": 0
+          },
+          "self": {
+            "ith": 1
+          },
+          "spacing": 0.35,
+          "pos": 0
+        }
+      }
+    ]
+  },
+  "大": {
+    "type": "Radical",
+    "body": [
+      "heng",
+      "pie",
+      "na"
+    ],
+    "vars": {},
+    "prog": [
+      {
+        "ith": 1,
+        "rotate": -32,
+        "scale": 1.5,
+        "curl": 9
+      },
+      {
+        "ith": 0,
+        "scale": 0.9
+      },
+      {
+        "ith": 2,
+        "rotate": 7,
+        "curl": -3
+      },
+      {
+        "cross": {
+          "self": {
+            "ith": 1,
+            "curve": 0,
+            "r": 0.3
+          },
+          "dest": {
+            "ith": 0,
+            "curve": 0,
+            "r": 0.49
+          }
+        }
+      },
+      {
+        "cross": {
+          "self": {
+            "ith": 2,
+            "curve": 0,
+            "r": 0.05
+          },
+          "dest": {
+            "ith": 1,
+            "curve": 0,
+            "r": 0.4
+          }
+        }
+      },
+      {
+        "core": [
+          {
+            "ith": 1,
+            "curve": 0,
+            "r": 0.2
+          },
+          {
+            "ith": 0,
+            "curve": 0,
+            "r": 0.1
+          },
+          {
+            "ith": 1,
+            "curve": 0,
+            "r": 0.8
+          },
+          {
+            "ith": 2,
+            "curve": 0,
+            "r": 0.7
+          },
+          {
+            "ith": 0,
+            "curve": 0,
+            "r": 0.9
+          }
+        ]
+      }
+    ]
+  },
+  "也": {
+    "type": "Radical",
+    "body": [
+      "hengzhegou",
+      "shu",
+      "shuwangou"
+    ],
+    "vars": {},
+    "prog": [
+      {
+        "ith": 0,
+        "prog": [
+          {
+            "ith": 0,
+            "rotate": -15,
+            "scale": 1.1
+          },
+          {
+            "ith": 1,
+            "scale": 0.55
+          },
+          {
+            "ith": 2,
+            "scale": 0.8
+          }
+        ]
+      },
+      {
+        "ith": 1,
+        "scale": 0.8
+      },
+      {
+        "ith": 2,
+        "scale": 1.25,
+        "prog": [
+          {
+            "ith": 0,
+            "rotate": 2,
+            "curl": -2,
+            "scale": 1.15
+          },
+          {
+            "ith": 1,
+            "scale": 0.6,
+            "rotate": 8
+          }
+        ]
+      },
+      {
+        "cross": {
+          "self": {
+            "ith": 1,
+            "curve": 0,
+            "r": 0.45
+          },
+          "dest": {
+            "ith": 0,
+            "curve": 0,
+            "r": 0.59
+          }
+        }
+      },
+      {
+        "cross": {
+          "self": {
+            "ith": 2,
+            "curve": 0,
+            "r": 0.16
+          },
+          "dest": {
+            "ith": 0,
+            "curve": 0,
+            "r": 0.18
+          }
+        }
+      },
+      {
+        "core": [
+          {
+            "ith": 0,
+            "curve": 0,
+            "r": 0.1
+          },
+          {
+            "ith": 0,
+            "curve": 0,
+            "r": 1
+          },
+          {
+            "ith": 0,
+            "curve": 1,
+            "r": 1
+          },
+          {
+            "ith": 0,
+            "curve": 2,
+            "r": 1
+          },
+          {
+            "ith": 2,
+            "curve": 0,
+            "r": 0.07
+          },
+          {
+            "ith": 2,
+            "curve": 0,
+            "r": 0.4
+          },
+          {
+            "ith": 2,
+            "curve": 0,
+            "r": 0.84
+          },
+          {
+            "ith": 1,
+            "curve": 0,
+            "r": 0.2
+          },
+          {
+            "ith": 1,
+            "curve": 0,
+            "r": 1
+          }
+        ]
+      }
+    ]
+  },
+  "正": {
+    "type": "Radical",
+    "body": [
+      "heng",
+      "shu",
+      "heng",
+      "shu",
+      "heng"
+    ],
+    "vars": {},
+    "prog": [
+      {
+        "ith": 2,
+        "scale": 0.45
+      },
+      {
+        "ith": 3,
+        "scale": 0.58
+      },
+      {
+        "ith": 4,
+        "scale": 1.2
+      },
+      {
+        "cross": {
+          "self": {
+            "ith": 1,
+            "curve": 0,
+            "r": 0
+          },
+          "dest": {
+            "ith": 0,
+            "curve": 0,
+            "r": 0.5
+          }
+        }
+      },
+      {
+        "cross": {
+          "self": {
+            "ith": 2,
+            "curve": 0,
+            "r": 0
+          },
+          "dest": {
+            "ith": 1,
+            "curve": 0,
+            "r": 0.5
+          }
+        }
+      },
+      {
+        "cross": {
+          "self": {
+            "ith": 4,
+            "curve": 0,
+            "r": 0.5
+          },
+          "dest": {
+            "ith": 1,
+            "curve": 0,
+            "r": 1
+          }
+        }
+      },
+      {
+        "cross": {
+          "self": {
+            "ith": 3,
+            "curve": 0,
+            "r": 1
+          },
+          "dest": {
+            "ith": 4,
+            "curve": 0,
+            "r": 0.2
+          }
+        }
+      }
+    ]
+  },
+  "正2": {
+    "type": "Radical",
+    "body": [
+      "heng",
+      "shu",
+      "heng",
+      "pie",
+      "pingna"
+    ],
+    "vars": {},
+    "prog": [
+      {
+        "ith": 2,
+        "scale": 0.45
+      },
+      {
+        "ith": 3,
+        "scale": 0.7,
+        "rotate": -20
+      },
+      {
+        "ith": 4,
+        "scale": 1.3,
+        "curl": -1
+      },
+      {
+        "cross": {
+          "self": {
+            "ith": 1,
+            "curve": 0,
+            "r": 0
+          },
+          "dest": {
+            "ith": 0,
+            "curve": 0,
+            "r": 0.45
+          }
+        }
+      },
+      {
+        "cross": {
+          "self": {
+            "ith": 2,
+            "curve": 0,
+            "r": 0
+          },
+          "dest": {
+            "ith": 1,
+            "curve": 0,
+            "r": 0.5
+          }
+        }
+      },
+      {
+        "cross": {
+          "self": {
+            "ith": 4,
+            "curve": 0,
+            "r": 0.4
+          },
+          "dest": {
+            "ith": 1,
+            "curve": 0,
+            "r": 1.4
+          }
+        }
+      },
+      {
+        "cross": {
+          "self": {
+            "ith": 3,
+            "curve": 0,
+            "r": 0.5
+          },
+          "dest": {
+            "ith": 4,
+            "curve": 0,
+            "r": 0
+          }
+        }
+      }
+    ]
+  },
+  "林": {
+    "type": "Char",
+    "body": [
+      "木",
+      "也"
+    ],
+    "vars": {},
+    "prog": [
+      {
+        "place": {
+          "dest": {
+            "ith": 0
+          },
+          "self": {
+            "ith": 1
+          },
+          "spacing": 0.35,
+          "pos": 0
+        }
+      }
+    ]
+  },
+  "女1": {
+    "type": "Radical",
+    "body": [
+      "piedian",
+      "pie",
+      "heng"
+    ],
+    "vars": {
+      "intersec-0-2": {
+        "val": 0.55,
+        "range": {
+          "min": 0.48,
+          "max": 0.62
+        }
+      },
+      "intersec-1-2": {
+        "val": 0.05,
+        "range": {
+          "min": 0.04,
+          "max": 0.06
+        }
+      },
+      "curvature-2": {
+        "val": 1.78,
+        "range": {
+          "min": 0,
+          "max": 5
+        }
+      }
+    },
+    "prog": [
+      {
+        "ith": 0,
+        "prog": [
+          {
+            "ith": 0,
+            "rotate": 5,
+            "curl": -4,
+            "scale": 0.88
+          },
+          {
+            "ith": 1,
+            "rotate": 0,
+            "scale": 0.35
+          }
+        ]
+      },
+      {
+        "ith": 1,
+        "rotate": "-20.200-@'curvature-2'*2",
+        "scale": "1.380+@'curvature-2'*0.01",
+        "curl": "14.700+@'curvature-2'*1.2"
+      },
+      {
+        "ith": 2,
+        "scale": 0.95,
+        "rotate": -3
+      },
+      {
+        "cross": {
+          "dest": {
+            "ith": 2,
+            "curve": 0,
+            "r": 0.5
+          },
+          "self": {
+            "ith": 0,
+            "curve": 0,
+            "r": "intersec-0-2"
+          }
+        }
+      },
+      {
+        "cross": {
+          "dest": {
+            "ith": 2,
+            "curve": 0,
+            "r": 1
+          },
+          "self": {
+            "ith": 1,
+            "curve": 0,
+            "r": "intersec-1-2"
+          }
+        }
+      },
+      {
+        "core": [
+          {
+            "ith": 0,
+            "curve": 0,
+            "r": "@'intersec-0-2'-0.01"
+          },
+          {
+            "ith": 0,
+            "curve": 0,
+            "r": 1
+          },
+          {
+            "ith": 0,
+            "curve": 1,
+            "r": 0.48
+          },
+          {
+            "ith": 1,
+            "curve": 0,
+            "r": 0.48
+          },
+          {
+            "ith": 1,
+            "curve": 0,
+            "r": 0.333
+          },
+          {
+            "ith": 2,
+            "curve": 0,
+            "r": 0.73
+          },
+          {
+            "ith": 2,
+            "curve": 0,
+            "r": 0.31
+          },
+          {
+            "ith": 1,
+            "curve": 0,
+            "r": "intersec-1-2"
+          }
+        ]
+      }
+    ]
+  },
+  "她": {
+    "type": "Char",
+    "body": [
+      "女1",
+      "也"
+    ],
+    "vars": {},
+    "prog": [
+      {
         "place": {
           "dest": {
             "ith": 0
