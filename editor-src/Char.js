@@ -108,7 +108,8 @@ export default class Char extends CurveStructureBase{
     }
 
     draw(ctx, strokeWidth, scale){
-        if(this.corebound){
+        if(this.corebound && this.corebound.body.length > 0){
+            console.log(this.corebound.body.length, "char corebound");
             ctx.fillStyle = "rgb(128, 64, 0, 0.3)";
             ctx.beginPath();
             ctx.moveToVec(this.corebound.body[0], scale);

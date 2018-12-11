@@ -36,14 +36,17 @@ export default class Curve extends CurveStructureBase{
         this.update();
     }
 
-    scale(ratio, anchor){
+    scale(ratio, from, to){
 
-        if (anchor === undefined) anchor = this.body[0];
+        if (to === undefined) to = this.body.length;
+        if (from === undefined) from = 0;
 
-        for (let elem of this.body){
-            let vec = elem.sub(anchor);
-            elem.isub(vec);
-            elem.iadd(vec.mult(ratio));
+        // let anchor = this.body[from];
+
+        for (let i = from + 1; i < to; i++){
+            let vec = this.body[i].sub(this.body[i-1]),
+                inc = vec.mult(ratio).sub(vec);
+            for (let j = i; j < this.body.length; j++) this.body[j].iadd(inc);
         }
         this.update();
     }
@@ -71,7 +74,10 @@ export default class Curve extends CurveStructureBase{
 
         for (let instr of prog)
             for (let method in instr)
-                instance[method](this.getVariable(instr[method]));
+                switch(method){
+                    case "scale":
+                        this.scale(instr[method].ratio, instr[method].from, instr[method].to);
+                }
 
         this.update();
     }
@@ -137,7 +143,7 @@ export default class Curve extends CurveStructureBase{
         
             return new Vec(momentX/area, momentY/area);
         } else {
-            throw "massCenter needs at least two points over the curve";
+            console.error("massCenter needs at least two points over the curve");
         }
 
     }
