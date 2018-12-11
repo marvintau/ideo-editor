@@ -33,6 +33,10 @@ export default class Stroke extends CurveStructureBase{
         return this.body[spec.curve].at(spec.r);
     }
 
+    hide(spec){
+        if (spec == 1) this.hidden = true;
+    }
+
     insertAt(spec, attr){
         return this.body[spec.curve].insertAt(spec.r, attr);
     }
@@ -68,13 +72,15 @@ export default class Stroke extends CurveStructureBase{
 
     draw(ctx, strokeWidth, scale){
 
-        ctx.beginPath();
-        ctx.moveToVec(this.body[0].body[0], scale);
-
-        for (let curve of this.body)
-            curve.draw(ctx, strokeWidth, scale);
-
-        ctx.stroke();
+        if(!this.hidden){
+            ctx.beginPath();
+            ctx.moveToVec(this.body[0].body[0], scale);
+    
+            for (let curve of this.body)
+                curve.draw(ctx, strokeWidth, scale);
+    
+            ctx.stroke();
+        }
     }
 
 }

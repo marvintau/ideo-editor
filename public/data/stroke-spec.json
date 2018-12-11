@@ -2999,5 +2999,105 @@
         }
       }
     ]
+  },
+  "三": {
+    "type": "Radical",
+    "body": [
+      "shu",
+      "heng",
+      "heng",
+      "heng"
+    ],
+    "vars": {},
+    "prog": [
+      {
+        "ith": 0,
+        "hide": 1
+      },
+      {
+        "ith": 2,
+        "scale": 0.8
+      },
+      {
+        "ith": 3,
+        "scale": 1.4
+      },
+      {
+        "cross": {
+          "self": {
+            "ith": 1,
+            "curve": 0,
+            "r": 0.5
+          },
+          "dest": {
+            "ith": 0,
+            "curve": 0,
+            "r": 0
+          }
+        }
+      },
+      {
+        "cross": {
+          "self": {
+            "ith": 2,
+            "curve": 0,
+            "r": 0.5
+          },
+          "dest": {
+            "ith": 0,
+            "curve": 0,
+            "r": 0.5
+          }
+        }
+      },
+      {
+        "cross": {
+          "self": {
+            "ith": 3,
+            "curve": 0,
+            "r": 0.5
+          },
+          "dest": {
+            "ith": 0,
+            "curve": 0,
+            "r": 1
+          }
+        }
+      },
+      {
+        "core": [
+          {
+            "ith": 1,
+            "curve": 0,
+            "r": 0.2
+          },
+          {
+            "ith": 2,
+            "curve": 0,
+            "r": 0.05
+          },
+          {
+            "ith": 3,
+            "curve": 0,
+            "r": 0.2
+          },
+          {
+            "ith": 1,
+            "curve": 0,
+            "r": 0.8
+          },
+          {
+            "ith": 2,
+            "curve": 0,
+            "r": 0.95
+          },
+          {
+            "ith": 3,
+            "curve": 0,
+            "r": 0.8
+          }
+        ]
+      }
+    ]
   }
 }

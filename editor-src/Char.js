@@ -66,7 +66,6 @@ export default class Char extends CurveStructureBase{
 
                 for (let k in dest.outliers)
                     for (let curve of dest.outliers[k]){
-                        console.log(k);
                         if (k == "l") curve.scale(maxRatio);
                         if (k == "r") curve.scale(1/maxRatio/maxRatio);
                     }
@@ -96,7 +95,6 @@ export default class Char extends CurveStructureBase{
 
     postUpdate(){
         if(!this.body.some(e => e.corebound === undefined)){
-            console.log(this);
             let coreboundPoints = [].concat(...this.body.map(elem => elem.corebound.body));
             this.corebound = new Curve(coreboundPoints);
             this.corebound.convexHull();
@@ -122,10 +120,6 @@ export default class Char extends CurveStructureBase{
         if (this.massCenter){
             ctx.strokeStyle = "black";
             ctx.circle(this.massCenter.mult(scale), 5, true);
-
-            // ctx.strokeStyle = "red";
-            // ctx.circle(this.geomCenter.mult(scale), 5, true);
-            // console.log(boxCenter, this.massCenter);
         }
 
         for (let comp of this.body)

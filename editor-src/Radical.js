@@ -55,21 +55,18 @@ export default class Radical extends CurveStructureBase{
                             .map(outlier => new Curve(outlier.reverse()))
                             .filter(outCurve => outCurve.length() > 0.01);
 
-        console.log(outlierPoints, "outlierPoints");
         this.outliers = {l:[], r:[], t:[], b:[]};
         for (let outlierCurve of outlierPoints){
             if (outlierCurve.body.length >= 2){
                 let p1 = outlierCurve.body[0],
                     p2 = outlierCurve.body[1],
                     angle = p2.sub(p1).angle();
-                console.log(outlierCurve, angle, "angle");
                 if (45 > angle && angle >= -45)   this.outliers.r.push(outlierCurve);
                 if (135 > angle && angle >= 45)   this.outliers.b.push(outlierCurve);
                 if (angle >= 135 || angle < -135) this.outliers.l.push(outlierCurve);
                 if (-45 > angle && angle >= -135)  this.outliers.t.push(outlierCurve);
             }
         }
-        console.log(this.outliers);
 
         this.massCenter = this.corebound.massCenter();
 

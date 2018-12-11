@@ -151,7 +151,11 @@ export default class CurveStructureBase{
 
                 if(method != 'prog'){
                     // console.log(instance, method, instance[method], "modify");
-                    instance[method](this.getVariable(instr[method]));
+                    try{
+                        instance[method](this.getVariable(instr[method]));
+                    } catch (e){
+                        console.error("Type [" + instance.type + "] doesn't contain method [" + method + "]");
+                    }
                 }else
                     instance.modify(instr[method]);
             }
