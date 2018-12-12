@@ -303,7 +303,7 @@
     "type": "Curve",
     "body": [
       {
-        "len": 7,
+        "len": 6,
         "ang": 90
       },
       {
@@ -1693,6 +1693,9 @@
     },
     "prog": [
       {
+        "scale": 0.9
+      },
+      {
         "ith": 0,
         "scale": "scale-0",
         "rotate": "rotate-0"
@@ -1767,6 +1770,11 @@
             "ith": 2,
             "curve": 0,
             "r": 0.2
+          },
+          {
+            "ith": 1,
+            "curve": 0,
+            "r": 0
           },
           {
             "ith": 1,
@@ -2600,7 +2608,7 @@
           "self": {
             "ith": 2,
             "curve": 0,
-            "r": 0.16
+            "r": 0.18
           },
           "dest": {
             "ith": 0,
@@ -3149,6 +3157,474 @@
             "r": 0.65
           }
         }
+      }
+    ]
+  },
+  "反文": {
+    "type": "Radical",
+    "body": [
+      "pie",
+      "heng",
+      "pie",
+      "na"
+    ],
+    "vars": {},
+    "prog": [
+      {
+        "ith": 0,
+        "rotate": -10,
+        "scale": 0.8
+      },
+      {
+        "ith": 1,
+        "scale": 0.8
+      },
+      {
+        "ith": 2,
+        "scale": 1.3,
+        "curl": 10,
+        "rotate": -15
+      },
+      {
+        "ith": 3,
+        "scale": 1.1,
+        "curl": -3,
+        "rotate": 0
+      },
+      {
+        "cross": {
+          "self": {
+            "ith": 1,
+            "curve": 0,
+            "r": 0
+          },
+          "dest": {
+            "ith": 0,
+            "curve": 0,
+            "r": 0.6
+          }
+        }
+      },
+      {
+        "cross": {
+          "self": {
+            "ith": 2,
+            "curve": 0,
+            "r": 0
+          },
+          "dest": {
+            "ith": 1,
+            "curve": 0,
+            "r": 0.7
+          }
+        }
+      },
+      {
+        "cross": {
+          "self": {
+            "ith": 3,
+            "curve": 0,
+            "r": 0.5
+          },
+          "dest": {
+            "ith": 2,
+            "curve": 0,
+            "r": 0.5
+          }
+        }
+      },
+      {
+        "core": [
+          {
+            "ith": 0,
+            "curve": 0,
+            "r": 0.4
+          },
+          {
+            "ith": 0,
+            "curve": 0,
+            "r": 0.9
+          },
+          {
+            "ith": 2,
+            "curve": 0,
+            "r": 0
+          },
+          {
+            "ith": 2,
+            "curve": 0,
+            "r": 0.65
+          },
+          {
+            "ith": 3,
+            "curve": 0,
+            "r": 0
+          },
+          {
+            "ith": 3,
+            "curve": 0,
+            "r": 0.65
+          },
+          {
+            "ith": 1,
+            "curve": 0,
+            "r": 0
+          },
+          {
+            "ith": 1,
+            "curve": 0,
+            "r": 0.85
+          }
+        ]
+      }
+    ]
+  },
+  "牛1": {
+    "type": "Radical",
+    "body": [
+      "pie",
+      "heng",
+      "shu",
+      "ti"
+    ],
+    "vars": {
+      "scale-0": {
+        "val": 0.48,
+        "range": {
+          "min": 0.384,
+          "max": 0.6
+        }
+      },
+      "rotate-0": {
+        "val": -15,
+        "range": {
+          "min": -35,
+          "max": 5
+        }
+      },
+      "scale-1": {
+        "val": 0.728,
+        "range": {
+          "min": 0.72,
+          "max": 1.125
+        }
+      },
+      "scale-2": {
+        "val": 1.453,
+        "range": {
+          "min": 1.12,
+          "max": 1.75
+        }
+      },
+      "scale-3": {
+        "val": 0.987,
+        "range": {
+          "min": 0.96,
+          "max": 1.5
+        }
+      },
+      "cross-0-1-self": {
+        "val": 0.5,
+        "range": {
+          "min": 0.4,
+          "max": 0.6
+        }
+      },
+      "cross-2-1-self": {
+        "val": 0.311,
+        "range": {
+          "min": 0.2,
+          "max": 0.4
+        }
+      },
+      "cross-2-1-dest": {
+        "val": 0.456,
+        "range": {
+          "min": 0.3,
+          "max": 0.6
+        }
+      },
+      "cross-3-2-self": {
+        "val": 0.5,
+        "range": {
+          "min": 0.4,
+          "max": 0.6
+        }
+      },
+      "cross-3-2-dest": {
+        "val": 0.649,
+        "range": {
+          "min": 0.5,
+          "max": 0.7
+        }
+      }
+    },
+    "prog": [
+      {
+        "scale": 0.9
+      },
+      {
+        "ith": 0,
+        "scale": "scale-0",
+        "rotate": "rotate-0"
+      },
+      {
+        "ith": 1,
+        "scale": "scale-1"
+      },
+      {
+        "ith": 2,
+        "scale": "scale-2"
+      },
+      {
+        "ith": 3,
+        "scale": "scale-3"
+      },
+      {
+        "cross": {
+          "self": {
+            "ith": 0,
+            "curve": 0,
+            "r": "cross-0-1-self"
+          },
+          "dest": {
+            "ith": 1,
+            "curve": 0,
+            "r": 0
+          }
+        }
+      },
+      {
+        "cross": {
+          "self": {
+            "ith": 2,
+            "curve": 0,
+            "r": "cross-2-1-self"
+          },
+          "dest": {
+            "ith": 1,
+            "curve": 0,
+            "r": "cross-2-1-dest"
+          }
+        }
+      },
+      {
+        "cross": {
+          "self": {
+            "ith": 3,
+            "curve": 0,
+            "r": "cross-3-2-self"
+          },
+          "dest": {
+            "ith": 2,
+            "curve": 0,
+            "r": "cross-3-2-dest"
+          }
+        }
+      },
+      {
+        "core": [
+          {
+            "ith": 0,
+            "curve": 0,
+            "r": 0.2
+          },
+          {
+            "ith": 0,
+            "curve": 0,
+            "r": 0.7
+          },
+          {
+            "ith": 1,
+            "curve": 0,
+            "r": 0.001
+          },
+          {
+            "ith": 1,
+            "curve": 0,
+            "r": 0.8
+          },
+          {
+            "ith": 2,
+            "curve": 0,
+            "r": 0.2
+          },
+          {
+            "ith": 2,
+            "curve": 0,
+            "r": 0.8
+          },
+          {
+            "ith": 3,
+            "curve": 0,
+            "r": 0.2
+          },
+          {
+            "ith": 3,
+            "curve": 0,
+            "r": 0.8
+          }
+        ]
+      }
+    ]
+  },
+  "牧": {
+    "type": "Char",
+    "body": [
+      "牛1",
+      "反文"
+    ],
+    "vars": {},
+    "prog": [
+      {
+        "place": {
+          "dest": {
+            "ith": 0
+          },
+          "self": {
+            "ith": 1
+          },
+          "spacing": 0.35,
+          "pos": 0
+        }
+      }
+    ]
+  },
+  "水": {
+    "type": "Radical",
+    "body": [
+      "shugou",
+      "hengpie",
+      "pie",
+      "na"
+    ],
+    "vars": {},
+    "prog": [
+      {
+        "ith": 0,
+        "prog": [
+          {
+            "ith": 0,
+            "scale": 1.3
+          }
+        ]
+      },
+      {
+        "ith": 1,
+        "scale": 0.8,
+        "prog": [
+          {
+            "ith": 0,
+            "scale": 0.5
+          },
+          {
+            "ith": 1,
+            "rotate": -8
+          }
+        ]
+      },
+      {
+        "ith": 2,
+        "scale": 0.5,
+        "rotate": 10,
+        "curl": 4
+      },
+      {
+        "ith": 3,
+        "rotate": 10,
+        "scale": 0.95,
+        "curl": -3
+      },
+      {
+        "cross": {
+          "self": {
+            "ith": 1,
+            "curve": 0,
+            "r": 1.55
+          },
+          "dest": {
+            "ith": 0,
+            "curve": 0,
+            "r": 0.3
+          }
+        }
+      },
+      {
+        "cross": {
+          "self": {
+            "ith": 3,
+            "curve": 0,
+            "r": 0
+          },
+          "dest": {
+            "ith": 0,
+            "curve": 0,
+            "r": 0.28
+          }
+        }
+      },
+      {
+        "cross": {
+          "self": {
+            "ith": 2,
+            "curve": 0,
+            "r": 1
+          },
+          "dest": {
+            "ith": 3,
+            "curve": 0,
+            "r": 0.1
+          }
+        }
+      },
+      {
+        "core": [
+          {
+            "ith": 0,
+            "curve": 0,
+            "r": 0.2
+          },
+          {
+            "ith": 1,
+            "curve": 0,
+            "r": 0.2
+          },
+          {
+            "ith": 1,
+            "curve": 1,
+            "r": 0.8
+          },
+          {
+            "ith": 0,
+            "curve": 0,
+            "r": 1
+          },
+          {
+            "ith": 0,
+            "curve": 1,
+            "r": 1
+          },
+          {
+            "ith": 3,
+            "curve": 0,
+            "r": 0
+          },
+          {
+            "ith": 3,
+            "curve": 0,
+            "r": 0.8
+          },
+          {
+            "ith": 2,
+            "curve": 0,
+            "r": 0.2
+          },
+          {
+            "ith": 2,
+            "curve": 0,
+            "r": 1
+          }
+        ]
       }
     ]
   }

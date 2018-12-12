@@ -3,12 +3,18 @@ import CurveStructureBase from "./CurveStructureBase.js";
 import Vec from "./Vec.js";
 import Curve from "./Curve.js";
 
+function wrap(inner, outerType){
+    return {type:outerType, body:[inner], vars:{}, prog:[]};
+}
+
 /**
- * Char 负责实现两种类型的数据，一种是Radical，一种是Char自己。
- * 如果将Radical视作部首，也就是没有组成它的部首，那么Char就是
- * 最终实现的字。
- * 
- * 需要注意的是，Char不能从CurveStructureBase继承
+ * Char is resposible for two types of data, Radical and Char itself.
+ * Considering Radical as undivisible component of character, char is
+ * the character composed by Radicals.
+ *
+ * Char shares most common functions with CurveStructureBase, however
+ * Char cannot get extended from CurveStructureBase because of its
+ * recursive structure.
  */
 export default class Char extends CurveStructureBase{
     
@@ -17,11 +23,18 @@ export default class Char extends CurveStructureBase{
         super(spec);
 
         this.body = [];
-        if (spec && spec.body) for (let elem of spec.body)
-            if (elem.type === "Radical")
-                this.body.push(new Radical(elem));
-            else if (elem.type === "Char")
-                this.body.push(new Char(elem));
+
+        if (spec && spec.body) for (let elem of spec.body){
+            let finalElem = elem;
+            if (finalElem.type === "Stroke") 
+                finalElem = wrap(finalElem, "Radical");
+
+            if (finalElem.type === "Radical") 
+                this.body.push(new Radical(finalElem));
+
+            if (finalElem.type === "Char")
+                this.body.push(new Char(finalElem));
+        }
 
         this.type = "Char";
         this.modify();
@@ -85,14 +98,6 @@ export default class Char extends CurveStructureBase{
         this.body[spec.self.ith].trans(transVec);
     }
 
-    intersect(){
-        for (let elem of this.body) elem.intersect();
-    }
-
-    deintersect(){
-        for (let elem of this.body) elem.deintersect();
-    }
-
     postUpdate(){
         if(!this.body.some(e => e.corebound === undefined)){
             let coreboundPoints = [].concat(...this.body.map(elem => elem.corebound.body));
@@ -109,7 +114,6 @@ export default class Char extends CurveStructureBase{
 
     draw(ctx, strokeWidth, scale){
         if(this.corebound && this.corebound.body.length > 0){
-            console.log(this.corebound.body.length, "char corebound");
             ctx.fillStyle = "rgb(128, 64, 0, 0.3)";
             ctx.beginPath();
             ctx.moveToVec(this.corebound.body[0], scale);

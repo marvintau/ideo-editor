@@ -146,8 +146,9 @@ canvas {
     <body>
         <div class="new-group">
             新建： <input id="new-char-name">
-            <button id="create">创建新字</button>
-            <button id="show-stroke">显示笔画</button>
+            <button id="create">Create new Char</button>
+            <button id="show-stroke">Show stroke</button>
+            <button id="toggle-code-param">Toggle Code/Parameter</button>
             <span id="indicator">就绪</span>    
         </div>
         
@@ -158,7 +159,7 @@ canvas {
                 <canvas id="preview" width="800" height="800" style="height: 400px; width: 400px"></canvas>
             </div>
     
-            <div class="text-stuff">
+            <div class="text-stuff" id="code-list">
                 <div class="text">
                     <textarea id="stroke-list" spellcheck="false" class="editor allow-tabs"></textarea>
                     <pre><code id="code-display" class="syntax-highight html"></code></pre>            

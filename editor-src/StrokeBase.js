@@ -29,6 +29,14 @@ export default class StrokeBase{
             this.updateCharList(this.base);
         }.bind(this);
 
+        document.getElementById('var-bars').style.display = "none";
+        document.getElementById('toggle-code-param').onclick = function(e){
+            let codelist = document.getElementById('code-list'),
+                varslist = document.getElementById('var-bars');
+
+            codelist.style.display = codelist.style.display == "none" ? "flex" : "none";
+            varslist.style.display = varslist.style.display == "none" ? "block" : "none";
+        }
     }
 
     initStroke(charName){        

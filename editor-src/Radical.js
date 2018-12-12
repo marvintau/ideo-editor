@@ -122,7 +122,6 @@ export default class Radical extends CurveStructureBase{
         
         if(this.corebound){
             ctx.fillStyle = "rgb(128, 64, 0, 0.5)";
-            console.log(this.corebound);
             ctx.beginPath();
             ctx.moveToVec(this.corebound.body[0], scale);
             for (let point of this.corebound.body)
