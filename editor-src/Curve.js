@@ -88,12 +88,13 @@ export default class Curve extends CurveStructureBase{
 
         if (this.duringUpdate) this.duringUpdate();
 
-        if(this.body.length > 1)
+        if(this.body.length > 1){
             this.box = new Box(this.body[0], this.body[1]);
             for(let i = 1; i < this.body.length; i++)
                 this.box.iunion(this.body[i]);
+        }
 
-        if(this.postUpdate) this.postUpdate();
+       if(this.postUpdate) this.postUpdate();
     }
 
     convexHull() {

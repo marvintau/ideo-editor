@@ -14,32 +14,37 @@ function dup(json){
  * @param {object} base 部件索引
  */
 function getSpecRecursive(strokeNextElem, base){
-    let stroke = dup(base[strokeNextElem]);
-    delete stroke.text;
+    if(base[strokeNextElem]){
+        let stroke = dup(base[strokeNextElem]);
+        delete stroke.text;
 
-    switch(stroke.type){
+        switch(stroke.type){
 
-        case "Char":
-            // console.log("getSpecRecursive, Char");
-        case "Radical":
-            stroke.body = stroke.body.reduce(function(list, elem){
-                return list.concat(getSpecRecursive(elem, base));
-            }, []);
-            return stroke;
+            case "Char":
+                // console.log("getSpecRecursive, Char");
+            case "Radical":
+                stroke.body = stroke.body.reduce(function(list, elem){
+                    return list.concat(getSpecRecursive(elem, base));
+                }, []);
+                return stroke;
 
-        // 一个简单笔画返回的是一个仅包含它的复杂笔画，也是递归的终点
-        case "Curve":
-            return {type:"Stroke", body:[stroke]};
+            // 一个简单笔画返回的是一个仅包含它的复杂笔画，也是递归的终点
+            case "Curve":
+                return {type:"Stroke", body:[stroke]};
 
-        // 一个复杂笔画引用的可能是另一个复杂笔画，也可能是若干个简单笔画，
-        // 但是因为在上面简单笔画也返回复杂笔画，因而最终返回的都是复杂笔
-        // 画。因此最终得到的是将各复杂笔画合成后的新的复杂笔画。而复杂笔
-        // 画内的引用关系也因为这部操作而丢失了。
-        case "Stroke":
-            stroke.body = stroke.body.reduce(function(list, elem){
-                return list.concat(getSpecRecursive(elem, base).body);
-            }, []);
-            return stroke;
+            // 一个复杂笔画引用的可能是另一个复杂笔画，也可能是若干个简单笔画，
+            // 但是因为在上面简单笔画也返回复杂笔画，因而最终返回的都是复杂笔
+            // 画。因此最终得到的是将各复杂笔画合成后的新的复杂笔画。而复杂笔
+            // 画内的引用关系也因为这部操作而丢失了。
+            case "Stroke":
+                stroke.body = stroke.body.reduce(function(list, elem){
+                    return list.concat(getSpecRecursive(elem, base).body);
+                }, []);
+                return stroke;
+        }
+    } else {
+        console.error("[" + strokeNextElem + "] is not found in dictionary");
+        return strokeNextElem;
     }
 }
 

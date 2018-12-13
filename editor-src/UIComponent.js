@@ -38,3 +38,43 @@ export function addInput(name, variable, func){
     }
     return x;
 }
+
+
+function hideAllTabs(){
+    for (let child of document.getElementById('char-list').children){
+        child.style.display = "none";
+    }
+}
+
+export function initButtons(){
+    document.getElementById('toggle-stroke').onclick = function(e){
+        hideAllTabs();
+        document.getElementById('list-Stroke').style.display = "block";
+    }
+
+    document.getElementById('toggle-radical').onclick = function(e){
+        hideAllTabs();
+        document.getElementById('list-Radical').style.display = "block";
+    }
+
+    document.getElementById('toggle-uniq').onclick = function(e){
+        hideAllTabs();
+        document.getElementById('list-Uniq').style.display = "block";
+    }
+
+    document.getElementById('toggle-combo').onclick = function(e){
+        hideAllTabs();
+        document.getElementById('list-Combo').style.display = "block";
+    }
+
+
+    document.getElementById('var-bars').style.display = "none";
+    document.getElementById('toggle-code-param').onclick = function(e){
+        let codelist = document.getElementById('code-list'),
+            varslist = document.getElementById('var-bars');
+
+        codelist.style.display = codelist.style.display == "none" ? "flex" : "none";
+        varslist.style.display = varslist.style.display == "none" ? "block" : "none";
+    }
+
+}

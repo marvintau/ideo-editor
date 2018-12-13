@@ -17,12 +17,10 @@ body{
 
 #canvas-wrap{
     margin: 10px;
-    display: flex;
-    flex-direction : column;
 }
 
 canvas {
-    margin-top:10px;
+    margin-top:20px;
 }
 
 .text-stuff{
@@ -45,6 +43,7 @@ canvas {
 }
 
 .main {
+    height: 440px;
     display:flex;
     flex-direction: row;
     /* overflow-x:scroll; */
@@ -52,7 +51,7 @@ canvas {
 
 textarea, code{
     position: absolute;
-    top: 0;
+    top: 0px;
     left: 0;
     width: 550px;
     font-family : "TheSansMono Office";
@@ -100,18 +99,20 @@ code{
     z-index: 1;
 }
 
-#char-list{
+#char-list-wrapper{
     margin : 10px;
-    height: 450;
+    width: 225px;
+    height: 450px;
     border-radius: 5px;
     overflow-y: scroll;
 }
 
 .char-button{
     /* font-size: 200%; */
-    font-family:"Kaiti SC";
+    display: inline-block;
+    font-size: 1.2em;
     margin : 10px;
-    display : block;
+    cursor: pointer;
     /* border-radius:5px; */
 }
 
@@ -147,14 +148,20 @@ canvas {
         <div class="new-group">
             新建： <input id="new-char-name">
             <button id="create">Create new Char</button>
-            <button id="show-stroke">Show stroke</button>
             <button id="toggle-code-param">Toggle Code/Parameter</button>
             <span id="indicator">就绪</span>    
         </div>
         
 
         <div class="main">
-            <div id="char-list"></div>
+            <div id="char-list-wrapper">
+                <button id="toggle-stroke">Stroke</button>
+                <button id="toggle-radical">Radical</button>
+                <button id="toggle-uniq">Uniq</button>
+                <button id="toggle-combo">Combo</button>
+                <div id="char-list">
+                </div>
+            </div>
             <div class="canvas-wrap">
                 <canvas id="preview" width="800" height="800" style="height: 400px; width: 400px"></canvas>
             </div>

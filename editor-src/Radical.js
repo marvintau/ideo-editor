@@ -11,7 +11,7 @@ export default class Radical extends CurveStructureBase{
     }
 
     at(spec){
-        this.body[spec.stroke].at(spec);
+        return this.body[spec.stroke].at(spec);
     }
 
     cross(spec){
@@ -135,7 +135,7 @@ export default class Radical extends CurveStructureBase{
             let boxCenter = this.box.center();
             ctx.circle(this.massCenter.mult(scale), 5, true);
             ctx.circle(boxCenter.mult(scale), 5, true);
-            console.log(boxCenter, this.massCenter);
+            console.log(boxCenter, this.massCenter, "massCenter");
         }
 
     }

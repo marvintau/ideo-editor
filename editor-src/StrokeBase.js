@@ -2,11 +2,17 @@ import "./ArrayExtension.js";
 import Input from "./Input.js";
 import {fromJSONObject, toJSONText} from "./ION.js";
 import {getSpec} from "./Spec.js";
-import {addSlider, addLabel, addInput} from "./UIComponent.js";
+import {initButtons, addSlider, addLabel, addInput} from "./UIComponent.js";
 import {loadStrokeBase, saveStrokeBase} from "./Ajax.js";
 
 import Char from "./Char.js";
 import {drawBound, drawRadical, drawFrame, drawBBox} from "./Draw.js";
+
+
+/**
+ * The overall class that initiates the UI, retrieves character
+ * information from backend, and so on.
+ */
 
 export default class StrokeBase{
 
@@ -18,25 +24,11 @@ export default class StrokeBase{
         this.currSpec = {};
         this.preview = document.getElementById("preview").getContext('2d');
 
-        this.shouldShowStrokes = false;
-
         document.getElementById('create').onclick = function(e){
             this.create();
         }.bind(this);
 
-        document.getElementById('show-stroke').onclick = function(e){
-            this.shouldShowStrokes = !this.shouldShowStrokes;
-            this.updateCharList(this.base);
-        }.bind(this);
-
-        document.getElementById('var-bars').style.display = "none";
-        document.getElementById('toggle-code-param').onclick = function(e){
-            let codelist = document.getElementById('code-list'),
-                varslist = document.getElementById('var-bars');
-
-            codelist.style.display = codelist.style.display == "none" ? "flex" : "none";
-            varslist.style.display = varslist.style.display == "none" ? "block" : "none";
-        }
+        initButtons();
     }
 
     initStroke(charName){        
@@ -67,10 +59,27 @@ export default class StrokeBase{
             charUI.removeChild(charUI.firstChild);
         }
 
-        for(let charName in chars)
-        if (this.shouldShowStrokes || this.base[charName].type === "Radical" || this.base[charName].type === "Char"){
+        let comboDOM = document.createElement('div'),
+            uniqDOM = document.createElement('div'),
+            radicalDOM = document.createElement('div'),
+            strokeDOM = document.createElement('div');
+
+        comboDOM.setAttribute('id', "list-Combo");
+        uniqDOM.setAttribute('id', "list-Uniq");
+        uniqDOM.style.display = "none";
+        radicalDOM.setAttribute('id', 'list-Radical');
+        radicalDOM.style.display = "none";
+        strokeDOM.setAttribute('id', 'list-Stroke');
+        strokeDOM.style.display = "none";
+
+        charUI.appendChild(comboDOM);
+        charUI.appendChild(uniqDOM);
+        charUI.appendChild(radicalDOM);
+        charUI.appendChild(strokeDOM);
+
+        for(let charName in chars){
             
-            var p = document.createElement('button')
+            var p = document.createElement('div')
             p.appendChild(document.createTextNode(charName));
             p.classList.add('char-button'); 
 
@@ -81,7 +90,13 @@ export default class StrokeBase{
                 this.input.update(this.getStrokeSpecText(charName));
             }.bind(this);
 
-            charUI.appendChild(p);
+            let category;
+            category = chars[charName].desc ? chars[charName].desc : chars[charName].type;
+            category = category === "Curve" ? "Stroke" : category;
+            category = category === "Char" ? "Uniq" : category;
+            
+            console.log(category, charName);
+            document.getElementById("list-"+category).appendChild(p);
         }
     }
 
@@ -199,7 +214,10 @@ export default class StrokeBase{
             center = this.char.box.center();
         }
 
-        let scale = 45;
+        console.log(this.char.body);
+
+        let scale = 25;
+        
 
         this.preview.translate(width/2 - center.x * scale, height/2 - center.y * scale);
                 

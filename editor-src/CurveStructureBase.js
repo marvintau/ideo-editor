@@ -125,8 +125,7 @@ export default class CurveStructureBase{
     }
 
     /**
-     * modify: operate the curve object with given instructions.
-     * 
+     * modify: Interprets and executes the program in the char spec.
      * 
      * @param {Array} prog the programmes to be applied over different level of curve structure.
      * @param {Array} vars  variables referred in prog
@@ -138,23 +137,37 @@ export default class CurveStructureBase{
         if (vars === undefined) vars = this.vars; else vars = Object.assign(this.vars, vars);
         if (prog === undefined) prog = this.prog;
 
-        // 先对本实例所有的组件应用modify操作，就是说如果组件本身含有prog会
-        // 先被执行。
+        /**
+         * Run the program of the children of the current object.
+         */
         for (let elem of this.body) elem.modify(undefined, vars);
 
-        // 然后再执行本实例的prog
+        /**
+         * Run the program of the current object. Make sure that all 
+         * the children has been modified at this point.
+         */
         for (let instr of prog){
 
-            // 执行instr中的每个method，如果method中包含ith，则所有的操作将应用于它的第ith个组件。
             for (let method in instr){
+
+                /**
+                 * If ith is specified in the instruction, then the 
+                 * instance to deal with is this, otherwise the ith
+                 * child.
+                 */
                 var instance = (instr.ith === undefined) ? this : this.body[instr.ith];
 
+                /**
+                 * Here we encounter a problem: for the method in the
+                 * class that extended from CurveStructureBase, modify
+                 * is unable to 
+                 */
                 if(method != 'prog'){
-                    // console.log(instance, method, instance[method], "modify");
                     try{
                         instance[method](this.getVariable(instr[method]));
                     } catch (e){
-                        console.error("Type [" + instance.type + "] doesn't contain method [" + method + "]");
+                        console.error(e);
+                        //console.error("Parsing: Type [" + instance.type + "] doesn't contain method [" + method + "]");
                     }
                 }else
                     instance.modify(instr[method]);
