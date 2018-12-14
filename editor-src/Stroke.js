@@ -12,7 +12,6 @@ export default class Stroke extends CurveStructureBase{
         super(spec);
         this.type = "Stroke";
         this.body = spec.body.map(comp => new Curve(comp));
-        this.update();
     }
 
     rotate(angle){

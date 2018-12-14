@@ -36,11 +36,13 @@ export default class StrokeBase{
         this.initVariableControls();
 
         this.char = new Char(this.currSpec);
+        this.char.modify();
         this.updateWithPoint();        
     }
 
     updateStroke(){
         this.char = new Char(this.currSpec);
+        this.char.modify();
         this.updateWithPoint();
     }
 
@@ -216,12 +218,12 @@ export default class StrokeBase{
 
         console.log(this.char.body);
 
-        let scale = 25;
+        let scale = 45;
         
 
         this.preview.translate(width/2 - center.x * scale, height/2 - center.y * scale);
                 
-        this.char.draw(this.preview, this.strokeWidth, scale);
+        this.char.draw(this.preview, this.strokeWidth, scale, this.currCharName);
 
 
         this.preview.setTransform(1, 0, 0, 1, 0, 0);

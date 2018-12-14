@@ -43,7 +43,6 @@ export default class Char extends CurveStructureBase{
             this.body.push(new Radical(wrap(wrap(spec, "Stroke"), "Radical")))
 
         this.type = "Char";
-        this.modify();
     }
 
     /**
@@ -56,7 +55,6 @@ export default class Char extends CurveStructureBase{
             var pointDest = this.body[spec.dest.ith].at(spec.dest),
                 pointSelf = this.body[spec.self.ith].at(spec.self);
 
-            console.log(this.body[spec.dest.ith].at(spec.dest), "splice");
             this.body[spec.self.ith].trans(pointDest.sub(pointSelf));
          }
     }
@@ -113,6 +111,8 @@ export default class Char extends CurveStructureBase{
         if(!this.body.some(e => e.corebound === undefined)){
             let coreboundPoints = [].concat(...this.body.map(elem => elem.corebound.body));
             this.corebound = new Curve(coreboundPoints);
+            if (coreboundPoints.some(e => isNaN(e.x)))
+                console.log(coreboundPoints, "NaN found corebound in Char postUpdate");
             this.corebound.convexHull();
             this.massCenter = this.corebound.massCenter();
     
@@ -123,7 +123,7 @@ export default class Char extends CurveStructureBase{
         }
     }
 
-    draw(ctx, strokeWidth, scale){
+    draw(ctx, strokeWidth, scale, charName){
         if(this.corebound && this.corebound.body.length > 0){
             ctx.fillStyle = "rgb(128, 64, 0, 0.3)";
             ctx.beginPath();
@@ -139,7 +139,7 @@ export default class Char extends CurveStructureBase{
         }
 
         for (let comp of this.body)
-            comp.draw(ctx, strokeWidth, scale);
+            comp.draw(ctx, strokeWidth, scale, charName, this.name);
 
     }
 }

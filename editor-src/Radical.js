@@ -20,13 +20,25 @@ export default class Radical extends CurveStructureBase{
             pointSelf = this.body[spec.self.ith].at(spec.self);
 
         this.body[spec.self.ith].trans(pointDest.sub(pointSelf));
+
+        if(this.flatten().some(e => isNaN(e.x)))
+            console.log("radical cross, NaN found", pointDest, spec.self, this.body[spec.self.ith]);
     }
 
     core(spec){
 
+        /**
+         * Note: insertAt returns the inserted element, and modifies
+         *       the array by inserting the element (as name implies),
+         *       so the corebound should store all the corebound points.
+         */
+
         let points = spec.map(s => this.body[s.ith].insertAt(s, {corebound: true}));
         this.corebound = new Curve(points);
         this.corebound.convexHull();
+
+        if(points.some(p => isNaN(p.x)))
+            console.log(spec, points, "NaN corebound in Radical");
 
         points = this.body
             .map(stroke => stroke.flatten())
@@ -76,7 +88,7 @@ export default class Radical extends CurveStructureBase{
 
     }
 
-    draw(ctx, strokeWidth, scale){
+    draw(ctx, strokeWidth, scale, charName){
 
         ctx.lineWidth = strokeWidth;
         ctx.lineCap = "square";
@@ -135,7 +147,7 @@ export default class Radical extends CurveStructureBase{
             let boxCenter = this.box.center();
             ctx.circle(this.massCenter.mult(scale), 5, true);
             ctx.circle(boxCenter.mult(scale), 5, true);
-            console.log(boxCenter, this.massCenter, "massCenter");
+            console.log(boxCenter, this.massCenter, "massCenter", charName, this.name);
         }
 
     }

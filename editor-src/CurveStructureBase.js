@@ -15,6 +15,7 @@ export default class CurveStructureBase{
 
         // console.log("CurveStructureBase", spec);
         this.type = "CurveStructureBase";
+        this.name = (spec=== undefined || spec.name === undefined) ? "" : spec.name;
         this.prog = (spec=== undefined || spec.prog === undefined) ? [] : spec.prog;
         this.vars = (spec=== undefined || spec.vars === undefined) ? {} : spec.vars;
         this.box  = new Box();
@@ -140,7 +141,9 @@ export default class CurveStructureBase{
         /**
          * Run the program of the children of the current object.
          */
-        for (let elem of this.body) elem.modify(undefined, vars);
+        for (let elem of this.body) 
+            elem.modify(undefined, vars);
+       
 
         /**
          * Run the program of the current object. Make sure that all 
@@ -167,7 +170,6 @@ export default class CurveStructureBase{
                         instance[method](this.getVariable(instr[method]));
                     } catch (e){
                         console.error(e);
-                        //console.error("Parsing: Type [" + instance.type + "] doesn't contain method [" + method + "]");
                     }
                 }else
                     instance.modify(instr[method]);
@@ -176,6 +178,9 @@ export default class CurveStructureBase{
         }
 
         this.update();
+
+        if (this.flatten().some(e => isNaN(e.x)))
+            console.error(method, this, "NaN found after modification");
     }
 
 

@@ -18,8 +18,6 @@ export default class Curve extends CurveStructureBase{
             } else if (Array.isArray(spec))
                 this.body = spec;
         }        
-
-        this.update();
     }
 
     trans(vec){
@@ -171,6 +169,14 @@ export default class Curve extends CurveStructureBase{
             currVec    = null,
             currSegLen = 0;
 
+        if(ratio == 0){
+            return this.body[0].copy();
+        }
+
+        if(ratio == 1){
+            return this.body.last().copy();
+        }
+
         for(var i = 0; i < this.body.length-1; i++){
             
             currPoint  = this.body[i],
@@ -193,6 +199,22 @@ export default class Curve extends CurveStructureBase{
             currVec    = null,
             currSegLen = 0;
 
+        if(ratio == 0) {
+            let point = this.body[0].copy();
+            point.setAttr(attr);
+            this.body.splice(1, 0, point);
+
+            return point;
+        }
+
+        if(ratio == 1) {
+            let point = this.body.last().copy();
+            point.setAttr(attr);
+            this.body.splice(-1, 0, point);
+
+            return point;
+        }
+
         for(var i = 0; i < this.body.length-1; i++){
             
             currPoint  = this.body[i],
@@ -209,6 +231,9 @@ export default class Curve extends CurveStructureBase{
         if (attr !== undefined) point.setAttr(attr);
 
         this.body.splice(i+1, 0, point);
+
+        if(isNaN(point.x))
+            console.log(point, "NaN Curve insertAt", currPoint, currVec, segRatio, ratio);
 
         return point;
     }
