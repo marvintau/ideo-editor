@@ -64,35 +64,33 @@ export default class Char extends CurveStructureBase{
         if (spec.self && spec.dest){
             var self = this.body[spec.self.ith],
                 dest = this.body[spec.dest.ith],
+                selfr = spec.self.r ? spec.self.r : 0.68,
+                destr = spec.dest.r ? spec.dest.r : 0.58,
                 selfCoreArea = self.corebound.area(),
                 destCoreArea = dest.corebound.area(),
-                // selfRatio = Math.sqrt(selfCoreArea / destCoreArea),
-                // destRatio = Math.sqrt(destCoreArea / selfCoreArea),
-                // maxRatio = Math.max(selfRatio, destRatio);
+                spacing = spec.spacing ? spec.spacing : 0.5,
+                outlying = spec.outlying ? spec.outlying : 1.5,
+                shrinking = spec.shrinking ? spec.shrinking : 0.5,
                 maxRatio = 1.2;
             
-            console.log(selfCoreArea, destCoreArea, "area");
-
             var transVec = dest.massCenter;
             switch(spec.pos){
                 case 0:
-                    self.stretch(new Vec(0.65, 1));
-                    dest.stretch(new Vec(0.65, 1));
+                    self.stretch(new Vec(selfr, 1));
+                    dest.stretch(new Vec(destr, 1));
                     
                     for (let k in self.outliers)
                         for (let curve of self.outliers[k]){
                             if (k == "r") curve.scale(maxRatio);
-                            if (k == "l") curve.scale(1/maxRatio/maxRatio);
                         }
 
                     for (let k in dest.outliers)
                         for (let curve of dest.outliers[k]){
                             if (k == "l") curve.scale(maxRatio);
-                            if (k == "r") curve.scale(1/maxRatio/maxRatio);
+                            if (k == "r") curve.scale(0.5);
                         }
                                 
-
-                    transVec.x += self.corebound.box.size().add(dest.corebound.box.size()).mult(0.5).x-2.5;
+                    transVec.x += self.corebound.box.size().add(dest.corebound.box.size()).mult(spacing).x;
                     transVec = transVec.sub(self.massCenter);
                     break;
                 case 1:
