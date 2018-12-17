@@ -69,14 +69,14 @@ export default class Stroke extends CurveStructureBase{
             }
     }
 
-    draw(ctx, strokeWidth, scale){
+    draw(ctx, spec){
 
         if(!this.hidden){
             ctx.beginPath();
-            ctx.moveToVec(this.body[0].body[0], scale);
+            ctx.moveToVec(this.body[0].body[0], spec.scale);
     
             for (let curve of this.body)
-                curve.draw(ctx, strokeWidth, scale);
+                curve.draw(ctx, spec);
     
             ctx.stroke();
         }

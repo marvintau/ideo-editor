@@ -93,69 +93,69 @@ export default class Radical extends CurveStructureBase{
     }
 
 
-    draw(ctx, strokeWidth, scale, charName){
+    draw(ctx, spec){
+        console.log(spec.strokeWidth, "rad draw");
 
-        ctx.lineWidth = strokeWidth;
-        ctx.lineCap = "square";
+        ctx.lineWidth = spec.strokeWidth;
         ctx.lineJoin = "miter";
         ctx.miterLimit = 3;
         ctx.strokeStyle = "black";
 
         for (let component of this.body)
-            component.draw(ctx, strokeWidth, scale);
+            component.draw(ctx, spec);
 
-        if(this.outline.length > 2){
-            console.log(this.outline);
-            ctx.lineWidth = 1;
-            ctx.strokeStyle = "black";
-            ctx.moveToVec(this.outline.body[0], scale);
-            for (let p of this.outline.body){
-                ctx.lineToVec(p, scale);
-            }
-            ctx.closePath();
-            ctx.stroke();
-        }
-
-        if(this.outliers){
-            let color = {
-                r : ["red", "右"],
-                l : ["green", "左"],
-                t : ["blue", "上"],
-                b : ["yellow", "下"]
-            };
-            for (let t in this.outliers){
+        if(spec.drawingAdditional){
+            if(this.outline.length > 2){
+                console.log(this.outline);
                 ctx.lineWidth = 1;
                 ctx.strokeStyle = "black";
-                ctx.fillStyle = "white";
-                ctx.font = "bold 20px Helvetica";
-                for (let curve of this.outliers[t]){
-                    ctx.circle(curve.body[0].mult(scale), 5, true);
-                    for (let point of curve.body){
-                        ctx.fillText(color[t][1],   point.x * scale - 10, point.y * scale + 10);
-                        ctx.strokeText(color[t][1], point.x * scale - 10, point.y * scale + 10);
-                    }
+                ctx.moveToVec(this.outline.body[0], spec.scale);
+                for (let p of this.outline.body){
+                    ctx.lineToVec(p, spec.scale);
                 }
-                
+                ctx.closePath();
+                ctx.stroke();
+            }
+
+            if(this.outliers){
+                let color = {
+                    r : ["red", "右"],
+                    l : ["green", "左"],
+                    t : ["blue", "上"],
+                    b : ["yellow", "下"]
+                };
+                for (let t in this.outliers){
+                    ctx.lineWidth = 1;
+                    ctx.strokeStyle = "black";
+                    ctx.fillStyle = "white";
+                    ctx.font = "bold 20px Helvetica";
+                    for (let curve of this.outliers[t]){
+                        ctx.circle(curve.body[0].mult(spec.scale), 5, true);
+                        for (let point of curve.body){
+                            ctx.fillText(color[t][1],   point.x * spec.scale - 10, point.y * spec.scale + 10);
+                            ctx.strokeText(color[t][1], point.x * spec.scale - 10, point.y * spec.scale + 10);
+                        }
+                    }
+                    
+                }
+            }
+            
+            if(this.corebound){
+                ctx.fillStyle = "rgb(128, 64, 0, 0.5)";
+                ctx.beginPath();
+                ctx.moveToVec(this.corebound.body[0], spec.scale);
+                for (let point of this.corebound.body)
+                    ctx.lineToVec(point, spec.scale);
+                ctx.fill();    
+            }
+
+            if (this.massCenter){
+                ctx.strokeStyle = "black";
+                ctx.fillStyle = "black";
+                let boxCenter = this.box.center();
+                ctx.circle(this.massCenter.mult(spec.scale), 5, true);
+                ctx.circle(boxCenter.mult(spec.scale), 5, true);
             }
         }
-        
-        if(this.corebound){
-            ctx.fillStyle = "rgb(128, 64, 0, 0.5)";
-            ctx.beginPath();
-            ctx.moveToVec(this.corebound.body[0], scale);
-            for (let point of this.corebound.body)
-                ctx.lineToVec(point, scale);
-            ctx.fill();    
-        }
-
-        if (this.massCenter){
-            ctx.strokeStyle = "black";
-            ctx.fillStyle = "black";
-            let boxCenter = this.box.center();
-            ctx.circle(this.massCenter.mult(scale), 5, true);
-            ctx.circle(boxCenter.mult(scale), 5, true);
-            console.log(boxCenter, this.massCenter, this.corebound, "massCenter", charName, this.name);
-        }
-
     }
 }

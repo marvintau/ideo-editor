@@ -140,7 +140,6 @@ export default class Curve extends CurveStructureBase{
                 momentY = pointListCopy.part(2, 1).map(p => (p[0].y+p[1].y) * p[0].cross(p[1])/6).sum(),
                 area = this.area();
         
-            console.log(momentX, momentY, area, "massCenter calculation");
             return new Vec(momentX/area, momentY/area);
         } else {
             console.error("massCenter needs at least two points over the curve");
@@ -242,17 +241,17 @@ export default class Curve extends CurveStructureBase{
         return point;
     }
 
-    draw(ctx, strokeWidth, scale){
+    draw(ctx, spec){
         
         let points = this.body.filter(e=>e.attr.original);
 
         for (var curr = 0; curr < points.length;) {
         
             if (points.length - curr > 3){
-                ctx.bezierCurveToVec(points.slice(curr+1, curr+4), scale);
+                ctx.bezierCurveToVec(points.slice(curr+1, curr+4), spec.scale);
                 curr += 4;
             } else {
-                ctx.lineToVec(points[curr], scale);
+                ctx.lineToVec(points[curr], spec.scale);
                 curr += 1;
             }
         }

@@ -23,9 +23,17 @@ export default class StrokeBase{
         this.currCharName = "";
         this.currSpec = {};
         this.preview = document.getElementById("preview").getContext('2d');
+        this.thumb = document.getElementById("thumb").getContext('2d');
 
         document.getElementById('create').onclick = function(e){
             this.create();
+        }.bind(this);
+
+        this.drawingAdditional = false;
+
+        document.getElementById('drawing-additional').onclick = function(e){
+            this.drawingAdditional = !this.drawingAdditional;
+            this.updateStroke();
         }.bind(this);
 
         initButtons();
@@ -37,14 +45,28 @@ export default class StrokeBase{
 
         this.char = new Char(this.currSpec);
         this.char.modify();
-        this.updateWithPoint();        
+
+        let state = this.drawingAdditional;
+        this.thumb.clearRect(0, 0, this.thumb.canvas.height, this.thumb.canvas.width);
+        this.drawingAdditional = false;
+        this.draw();
+        this.thumb.drawImage(this.preview.canvas, 0, 0, this.thumb.canvas.height, this.thumb.canvas.width);
+        this.drawingAdditional = state;
+        this.draw();        
     }
 
     updateStroke(){
         this.char = new Char(this.currSpec);
         this.char.modify();
-        this.updateWithPoint();
-    }
+
+        let state = this.drawingAdditional;
+        this.thumb.clearRect(0, 0, this.thumb.canvas.height, this.thumb.canvas.width);
+        this.drawingAdditional = false;
+        this.draw();
+        this.thumb.drawImage(this.preview.canvas, 0, 0, this.thumb.canvas.height, this.thumb.canvas.width);
+        this.drawingAdditional = state;
+        this.draw();
+   }
 
     updateBase(){
         loadStrokeBase()
@@ -105,10 +127,15 @@ export default class StrokeBase{
         var text = document.getElementById("stroke-list").value;
         var updatedSpec = JSON.parse(toJSONText(text));
         this.base[this.currCharName] = updatedSpec;
+
+        this.base[this.currCharName].thumbnail = this.thumb.canvas.toDataURL();
+
         this.initStroke(this.currCharName);
+        console.log(this.base[this.currCharName]);
     }
 
     save(){
+
         var stringified = JSON.stringify(this.base, null, 2),
             charName    = this.currCharName;
         saveStrokeBase(stringified).then(function(e){
@@ -163,9 +190,11 @@ export default class StrokeBase{
 
     getStrokeSpecText(strokeName){
 
-        if(this.base[strokeName].text)
-            delete this.base[strokeName].text;
-        return fromJSONObject(this.base[strokeName]);
+        let dupped = JSON.parse(JSON.stringify(this.base[strokeName]));
+
+        if(dupped.thumbnail)
+            delete dupped.thumbnail;
+        return fromJSONObject(dupped);
     }
     
     initVariableControls(){
@@ -201,12 +230,19 @@ export default class StrokeBase{
     }
 
 
-    updateWithPoint(){
+    draw(){
         
         let width = this.preview.canvas.width,
             height = this.preview.canvas.height;
         this.preview.clearRect(0, 0, width, height);
-        drawFrame(this.preview, width, height);
+
+        if(this.drawingAdditional){
+            drawFrame(this.preview, width, height);
+
+            this.font = "120px Helvetica";
+            this.fillStyle = "black";
+            this.preview.fillText(this.currCharName, 300, 300);
+        }
 
         let center;
         if (this.char.massCenter){       
@@ -215,15 +251,17 @@ export default class StrokeBase{
             center = this.char.box.center();
         }
 
-        console.log(this.char.body);
-
         let scale = 45;
-        
-
         this.preview.translate(width/2 - center.x * scale, height/2 - center.y * scale);
                 
-        this.char.draw(this.preview, this.strokeWidth, scale, this.currCharName);
+        let drawSpec = {
+            scale: scale,
+            strokeWidth: this.strokeWidth,
+            currCharName: this.currCharName,
+            drawingAdditional: this.drawingAdditional
+        }
 
+        this.char.draw(this.preview, drawSpec);
 
         this.preview.setTransform(1, 0, 0, 1, 0, 0);
     

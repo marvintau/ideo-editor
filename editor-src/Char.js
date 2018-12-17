@@ -74,7 +74,7 @@ export default class Char extends CurveStructureBase{
                 spacing = spec.spacing ? spec.spacing : 0.5,
                 outlying = spec.outlying ? spec.outlying : 1.5,
                 shrinking = spec.shrinking ? spec.shrinking : 0.5,
-                maxRatio = 1.2;
+                maxRatio = Math.max(selfr, destr) / Math.min(selfr, destr);
             
             var transVec = dest.massCenter;
             switch(spec.pos){
@@ -89,7 +89,6 @@ export default class Char extends CurveStructureBase{
 
                     for (let k in dest.outliers)
                         for (let curve of dest.outliers[k]){
-                            if (k == "l") curve.scale(maxRatio);
                             if (k == "r") curve.scale(0.5);
                         }
                                 
@@ -137,7 +136,6 @@ export default class Char extends CurveStructureBase{
     }
 
     flattenToRadical(){
-        console.log("flatten triggered");
         let radical = new Radical({});
         radical.body = this.body.flatten(e=>e.type != "Stroke", e=>e.body);
         radical.update();
@@ -145,23 +143,25 @@ export default class Char extends CurveStructureBase{
     }
     
 
-    draw(ctx, strokeWidth, scale, charName){
-        if(this.corebound && this.corebound.body.length > 0){
-            ctx.fillStyle = "rgb(128, 64, 0, 0.3)";
-            ctx.beginPath();
-            ctx.moveToVec(this.corebound.body[0], scale);
-            for (let point of this.corebound.body)
-                ctx.lineToVec(point, scale);
-            ctx.fill();    
-        }
+    draw(ctx, spec){
+        if(spec.drawingAdditional){
+            if(this.corebound && this.corebound.body.length > 0){
+                ctx.fillStyle = "rgb(128, 64, 0, 0.3)";
+                ctx.beginPath();
+                ctx.moveToVec(this.corebound.body[0], spec.scale);
+                for (let point of this.corebound.body)
+                    ctx.lineToVec(point, spec.scale);
+                ctx.fill();    
+            }
 
-        if (this.massCenter){
-            ctx.strokeStyle = "black";
-            ctx.circle(this.massCenter.mult(scale), 5, true);
+            if (this.massCenter){
+                ctx.strokeStyle = "black";
+                ctx.circle(this.massCenter.mult(spec.scale), 5, true);
+            }
+
         }
 
         for (let comp of this.body)
-            comp.draw(ctx, strokeWidth, scale, charName, this.name);
-
+            comp.draw(ctx, spec);
     }
 }
