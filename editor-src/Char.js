@@ -52,6 +52,9 @@ export default class Char extends CurveStructureBase{
     splice(spec){
 
         if (spec.self && spec.dest){
+
+            console.log(this.body[spec.dest.ith], this.body[spec.self.ith], "splice");
+
             var pointDest = this.body[spec.dest.ith].at(spec.dest),
                 pointSelf = this.body[spec.self.ith].at(spec.self);
 
@@ -94,9 +97,21 @@ export default class Char extends CurveStructureBase{
                     transVec = transVec.sub(self.massCenter);
                     break;
                 case 1:
-                    self.stretch(new Vec(1, 0.65));
-                    dest.stretch(new Vec(1, 0.65));
-                    transVec.y += self.box.size().add(dest.box.size()).mult(0.5).y;
+                    self.stretch(new Vec(1, selfr));
+                    dest.stretch(new Vec(1, destr));
+                    
+                    for (let k in self.outliers)
+                        for (let curve of self.outliers[k]){
+                            if (k == "r") curve.scale(maxRatio);
+                        }
+
+                    for (let k in dest.outliers)
+                        for (let curve of dest.outliers[k]){
+                            if (k == "l") curve.scale(maxRatio);
+                            if (k == "r") curve.scale(0.5);
+                        }
+                                
+                    transVec.y += self.corebound.box.size().add(dest.corebound.box.size()).mult(spacing).y;
                     transVec = transVec.sub(self.massCenter);
                     break;
             }
@@ -106,20 +121,29 @@ export default class Char extends CurveStructureBase{
     }
 
     postUpdate(){
-        if(!this.body.some(e => e.corebound === undefined)){
-            let coreboundPoints = [].concat(...this.body.map(elem => elem.corebound.body));
-            this.corebound = new Curve(coreboundPoints);
-            if (coreboundPoints.some(e => isNaN(e.x)))
-                console.log(coreboundPoints, "NaN found corebound in Char postUpdate");
-            this.corebound.convexHull();
-            this.massCenter = this.corebound.massCenter();
-    
-            let outlinePoints = [].concat(...this.body.map(elem => elem.outline.body));
-            this.outline = new Curve(outlinePoints);
-            this.outline.convexHull();
-            this.geomCenter = this.outline.massCenter();
-        }
+
+        let coreboundPoints = [].concat(...this.body.map(elem => elem.corebound ? elem.corebound.body : elem.outline.body));
+        this.corebound = new Curve(coreboundPoints);
+        if (coreboundPoints.some(e => isNaN(e.x)))
+            console.log(coreboundPoints, "NaN found corebound in Char postUpdate");
+        this.corebound.convexHull();
+        this.massCenter = this.corebound.massCenter();
+
+        let outlinePoints = [].concat(...this.body.map(elem => elem.outline.body));
+        this.outline = new Curve(outlinePoints);
+        this.outline.convexHull();
+        this.geomCenter = this.outline.massCenter();
+
     }
+
+    flattenToRadical(){
+        console.log("flatten triggered");
+        let radical = new Radical({});
+        radical.body = this.body.flatten(e=>e.type != "Stroke", e=>e.body);
+        radical.update();
+        return radical;
+    }
+    
 
     draw(ctx, strokeWidth, scale, charName){
         if(this.corebound && this.corebound.body.length > 0){

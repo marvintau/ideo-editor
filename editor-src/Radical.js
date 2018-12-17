@@ -7,7 +7,7 @@ export default class Radical extends CurveStructureBase{
     constructor(spec) {
         super(spec);
         this.type = "Radical";
-        this.body = spec.body.map(comp => new Stroke(comp));
+        this.body = spec.body ? spec.body.map(comp => new Stroke(comp)) : [];
     }
 
     at(spec){
@@ -82,11 +82,16 @@ export default class Radical extends CurveStructureBase{
 
         this.massCenter = this.corebound.massCenter();
 
+    }
+
+    postUpdate(){
+
         this.outline = new Curve(this.flatten());
         this.outline.convexHull();
         this.geomCenter = this.outline.massCenter();
-
+ 
     }
+
 
     draw(ctx, strokeWidth, scale, charName){
 
@@ -99,7 +104,8 @@ export default class Radical extends CurveStructureBase{
         for (let component of this.body)
             component.draw(ctx, strokeWidth, scale);
 
-        if(this.outline){
+        if(this.outline.length > 2){
+            console.log(this.outline);
             ctx.lineWidth = 1;
             ctx.strokeStyle = "black";
             ctx.moveToVec(this.outline.body[0], scale);
@@ -118,6 +124,7 @@ export default class Radical extends CurveStructureBase{
                 b : ["yellow", "下"]
             };
             for (let t in this.outliers){
+                ctx.lineWidth = 1;
                 ctx.strokeStyle = "black";
                 ctx.fillStyle = "white";
                 ctx.font = "bold 20px Helvetica";
@@ -147,7 +154,7 @@ export default class Radical extends CurveStructureBase{
             let boxCenter = this.box.center();
             ctx.circle(this.massCenter.mult(scale), 5, true);
             ctx.circle(boxCenter.mult(scale), 5, true);
-            console.log(boxCenter, this.massCenter, "massCenter", charName, this.name);
+            console.log(boxCenter, this.massCenter, this.corebound, "massCenter", charName, this.name);
         }
 
     }

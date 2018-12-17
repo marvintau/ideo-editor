@@ -97,7 +97,6 @@ export default class StrokeBase{
             category = category === "Curve" ? "Stroke" : category;
             category = category === "Char" ? "Uniq" : category;
             
-            console.log(category, charName);
             document.getElementById("list-"+category).appendChild(p);
         }
     }

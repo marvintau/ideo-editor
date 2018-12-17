@@ -123,7 +123,7 @@ export default class Curve extends CurveStructureBase{
     }
     
     area(){
-        if(this.body.length > 3){
+        if(this.body.length > 2){
             var pointListCopy = this.body.concat(this.body[0].copy());
             return pointListCopy.part(2, 1).map(p => p[0].cross(p[1])/2).sum();
         } else {
@@ -140,6 +140,7 @@ export default class Curve extends CurveStructureBase{
                 momentY = pointListCopy.part(2, 1).map(p => (p[0].y+p[1].y) * p[0].cross(p[1])/6).sum(),
                 area = this.area();
         
+            console.log(momentX, momentY, area, "massCenter calculation");
             return new Vec(momentX/area, momentY/area);
         } else {
             console.error("massCenter needs at least two points over the curve");
@@ -201,6 +202,7 @@ export default class Curve extends CurveStructureBase{
 
         if(ratio == 0) {
             let point = this.body[0].copy();
+            point.attr = {};
             point.setAttr(attr);
             this.body.splice(1, 0, point);
 
@@ -209,7 +211,9 @@ export default class Curve extends CurveStructureBase{
 
         if(ratio == 1) {
             let point = this.body.last().copy();
+            point.attr = {};
             point.setAttr(attr);
+            console.log(point);
             this.body.splice(-1, 0, point);
 
             return point;

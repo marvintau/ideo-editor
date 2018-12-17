@@ -140,11 +140,23 @@ export default class CurveStructureBase{
 
         /**
          * Run the program of the children of the current object.
+         *
+         * Note: flattenToRadical is a special process for Char. Since
+         *       its recursive structure, the method like splice doesn't
+         *       work with inner Char. thus we have to reform it into
+         *       Radical, so that to do further modification.
+         *
+         *       There is no need to generalize this part, like traits
+         *       or hook or postprocess or something, because only Char
+         *       need this.
          */
-        for (let elem of this.body) 
+        for (let elem of this.body) {
             elem.modify(undefined, vars);
-       
+            if (elem.type == "Char") elem = elem.flattenToRadical();
+            console.log(elem.type, "modify children");
+        }
 
+        if (this.type == "Char") console.log(this.body.map(e => e.type));
         /**
          * Run the program of the current object. Make sure that all 
          * the children has been modified at this point.

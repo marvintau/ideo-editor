@@ -675,14 +675,14 @@
     ],
     "vars": {
       "intersec-0-2": {
-        "val": 0.55,
+        "val": 0.587,
         "range": {
           "min": 0.48,
           "max": 0.62
         }
       },
       "intersec-1-2": {
-        "val": 0.05,
+        "val": 0.06,
         "range": {
           "min": 0.04,
           "max": 0.06
@@ -698,13 +698,16 @@
     },
     "prog": [
       {
+        "scale": 1.3
+      },
+      {
         "ith": 0,
         "prog": [
           {
             "ith": 0,
             "rotate": 5,
             "curl": -4,
-            "scale": 0.88
+            "scale": 0.93
           },
           {
             "ith": 1,
@@ -757,7 +760,7 @@
           {
             "ith": 0,
             "curve": 0,
-            "r": "@'intersec-0-2'-0.01"
+            "r": "@'intersec-0-2'-0.3"
           },
           {
             "ith": 0,
@@ -777,7 +780,7 @@
           {
             "ith": 1,
             "curve": 0,
-            "r": 0.333
+            "r": 0.233
           },
           {
             "ith": 2,
@@ -792,7 +795,7 @@
           {
             "ith": 1,
             "curve": 0,
-            "r": "intersec-1-2"
+            "r": 0
           }
         ]
       }
@@ -809,14 +812,14 @@
     "desc": "Uniq",
     "vars": {
       "aspect": {
-        "val": 0.489,
+        "val": 0.659,
         "range": {
           "min": 0,
           "max": 1
         }
       },
       "cross-pos": {
-        "val": 0.2,
+        "val": 0.23,
         "range": {
           "min": 0.2,
           "max": 0.25
@@ -828,7 +831,7 @@
     },
     "prog": [
       {
-        "scale": 1.15
+        "scale": 1.55
       },
       {
         "ith": 0,
@@ -986,7 +989,7 @@
     },
     "prog": [
       {
-        "scale": 0.98
+        "scale": 1.38
       },
       {
         "ith": 0,
@@ -1131,7 +1134,7 @@
         }
       },
       "cross-3-0-dest": {
-        "val": 0.12,
+        "val": 0.199,
         "range": {
           "min": 0.07,
           "max": 0.27
@@ -1139,6 +1142,9 @@
       }
     },
     "prog": [
+      {
+        "scale": 1.3
+      },
       {
         "ith": 0,
         "scale": "vertical",
@@ -1208,7 +1214,7 @@
           {
             "ith": 0,
             "curve": 1,
-            "r": 0.5
+            "r": 0.56
           },
           {
             "ith": 1,
@@ -1223,7 +1229,7 @@
           {
             "ith": 1,
             "curve": 1,
-            "r": 0.8
+            "r": 0.9
           },
           {
             "ith": 2,
@@ -1297,6 +1303,9 @@
       }
     },
     "prog": [
+      {
+        "scale": 1.4
+      },
       {
         "ith": 0,
         "scale": "vertical"
@@ -1429,6 +1438,9 @@
       "shuzhe"
     ],
     "prog": [
+      {
+        "scale": 1.2
+      },
       {
         "ith": 0,
         "scale": "scale-0"
@@ -1700,7 +1712,7 @@
     },
     "prog": [
       {
-        "scale": 0.9
+        "scale": 1.27
       },
       {
         "ith": 0,
@@ -1857,6 +1869,9 @@
     },
     "prog": [
       {
+        "scale": 1.45
+      },
+      {
         "ith": 0,
         "scale": "vertical"
       },
@@ -1992,14 +2007,14 @@
         "ith": 1,
         "stretch": {
           "x": 1,
-          "y": 0.8
+          "y": 0.7
         }
       },
       {
         "ith": 0,
         "stretch": {
           "x": 1,
-          "y": 0.8
+          "y": 0.66
         }
       },
       {
@@ -2021,10 +2036,28 @@
     ]
   },
   "具": {
-    "type": "Radical",
-    "body": [],
+    "type": "Char",
+    "desc": "Uniq",
+    "body": [
+      "目部",
+      "八底"
+    ],
     "vars": {},
-    "prog": []
+    "prog": [
+      {
+        "place": {
+          "self": {
+            "ith": 1,
+            "r": 0.75
+          },
+          "dest": {
+            "ith": 0,
+            "r": 0.78
+          },
+          "pos": 1
+        }
+      }
+    ]
   },
   "真": {
     "type": "Char",
@@ -2037,33 +2070,234 @@
     "vars": {},
     "prog": [
       {
-        "splice": {}
+        "place": {
+          "self": {
+            "ith": 1,
+            "r": 0.6
+          },
+          "dest": {
+            "ith": 0,
+            "r": 0.8
+          },
+          "pos": 1
+        }
       }
     ]
   },
   "白": {
-    "type": "Radical",
-    "body": [],
+    "type": "Char",
+    "desc": "Uniq",
+    "body": [
+      "pie",
+      "日"
+    ],
     "vars": {},
-    "prog": []
+    "prog": [
+      {
+        "ith": 0,
+        "scale": 0.6,
+        "prog": [
+          {
+            "ith": 0,
+            "rotate": -10
+          }
+        ]
+      },
+      {
+        "ith": 1,
+        "stretch": {
+          "x": 1.3,
+          "y": 0.8
+        }
+      },
+      {
+        "splice": {
+          "dest": {
+            "ith": 0,
+            "stroke": 0,
+            "curve": 0,
+            "r": 1
+          },
+          "self": {
+            "ith": 1,
+            "stroke": 1,
+            "curve": 0,
+            "r": 0.2
+          }
+        }
+      }
+    ]
   },
   "百": {
-    "type": "Radical",
-    "body": [],
+    "type": "Char",
+    "body": [
+      "页头",
+      "日"
+    ],
     "vars": {},
-    "prog": []
+    "prog": [
+      {
+        "ith": 1,
+        "stretch": {
+          "x": 1.4,
+          "y": 0.8
+        }
+      },
+      {
+        "splice": {
+          "dest": {
+            "ith": 0,
+            "stroke": 1,
+            "curve": 0,
+            "r": 1
+          },
+          "self": {
+            "ith": 1,
+            "stroke": 1,
+            "curve": 0,
+            "r": 0.22
+          }
+        }
+      }
+    ]
   },
   "王": {
     "type": "Radical",
-    "body": [],
+    "desc": "Uniq",
+    "body": [
+      "heng",
+      "shu",
+      "heng",
+      "heng"
+    ],
     "vars": {},
-    "prog": []
+    "prog": [
+      {
+        "scale": 1.3
+      },
+      {
+        "ith": 2,
+        "scale": 0.8
+      },
+      {
+        "ith": 3,
+        "scale": 1.4
+      },
+      {
+        "cross": {
+          "self": {
+            "ith": 0,
+            "curve": 0,
+            "r": 0.5
+          },
+          "dest": {
+            "ith": 1,
+            "curve": 0,
+            "r": 0
+          }
+        }
+      },
+      {
+        "cross": {
+          "self": {
+            "ith": 2,
+            "curve": 0,
+            "r": 0.5
+          },
+          "dest": {
+            "ith": 1,
+            "curve": 0,
+            "r": 0.5
+          }
+        }
+      },
+      {
+        "cross": {
+          "self": {
+            "ith": 3,
+            "curve": 0,
+            "r": 0.5
+          },
+          "dest": {
+            "ith": 1,
+            "curve": 0,
+            "r": 1
+          }
+        }
+      },
+      {
+        "core": [
+          {
+            "ith": 0,
+            "curve": 0,
+            "r": 0.2
+          },
+          {
+            "ith": 2,
+            "curve": 0,
+            "r": 0.05
+          },
+          {
+            "ith": 3,
+            "curve": 0,
+            "r": 0.2
+          },
+          {
+            "ith": 0,
+            "curve": 0,
+            "r": 0.8
+          },
+          {
+            "ith": 2,
+            "curve": 0,
+            "r": 0.95
+          },
+          {
+            "ith": 3,
+            "curve": 0,
+            "r": 0.8
+          }
+        ]
+      }
+    ]
   },
   "主": {
-    "type": "Radical",
-    "body": [],
+    "type": "Char",
+    "desc": "Uniq",
+    "body": [
+      "dian",
+      "王"
+    ],
     "vars": {},
-    "prog": []
+    "prog": [
+      {
+        "ith": 0,
+        "scale": 0.5
+      },
+      {
+        "ith": 1,
+        "stretch": {
+          "x": 0.9,
+          "y": 0.9
+        }
+      },
+      {
+        "splice": {
+          "dest": {
+            "ith": 0,
+            "stroke": 0,
+            "curve": 0,
+            "r": 1.5
+          },
+          "self": {
+            "ith": 1,
+            "stroke": 0,
+            "curve": 0,
+            "r": 0.6
+          }
+        }
+      }
+    ]
   },
   "土": {
     "type": "Radical",
@@ -2076,8 +2310,11 @@
     "vars": {},
     "prog": [
       {
+        "scale": 1.3
+      },
+      {
         "ith": 2,
-        "scale": 1.1
+        "scale": 1.3
       },
       {
         "ith": 0,
@@ -2110,14 +2347,83 @@
             "r": 1
           }
         }
+      },
+      {
+        "core": [
+          {
+            "ith": 0,
+            "curve": 0,
+            "r": 0.1
+          },
+          {
+            "ith": 0,
+            "curve": 0,
+            "r": 0.9
+          },
+          {
+            "ith": 2,
+            "curve": 0,
+            "r": 0.2
+          },
+          {
+            "ith": 2,
+            "curve": 0,
+            "r": 0.8
+          },
+          {
+            "ith": 1,
+            "curve": 0,
+            "r": 0.2
+          },
+          {
+            "ith": 1,
+            "curve": 0,
+            "r": 1
+          }
+        ]
       }
     ]
   },
   "圭": {
-    "type": "Radical",
-    "body": [],
+    "type": "Char",
+    "desc": "Uniq",
+    "body": [
+      "土",
+      "土"
+    ],
     "vars": {},
-    "prog": []
+    "prog": [
+      {
+        "ith": 0,
+        "stretch": {
+          "x": 1,
+          "y": 0.55
+        }
+      },
+      {
+        "ith": 1,
+        "stretch": {
+          "x": 1,
+          "y": 0.6
+        }
+      },
+      {
+        "splice": {
+          "dest": {
+            "ith": 0,
+            "stroke": 2,
+            "curve": 0,
+            "r": 0.5
+          },
+          "self": {
+            "ith": 1,
+            "stroke": 1,
+            "curve": 0,
+            "r": -0.1
+          }
+        }
+      }
+    ]
   },
   "目部": {
     "type": "Radical",
@@ -2169,6 +2475,9 @@
       "bottom-pos": "@'outer-hori'/(@'horizontal'+@'outer-hori'*2)"
     },
     "prog": [
+      {
+        "scale": 1.5
+      },
       {
         "ith": 0,
         "scale": "vertical"
@@ -2324,9 +2633,10 @@
             "ith": 0
           },
           "self": {
-            "ith": 1
+            "ith": 1,
+            "r": 0.78
           },
-          "spacing": 0.35,
+          "spacing": 0.43,
           "pos": 0
         }
       }
@@ -2336,7 +2646,7 @@
     "type": "Char",
     "desc": "Combo",
     "body": [
-      "日",
+      "日旁",
       "月"
     ],
     "vars": {},
@@ -2348,12 +2658,14 @@
       {
         "place": {
           "dest": {
-            "ith": 0
+            "ith": 0,
+            "r": 0.6
           },
           "self": {
-            "ith": 1
+            "ith": 1,
+            "r": 0.75
           },
-          "spacing": 0.35,
+          "spacing": 0.45,
           "pos": 0
         }
       }
@@ -2432,6 +2744,11 @@
           {
             "ith": 2,
             "curve": 0,
+            "r": 0
+          },
+          {
+            "ith": 2,
+            "curve": 0,
             "r": 0.7
           },
           {
@@ -2453,6 +2770,9 @@
     ],
     "vars": {},
     "prog": [
+      {
+        "scale": 1.3
+      },
       {
         "ith": 0,
         "prog": [
@@ -2584,6 +2904,9 @@
     "vars": {},
     "prog": [
       {
+        "scale": 1.5
+      },
+      {
         "ith": 2,
         "scale": 0.45
       },
@@ -2650,6 +2973,60 @@
             "r": 0.2
           }
         }
+      },
+      {
+        "core": [
+          {
+            "ith": 0,
+            "curve": 0,
+            "r": 0.15
+          },
+          {
+            "ith": 0,
+            "curve": 0,
+            "r": 0.85
+          },
+          {
+            "ith": 1,
+            "curve": 0,
+            "r": 0
+          },
+          {
+            "ith": 1,
+            "curve": 0,
+            "r": 1
+          },
+          {
+            "ith": 2,
+            "curve": 0,
+            "r": 0
+          },
+          {
+            "ith": 2,
+            "curve": 0,
+            "r": 0.7
+          },
+          {
+            "ith": 3,
+            "curve": 0,
+            "r": 0
+          },
+          {
+            "ith": 3,
+            "curve": 0,
+            "r": 1
+          },
+          {
+            "ith": 4,
+            "curve": 0,
+            "r": 0.2
+          },
+          {
+            "ith": 4,
+            "curve": 0,
+            "r": 0.8
+          }
+        ]
       }
     ]
   },
@@ -2666,6 +3043,13 @@
     "vars": {},
     "prog": [
       {
+        "scale": 1.4
+      },
+      {
+        "ith": 0,
+        "scale": 1.2
+      },
+      {
         "ith": 1,
         "scale": 0.9
       },
@@ -2680,7 +3064,7 @@
       },
       {
         "ith": 4,
-        "scale": 1.2,
+        "scale": 1.1,
         "curl": -1
       },
       {
@@ -2807,12 +3191,14 @@
       {
         "place": {
           "dest": {
-            "ith": 0
+            "ith": 0,
+            "r": 0.51
           },
           "self": {
-            "ith": 1
+            "ith": 1,
+            "r": 0.53
           },
-          "spacing": 0.35,
+          "spacing": 0.4,
           "pos": 0
         }
       }
@@ -2850,6 +3236,9 @@
       }
     },
     "prog": [
+      {
+        "scale": 1.3
+      },
       {
         "ith": 0,
         "prog": [
@@ -2910,7 +3299,7 @@
           {
             "ith": 0,
             "curve": 0,
-            "r": "@'intersec-0-2'-0.01"
+            "r": "@'intersec-0-2'-0.2"
           },
           {
             "ith": 0,
@@ -2935,12 +3324,12 @@
           {
             "ith": 2,
             "curve": 0,
-            "r": 0.73
+            "r": 0.31
           },
           {
             "ith": 2,
             "curve": 0,
-            "r": 0.31
+            "r": 1
           },
           {
             "ith": 1,
@@ -2985,6 +3374,9 @@
     ],
     "vars": {},
     "prog": [
+      {
+        "scale": 1.3
+      },
       {
         "ith": 0,
         "hide": 1
@@ -3085,7 +3477,7 @@
     "vars": {},
     "prog": [
       {
-        "scale": 1.1
+        "scale": 1.6
       },
       {
         "ith": 0,
@@ -3169,6 +3561,9 @@
     ],
     "vars": {},
     "prog": [
+      {
+        "scale": 1.3
+      },
       {
         "ith": 0,
         "rotate": -10,
@@ -3361,7 +3756,7 @@
     },
     "prog": [
       {
-        "scale": 0.9
+        "scale": 1.22
       },
       {
         "ith": 0,
@@ -3503,6 +3898,9 @@
     "vars": {},
     "prog": [
       {
+        "scale": 1.3
+      },
+      {
         "ith": 0,
         "prog": [
           {
@@ -3527,7 +3925,7 @@
       },
       {
         "ith": 2,
-        "scale": 0.5,
+        "scale": 0.48,
         "rotate": 10,
         "curl": 4
       },
@@ -3561,7 +3959,7 @@
           "dest": {
             "ith": 0,
             "curve": 0,
-            "r": 0.28
+            "r": 0.29
           }
         }
       },
@@ -3580,11 +3978,17 @@
         }
       },
       {
+        "stretch": {
+          "x": 1.1,
+          "y": 1
+        }
+      },
+      {
         "core": [
           {
             "ith": 0,
             "curve": 0,
-            "r": 0.2
+            "r": 0.1
           },
           {
             "ith": 1,
@@ -3655,6 +4059,7 @@
   },
   "又": {
     "type": "Radical",
+    "desc": "Uniq",
     "body": [
       "hengpie",
       "na"
@@ -3662,36 +4067,40 @@
     "vars": {},
     "prog": [
       {
-        "scale": 1.1
+        "scale": 1.7
       },
       {
         "ith": 0,
         "prog": [
           {
             "ith": 0,
-            "scale": 0.8
+            "scale": 0.75
           },
           {
             "ith": 1,
-            "scale": 1.2
+            "scale": 1.3,
+            "curl": 12,
+            "rotate": -15
           }
         ]
       },
       {
         "ith": 1,
-        "scale": 1.1
+        "scale": 1.2,
+        "curl": -10,
+        "rotate": 10
       },
       {
         "cross": {
           "dest": {
             "ith": 0,
             "curve": 1,
-            "r": 0.55
+            "r": 0.56
           },
           "self": {
             "ith": 1,
             "curve": 0,
-            "r": 0.5
+            "r": 0.55
           }
         }
       },
@@ -3813,6 +4222,9 @@
     "vars": {},
     "prog": [
       {
+        "scale": 1.5
+      },
+      {
         "ith": 1,
         "rotate": 3,
         "curl": 5,
@@ -3906,6 +4318,552 @@
             "r": 0.8
           }
         ]
+      }
+    ]
+  },
+  "日旁": {
+    "type": "Radical",
+    "desc": "Radical",
+    "body": [
+      "shu",
+      "hengzhe",
+      "heng",
+      "ti"
+    ],
+    "vars": {
+      "horizontal": {
+        "val": 0.618,
+        "range": {
+          "min": 0.48,
+          "max": 0.75
+        }
+      },
+      "vertical": {
+        "val": 1,
+        "range": {
+          "min": 0.9,
+          "max": 1.1
+        }
+      },
+      "inner-hori": {
+        "val": 0.8,
+        "range": {
+          "min": 0.6,
+          "max": 1
+        }
+      },
+      "center-ratio": {
+        "val": 0.47,
+        "range": {
+          "min": 0.4,
+          "max": 0.6
+        }
+      },
+      "bottom-ratio": {
+        "val": 0.95,
+        "range": {
+          "min": 0.9,
+          "max": 1
+        }
+      }
+    },
+    "prog": [
+      {
+        "scale": 1.38
+      },
+      {
+        "ith": 0,
+        "scale": "vertical"
+      },
+      {
+        "ith": 1,
+        "prog": [
+          {
+            "ith": 0,
+            "scale": "horizontal"
+          },
+          {
+            "ith": 1,
+            "scale": "@'vertical'-0.08"
+          }
+        ]
+      },
+      {
+        "ith": 2,
+        "scale": "@'inner-hori' * @'horizontal'"
+      },
+      {
+        "ith": 3,
+        "scale": "horizontal"
+      },
+      {
+        "cross": {
+          "dest": {
+            "ith": 0,
+            "curve": 0,
+            "r": "@'center-ratio' * @'bottom-ratio'"
+          },
+          "self": {
+            "ith": 2,
+            "curve": 0,
+            "r": 0
+          }
+        }
+      },
+      {
+        "cross": {
+          "dest": {
+            "ith": 0,
+            "curve": 0,
+            "r": "bottom-ratio"
+          },
+          "self": {
+            "ith": 3,
+            "curve": 0,
+            "r": 0
+          }
+        }
+      },
+      {
+        "core": [
+          {
+            "ith": 0,
+            "curve": 0,
+            "r": 0.001
+          },
+          {
+            "ith": 0,
+            "curve": 0,
+            "r": "bottom-ratio"
+          },
+          {
+            "ith": 1,
+            "curve": 0,
+            "r": 0.001
+          },
+          {
+            "ith": 1,
+            "curve": 0,
+            "r": 1
+          },
+          {
+            "ith": 1,
+            "curve": 1,
+            "r": "bottom-ratio"
+          },
+          {
+            "ith": 2,
+            "curve": 0,
+            "r": 0
+          },
+          {
+            "ith": 2,
+            "curve": 0,
+            "r": 1
+          },
+          {
+            "ith": 3,
+            "curve": 0,
+            "r": 0
+          },
+          {
+            "ith": 3,
+            "curve": 0,
+            "r": 1
+          }
+        ]
+      }
+    ]
+  },
+  "人旁": {
+    "type": "Radical",
+    "body": [
+      "pie",
+      "shu"
+    ],
+    "vars": {},
+    "prog": [
+      {
+        "scale": 1.3
+      },
+      {
+        "cross": {
+          "self": {
+            "ith": 1,
+            "curve": 0,
+            "r": 0
+          },
+          "dest": {
+            "ith": 0,
+            "curve": 0,
+            "r": 0.5
+          }
+        }
+      },
+      {
+        "core": [
+          {
+            "ith": 0,
+            "curve": 0,
+            "r": 0.3
+          },
+          {
+            "ith": 0,
+            "curve": 0,
+            "r": 0.8
+          },
+          {
+            "ith": 1,
+            "curve": 0,
+            "r": 0
+          },
+          {
+            "ith": 1,
+            "curve": 0,
+            "r": 0.9
+          }
+        ]
+      }
+    ]
+  },
+  "彳旁": {
+    "type": "Radical",
+    "body": [
+      "pie",
+      "pie",
+      "shu"
+    ],
+    "vars": {},
+    "prog": [
+      {
+        "scale": 1.3
+      },
+      {
+        "stretch": {
+          "x": 1,
+          "y": 0.8
+        }
+      },
+      {
+        "ith": 0,
+        "scale": 0.8
+      },
+      {
+        "cross": {
+          "self": {
+            "ith": 0,
+            "curve": 0,
+            "r": 0.5
+          },
+          "dest": {
+            "ith": 2,
+            "curve": 0,
+            "r": -0.4
+          }
+        }
+      },
+      {
+        "cross": {
+          "self": {
+            "ith": 1,
+            "curve": 0,
+            "r": 0.5
+          },
+          "dest": {
+            "ith": 2,
+            "curve": 0,
+            "r": 0
+          }
+        }
+      },
+      {
+        "core": [
+          {
+            "ith": 0,
+            "curve": 0,
+            "r": 0.4
+          },
+          {
+            "ith": 0,
+            "curve": 0,
+            "r": 0.6
+          },
+          {
+            "ith": 1,
+            "curve": 0,
+            "r": 0.3
+          },
+          {
+            "ith": 1,
+            "curve": 0,
+            "r": 0.8
+          },
+          {
+            "ith": 2,
+            "curve": 0,
+            "r": 0
+          },
+          {
+            "ith": 2,
+            "curve": 0,
+            "r": 0.9
+          }
+        ]
+      }
+    ]
+  },
+  "页头": {
+    "type": "Radical",
+    "body": [
+      "heng",
+      "pie"
+    ],
+    "vars": {},
+    "prog": [
+      {
+        "ith": 0,
+        "scale": 1.4
+      },
+      {
+        "ith": 1,
+        "scale": 0.6,
+        "rotate": -10
+      },
+      {
+        "cross": {
+          "dest": {
+            "ith": 0,
+            "curve": 0,
+            "r": 0.5
+          },
+          "self": {
+            "ith": 1,
+            "curve": 0,
+            "r": 0
+          }
+        }
+      },
+      {
+        "core": [
+          {
+            "ith": 0,
+            "curve": 0,
+            "r": 0.2
+          },
+          {
+            "ith": 0,
+            "curve": 0,
+            "r": 0.8
+          },
+          {
+            "ith": 1,
+            "curve": 0,
+            "r": 0
+          },
+          {
+            "ith": 1,
+            "curve": 0,
+            "r": 0.8
+          }
+        ]
+      }
+    ]
+  },
+  "包部": {
+    "type": "Radical",
+    "body": [
+      "pie",
+      "hengzhegou",
+      "shu"
+    ],
+    "vars": {},
+    "prog": [
+      {
+        "scale": 1.1
+      },
+      {
+        "ith": 0,
+        "rotate": -10,
+        "scale": 0.8
+      },
+      {
+        "ith": 1,
+        "prog": [
+          {
+            "ith": 1,
+            "curl": 5,
+            "rotate": -3,
+            "scale": 1.2
+          },
+          {
+            "ith": 2,
+            "rotate": -25
+          }
+        ]
+      },
+      {
+        "ith": 2,
+        "hide": 1
+      },
+      {
+        "cross": {
+          "self": {
+            "ith": 1,
+            "curve": 0,
+            "r": 0
+          },
+          "dest": {
+            "ith": 0,
+            "curve": 0,
+            "r": 0.5
+          }
+        }
+      },
+      {
+        "cross": {
+          "self": {
+            "ith": 2,
+            "curve": 0,
+            "r": 0
+          },
+          "dest": {
+            "ith": 0,
+            "curve": 0,
+            "r": 0.5
+          }
+        }
+      },
+      {
+        "core": [
+          {
+            "ith": 0,
+            "curve": 0,
+            "r": 0.3
+          },
+          {
+            "ith": 0,
+            "curve": 0,
+            "r": 0.8
+          },
+          {
+            "ith": 1,
+            "curve": 0,
+            "r": 0
+          },
+          {
+            "ith": 1,
+            "curve": 1,
+            "r": 0
+          },
+          {
+            "ith": 1,
+            "curve": 1,
+            "r": 1
+          },
+          {
+            "ith": 2,
+            "curve": 0,
+            "r": 0
+          },
+          {
+            "ith": 2,
+            "curve": 0,
+            "r": 0.8
+          }
+        ]
+      }
+    ]
+  },
+  "勺": {
+    "type": "Char",
+    "desc": "Uniq",
+    "body": [
+      "包部",
+      "dian"
+    ],
+    "vars": {},
+    "prog": [
+      {
+        "ith": 1,
+        "scale": 0.7
+      },
+      {
+        "splice": {
+          "self": {
+            "ith": 1,
+            "stroke": 0,
+            "curve": 0,
+            "r": -0.3
+          },
+          "dest": {
+            "ith": 0,
+            "stroke": 2,
+            "curve": 0,
+            "r": 0.2
+          }
+        }
+      }
+    ]
+  },
+  "的": {
+    "type": "Char",
+    "body": [
+      "白",
+      "勺"
+    ],
+    "vars": {},
+    "prog": [
+      {
+        "place": {
+          "dest": {
+            "ith": 0,
+            "r": 0.55
+          },
+          "self": {
+            "ith": 1,
+            "r": 0.55
+          },
+          "spacing": 0.6,
+          "pos": 0
+        }
+      }
+    ]
+  },
+  "是": {
+    "type": "Char",
+    "body": [
+      "日",
+      "正底"
+    ],
+    "vars": {},
+    "prog": [
+      {
+        "ith": 1,
+        "stretch": {
+          "x": 0.9,
+          "y": 1
+        }
+      },
+      {
+        "ith": 0,
+        "stretch": {
+          "x": 1.1,
+          "y": 1
+        }
+      },
+      {
+        "place": {
+          "self": {
+            "ith": 1,
+            "r": 0.54
+          },
+          "dest": {
+            "ith": 0,
+            "r": 0.5
+          },
+          "spacing": 0.33,
+          "pos": 1
+        }
       }
     ]
   }
