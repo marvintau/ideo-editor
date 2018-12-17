@@ -4,11 +4,20 @@
 body{
     background: #8abeb7;
     text-align: left;
-    overflow-x: hidden;
+    overflow-x: scroll;
     font-family : "TheSansMono Office";
     font-size : 11px;
     display: flex;
     flex-direction: column;
+
+}
+
+scroll-bar{
+    display: none;
+}
+
+::-webkit-scrollbar{
+    display: none;
 }
 
 .new-group {
@@ -33,7 +42,7 @@ canvas {
     margin: 10px;
     width: 600px;
     height : 600px;
-    overflow-y:hidden;
+    overflow-y:scroll;
 }
 
 .text-gen{
@@ -62,8 +71,8 @@ textarea, code{
     border : none;
     background: #fdf6e3;
     border-radius: 5px;
-    overflow-x: hidden;
-    overflow-y: hidden;
+    overflow-x: scroll;
+    overflow-y: scroll;
 }
 	
 textarea{
@@ -103,7 +112,7 @@ code{
     width: 225px;
     height: 450px;
     border-radius: 5px;
-    overflow-y: hidden;
+    overflow-y: scroll;
 }
 
 .char-button{
