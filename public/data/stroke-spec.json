@@ -3077,7 +3077,7 @@
           "dest": {
             "ith": 0,
             "curve": 0,
-            "r": 0.48
+            "r": 0.5
           }
         }
       },
@@ -3214,14 +3214,14 @@
     ],
     "vars": {
       "intersec-0-2": {
-        "val": 0.55,
+        "val": 0.53,
         "range": {
           "min": 0.48,
           "max": 0.62
         }
       },
       "intersec-1-2": {
-        "val": 0.05,
+        "val": 0.053,
         "range": {
           "min": 0.04,
           "max": 0.06
@@ -3263,15 +3263,15 @@
       },
       {
         "ith": 2,
-        "scale": 0.95,
-        "rotate": -3
+        "scale": 0.8,
+        "rotate": 0
       },
       {
         "cross": {
           "dest": {
             "ith": 2,
             "curve": 0,
-            "r": 0.5
+            "r": 0.46
           },
           "self": {
             "ith": 0,
@@ -3324,7 +3324,7 @@
           {
             "ith": 2,
             "curve": 0,
-            "r": 0.31
+            "r": 0.24
           },
           {
             "ith": 2,
@@ -3352,10 +3352,12 @@
       {
         "place": {
           "dest": {
-            "ith": 0
+            "ith": 0,
+            "r": 0.65
           },
           "self": {
-            "ith": 1
+            "ith": 1,
+            "r": 0.56
           },
           "spacing": 0.35,
           "pos": 0
@@ -4863,6 +4865,146 @@
           },
           "spacing": 0.33,
           "pos": 1
+        }
+      }
+    ]
+  },
+  "我": {
+    "type": "Radical",
+    "desc": "Uniq",
+    "body": [
+      "pie",
+      "heng",
+      "shugou",
+      "ti",
+      "xiegou",
+      "pie",
+      "dian"
+    ],
+    "vars": {},
+    "prog": [
+      {
+        "scale": 1.4
+      },
+      {
+        "ith": 0,
+        "rotate": 10,
+        "scale": 0.5
+      },
+      {
+        "ith": 1,
+        "scale": 1.15
+      },
+      {
+        "ith": 3,
+        "rotate": -10,
+        "scale": 0.5
+      },
+      {
+        "ith": 4,
+        "prog": [
+          {
+            "ith": 0,
+            "scale": 1.4,
+            "rotate": 12,
+            "curl": -9
+          }
+        ]
+      },
+      {
+        "ith": 5,
+        "scale": 0.7,
+        "curl": -1,
+        "rotate": 3
+      },
+      {
+        "ith": 6,
+        "scale": 0.3,
+        "curl": -3,
+        "rotate": 3
+      },
+      {
+        "cross": {
+          "self": {
+            "ith": 2,
+            "curve": 0,
+            "r": 0
+          },
+          "dest": {
+            "ith": 0,
+            "curve": 0,
+            "r": 0.5
+          }
+        }
+      },
+      {
+        "cross": {
+          "self": {
+            "ith": 1,
+            "curve": 0,
+            "r": 0.25
+          },
+          "dest": {
+            "ith": 2,
+            "curve": 0,
+            "r": 0.2
+          }
+        }
+      },
+      {
+        "cross": {
+          "self": {
+            "ith": 3,
+            "curve": 0,
+            "r": 0.55
+          },
+          "dest": {
+            "ith": 2,
+            "curve": 0,
+            "r": 0.55
+          }
+        }
+      },
+      {
+        "cross": {
+          "self": {
+            "ith": 4,
+            "curve": 0,
+            "r": 0.28
+          },
+          "dest": {
+            "ith": 1,
+            "curve": 0,
+            "r": 0.55
+          }
+        }
+      },
+      {
+        "cross": {
+          "self": {
+            "ith": 5,
+            "curve": 0,
+            "r": 0.5
+          },
+          "dest": {
+            "ith": 4,
+            "curve": 0,
+            "r": 0.64
+          }
+        }
+      },
+      {
+        "cross": {
+          "self": {
+            "ith": 6,
+            "curve": 0,
+            "r": 2
+          },
+          "dest": {
+            "ith": 1,
+            "curve": 0,
+            "r": 1.35
+          }
         }
       }
     ]
