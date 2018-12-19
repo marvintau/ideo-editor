@@ -71,9 +71,9 @@ export default class Char extends CurveStructureBase{
                 destr = spec.dest.r ? spec.dest.r : 0.58,
                 selfCoreArea = self.corebound.area(),
                 destCoreArea = dest.corebound.area(),
-                spacing = spec.spacing ? spec.spacing : 0.5,
-                outlying = spec.outlying ? spec.outlying : 1.5,
-                shrinking = spec.shrinking ? spec.shrinking : 0.5,
+                spacing =   this.vars.spacing   ? this.vars.spacing.val   : 0.5,
+                outlying =  this.vars.outlying  ? this.vars.outlying.val  : 1.5,
+                shrinking = this.vars.shrinking ? this.vars.shrinking.val : 0.5,
                 maxRatio = Math.max(selfr, destr) / Math.min(selfr, destr);
             
             var transVec = dest.massCenter;
@@ -84,12 +84,12 @@ export default class Char extends CurveStructureBase{
                     
                     for (let k in self.outliers)
                         for (let curve of self.outliers[k]){
-                            if (k == "r") curve.scale(maxRatio);
+                            if (k == "r") curve.scale(outlying);
                         }
 
                     for (let k in dest.outliers)
                         for (let curve of dest.outliers[k]){
-                            if (k == "r") curve.scale(0.5);
+                            if (k == "r") curve.scale(shrinking);
                         }
                                 
                     transVec.x += self.corebound.box.size().add(dest.corebound.box.size()).mult(spacing).x;
@@ -101,13 +101,12 @@ export default class Char extends CurveStructureBase{
                     
                     for (let k in self.outliers)
                         for (let curve of self.outliers[k]){
-                            if (k == "r") curve.scale(maxRatio);
+                            if (k == "r") curve.scale(outlying);
                         }
 
                     for (let k in dest.outliers)
                         for (let curve of dest.outliers[k]){
-                            if (k == "l") curve.scale(maxRatio);
-                            if (k == "r") curve.scale(0.5);
+                            if (k == "r") curve.scale(shrinking);
                         }
                                 
                     transVec.y += self.corebound.box.size().add(dest.corebound.box.size()).mult(spacing).y;

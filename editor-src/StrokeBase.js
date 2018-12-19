@@ -40,19 +40,25 @@ export default class StrokeBase{
     }
 
     initStroke(charName){        
-        this.getStrokeSpec(charName);
-        this.initVariableControls();
-
-        this.char = new Char(this.currSpec);
-        this.char.modify();
-
-        let state = this.drawingAdditional;
-        this.thumb.clearRect(0, 0, this.thumb.canvas.height, this.thumb.canvas.width);
-        this.drawingAdditional = false;
-        this.draw();
-        this.thumb.drawImage(this.preview.canvas, 0, 0, this.thumb.canvas.height, this.thumb.canvas.width);
-        this.drawingAdditional = state;
-        this.draw();        
+        try{
+            this.getStrokeSpec(charName);
+            this.initVariableControls();
+    
+            this.char = new Char(this.currSpec);
+            this.char.modify();
+    
+            let state = this.drawingAdditional;
+            this.thumb.clearRect(0, 0, this.thumb.canvas.height, this.thumb.canvas.width);
+            this.drawingAdditional = false;
+            this.draw();
+            this.thumb.drawImage(this.preview.canvas, 0, 0, this.thumb.canvas.height, this.thumb.canvas.width);
+            this.drawingAdditional = state;
+            this.draw();            
+        }
+        catch (e){
+            document.getElementById("indicator").innerHTML="<span class=\"keyword\">"+e.message+"</span>";
+            console.error(e);
+        }
     }
 
     updateStroke(){
@@ -128,7 +134,7 @@ export default class StrokeBase{
         var updatedSpec = JSON.parse(toJSONText(text));
         this.base[this.currCharName] = updatedSpec;
 
-        this.base[this.currCharName].thumbnail = this.thumb.canvas.toDataURL();
+        // this.base[this.currCharName].thumbnail = this.thumb.canvas.toDataURL();
 
         this.initStroke(this.currCharName);
         console.log(this.base[this.currCharName]);
@@ -160,32 +166,18 @@ export default class StrokeBase{
         }
     }
 
-    suggest(){
-        this.submit();
-        this.getStrokeSpec(this.currCharName);
-        this.base[this.currCharName] = suggestSpec(this.base[this.currCharName], this.currSpec);
-        this.base[this.currCharName].text = fromJSONObject(this.base[this.currCharName]);
-        this.input.update(this.base[this.currCharName].text);
-        this.initStroke(this.currCharName);
-    }
-
-    replaceVars(){
-        delete this.base[this.currCharName].text;
-        console.log(this.base[this.currCharName]);
-        this.base[this.currCharName] = replaceVariables(this.base[this.currCharName]);
-        this.base[this.currCharName].text = fromJSONObject(this.base[this.currCharName]);
-        this.input.update(this.base[this.currCharName].text);
-        this.initStroke(this.currCharName);
-    }
-
     getStrokeSpec(strokeName){
+
+
+        var globalVariables = {
+            globalStrokeWidth : {val: 1, range: {min: 1, max:5}}
+        }
 
         var type = this.base[strokeName].type,
             names = {"Char": "全字", "Radical": "部首", "Compound": "笔画", "Curve": "简单笔画"};
 
         document.getElementById("indicator").innerText = "载入" + names[type] + "『" + strokeName + "』";
-        this.currSpec = getSpec(strokeName, this.base);
-        console.log("currSpec", this.currSpec);
+        this.currSpec = getSpec(strokeName, this.base, globalVariables);
     }
 
     getStrokeSpecText(strokeName){
@@ -203,17 +195,6 @@ export default class StrokeBase{
             varsDom.removeChild(varsDom.firstChild);
         }
         
-        let width = document.createElement('div');
-        width.appendChild(addLabel("笔画宽度"));
-        this.strokeWidth = 25;
-        width.appendChild(addSlider(name, {val:25, range:{min:10, max:50}}, function(e){
-            console.clear();
-            this.strokeWidth = parseFloat(e.target.value);
-            this.updateStroke();
-        }.bind(this)));
-        varsDom.appendChild(width);
-        // let widthDom = document.createElement(div)
-
         if (this.currSpec.vars){
             for (let i in this.currSpec.vars){
                 varsDom.appendChild(addInput(i, this.currSpec.vars[i], function(e){
@@ -221,7 +202,7 @@ export default class StrokeBase{
                         this.currSpec.vars[i].val = parseFloat(e.target.value);
                         document.getElementById(e.target.name+"-indicator").innerText = this.currSpec.vars[i].val;    
                     }
-                    this.base[this.currCharName].vars = this.currSpec.vars;
+                    
                     this.input.update(fromJSONObject(this.base[this.currCharName]));
                     this.updateStroke();
                 }.bind(this)));
@@ -239,9 +220,9 @@ export default class StrokeBase{
         if(this.drawingAdditional){
             drawFrame(this.preview, width, height);
 
-            this.font = "120px Helvetica";
-            this.fillStyle = "black";
-            this.preview.fillText(this.currCharName, 300, 300);
+            this.preview.font = "780px serif";
+            this.preview.fillStyle = "rgb(0, 0, 0, 0.5)";
+            this.preview.fillText(this.currCharName, 30, 660);
         }
 
         let center;
@@ -256,7 +237,7 @@ export default class StrokeBase{
                 
         let drawSpec = {
             scale: scale,
-            strokeWidth: this.strokeWidth,
+            strokeWidth: 25,
             currCharName: this.currCharName,
             drawingAdditional: this.drawingAdditional
         }

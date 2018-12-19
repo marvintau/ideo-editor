@@ -3,6 +3,34 @@ function dup(json){
 }
 
 /**
+ * 将comp的子一层variable绑定在自己的variable列表中。如果当
+ * 前组件没有vars的话就创建一个。如果已经有同名变量，则当前变
+ * 量会覆盖子一层的变量。
+ * @param {object} comp 
+ */
+function bindVars(comp){
+    if (!comp.vars) comp.vars = {};
+    
+    if(comp.body)
+        for (let elem of comp.body) if(elem && elem.vars)
+            for (let key in elem.vars) {
+                if(elem.vars[key].exposeLevel != undefined && elem.vars[key].exposeLevel-1 != 0){
+                    comp.vars[key] = elem.vars[key];
+                    comp.vars[key].exposeLevel -= 1;
+                    // the expose level in elem level will be decreased as well but it's fine. 
+                }
+
+                if(elem.vars[key].global)
+                    comp.vars[key] = elem.vars[key];
+                    
+                if(elem.vars[key].overridable && comp.vars[key])
+                    elem.vars[key] = comp.vars[key];
+            }
+
+    return comp;
+}    
+
+/**
  * 
  * 递归地获得完整的部件描述。
  * 由于在部件索引中对其它部件是通过名称引用，因此要不断将引用的
@@ -10,41 +38,59 @@ function dup(json){
  * 意，如果一个描述中引用了自身的名称或其它循环引用的情况，就会
  * 造成无限递归错误。
  *
- * @param {string} strokeNextElem 部件的名称
+ * @param {string} compName 部件的名称
  * @param {object} base 部件索引
  */
-function getSpecRecursive(strokeNextElem, base){
-    if(base[strokeNextElem]){
-        let stroke = dup(base[strokeNextElem]);
-        delete stroke.text;
+function getSpecRecursive(compName, base, globalVars){
 
-        switch(stroke.type){
+    if (globalVars === undefined) globalVars = {};
+
+    for (let key in globalVars) globalVars[key].global = 1;
+
+    if(base[compName]){
+        let comp = dup(base[compName]);
+        delete comp.text;
+
+        switch(comp.type){
 
             case "Char":
-                // console.log("getSpecRecursive, Char");
             case "Radical":
-                stroke.body = stroke.body.reduce(function(list, elem){
-                    return list.concat(getSpecRecursive(elem, base));
+                comp.body = comp.body.reduce(function(list, elem){
+                    return list.concat(getSpecRecursive(elem, base, globalVars));
                 }, []);
-                return stroke;
 
-            // 一个简单笔画返回的是一个仅包含它的复杂笔画，也是递归的终点
-            case "Curve":
-                return {type:"Stroke", body:[stroke]};
+                comp = bindVars(comp);
+                break;
 
             // 一个复杂笔画引用的可能是另一个复杂笔画，也可能是若干个简单笔画，
             // 但是因为在上面简单笔画也返回复杂笔画，因而最终返回的都是复杂笔
             // 画。因此最终得到的是将各复杂笔画合成后的新的复杂笔画。而复杂笔
             // 画内的引用关系也因为这部操作而丢失了。
             case "Stroke":
-                stroke.body = stroke.body.reduce(function(list, elem){
-                    return list.concat(getSpecRecursive(elem, base).body);
+                comp.body = comp.body.reduce(function(list, elem){
+                    return list.concat(getSpecRecursive(elem, base, globalVars).body);
                 }, []);
-                return stroke;
+
+                comp = bindVars(comp);
+                break;
+
+            // 一个简单笔画返回的是一个仅包含它的复杂笔画，也是递归的终点
+            // 之所以要处理这部分，是因为某些笔画是Curve结构。
+            case "Curve":
+                if(!comp.vars)
+                    comp.vars = globalVars;
+                else for (let key in globalVars)
+                    comp.vars[key] = globalVars[key];
+
+                comp = {type:"Stroke", body:[comp], vars:comp.vars};
+                console.log(comp);
+                break;
         }
+
+        return comp;
+
     } else {
-        console.error("[" + strokeNextElem + "] is not found in dictionary");
-        return strokeNextElem;
+        throw {name: "NotFound", message:"字典里面没找到 [" + compName + "]"};
     }
 }
 
@@ -59,121 +105,16 @@ function getSpecRecursive(strokeNextElem, base){
  * @param {string} strokeName 部件名称
  * @param {object} base 部件索引
  */
-export function getSpec(strokeName, base){
+export function getSpec(strokeName, base, globalVars){
     
-    var res = base[strokeName];
-    console.log(base);
+    var res = getSpecRecursive(strokeName, base, globalVars);
     
     if (res.type == "Stroke")
-    res = {type:"Radical", vars:{}, body:[getSpecRecursive(strokeName, base)]};
+        res = {type:"Radical", vars:res.vars, body:[res]};
     
-    if (res.type == "Radical"){
-        res = {type: "Char", vars: {}, body:[getSpecRecursive(strokeName, base)]};
-        for (let comp of res.body)
-        for (let thevar in comp.vars)
-        res.vars[thevar] = comp.vars[thevar];
-        
-    } else if (res.type == "Char"){
-        console.log("getSpec", res.type);
-        res = getSpecRecursive(strokeName, base);
-    }
-
+    if (res.type == "Radical")
+        res = {type: "Char", vars: res.vars, body:[res]};
+    
+    console.log(res.vars, "getSpec");
     return res;
-}
-
-export function suggestSpec(specOrig, specDeri){
-    console.log(specOrig, specDeri, "suggestSpec");
-    var newSpec = {body: specOrig.body, type: specOrig.type, prog:[]};
-
-    for (let i = 0; i < specDeri.body.length; i++){
-        let stroke = specDeri.body[i];
-        console.log(stroke, "suggestedSpec stroke");
-        if(stroke.body.length == 1)
-            newSpec.prog.push({ith:i, scale: 1, rotate:0, curl: 0});
-        else
-            newSpec.prog.push({
-                ith: i,
-                prog: stroke.body.map((e, j) => ({ith:j, scale: 1, rotate: 0, curl: 0}))
-            });
-    }
-
-    if(specDeri.body.length > 1) for (let i = 1; i < specDeri.body.length; i++){
-        newSpec.prog.push({cross:{
-            dest:{ith: i-1, curve: 0, r: 0},
-            self:{ith: i, curve: 0, r: 0}
-        }})
-    }
-
-    console.log(newSpec, "suggestedSpec");
-    return newSpec;
-}
-
-function replaceSingleVariable(key, val){
-    switch(key){
-        case "rotate":
-            return {val: val, range:{min: val-20, max: val+20}};
-        case "curl":
-            return {val: val, range:{min: val-10, max: val+10}};
-        case "scale":
-            return {val: val, range:{min: val*0.8, max:val/0.8}};
-        case "r":
-            return {val: val, range:{min: val-0.1, max:val+0.1}};
-    }
-}
-
-function replaceVariableGeneralInstr(spec, ithProg, key, varName){
-    let nonVars1 = ((key == "rotate" || key == "curl") && spec.prog[ithProg][key] == 0),
-        nonVars2 = (key == "scale" && spec.prog[ithProg][key] == 1),
-        nonVars = nonVars1 || nonVars2;
-    console.log(key, spec.prog[ithProg][key], key in ["rotate", "curl"]);
-    if(!nonVars){
-        spec.vars[varName] = replaceSingleVariable(key, spec.prog[is][key]);
-        spec.prog[ithProg][key] = varName;
-    }
-}
-
-function replaceVariableCross(spec, ithProg){
-    let cross = spec.prog[ithProg].cross,
-        varSelfName = "cross-"+ cross.self.ith + "-" + cross.dest.ith + "-" + "self",
-        varDestName = "cross-"+ cross.self.ith + "-" + cross.dest.ith + "-" + "dest";
-
-    if(cross.self.r != 1 && cross.self.r != 0){
-        spec.vars[varSelfName] = replaceSingleVariable("r", cross.self.r);
-        spec.prog[ithProg].cross.self.r = varSelfName;
-    }
-
-    if(cross.dest.r != 1 && cross.dest.r != 0){
-        spec.vars[varDestName] = replaceSingleVariable("r", cross.dest.r);
-        spec.prog[ithProg].cross.dest.r = varDestName;
-    }
-}
-
-function replaceVariables(spec){
-    spec.vars = {};
-
-    let ithStroke = 0,
-        ithCurve = 0;
-    for (let is = 0; is < spec.prog.length; is++)
-        for (let key in spec.prog[is]){
-            if (key == "ith")
-                ithStroke = spec.prog[is].ith;
-            else if (key == "prog")
-                for (let ic = 0; ic < spec.prog[is].prog.length; ic++)
-                    for (let keyc in spec.prog[is].prog[ic])
-                        if (keyc == "ith")
-                            ithCurve = spec.prog[is].prog[ic].ith;
-                        else{
-                            let varName = keyc+"-"+ithStroke+"-"+ithCurve;
-                            replaceVariableGeneralInstr(spec.prog[is], ic, keyc, varName);
-                        }
-            else if (key == "cross")
-                replaceVariableCross(spec, is);
-            else {
-                let varName =  key+"-"+ithStroke;
-                replaceVariableGeneralInstr(spec, is, key, varName);
-            }
-                
-        }
-    
-    return spec;
 }

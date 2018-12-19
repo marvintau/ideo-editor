@@ -1,6 +1,16 @@
 {
   "pie": {
     "type": "Curve",
+    "vars": {
+      "strokeWidth": {
+        "val": 0.5,
+        "range": {
+          "min": 0.1,
+          "max": 1
+        },
+        "exposeLevel": 1
+      }
+    },
     "body": [
       {
         "len": 3,
@@ -33,30 +43,17 @@
     "body": [
       {
         "len": 3,
-        "ang": 60,
-        "weight": [
-          1,
-          1
-        ]
+        "ang": 60
       },
       {
         "len": 3,
-        "ang": 45,
-        "weight": [
-          1,
-          2
-        ]
+        "ang": 45
       },
       {
         "len": 3,
-        "ang": 30,
-        "weight": [
-          2,
-          1
-        ]
+        "ang": 30
       }
-    ],
-    "text": "# type: Curve\n  body: @ # len: 3 ang: 60 weight: @ 1 1\n          # len: 3 ang: 45 weight: @ 1 2\n          # len: 3 ang: 30 weight: @ 2 1"
+    ]
   },
   "heng": {
     "type": "Curve",
@@ -827,7 +824,7 @@
       },
       "fanning": "(0.22-@'aspect'+(@'cross-pos'-0.2)*7.5)*20",
       "stem-len": "0.8+0.5*@'aspect'",
-      "beam-len": "1-@'aspect'*0.3"
+      "beam-len": "1-@'aspect'*0.4"
     },
     "prog": [
       {
@@ -2131,15 +2128,19 @@
   "百": {
     "type": "Char",
     "body": [
-      "页头",
-      "日"
+      "heng",
+      "白"
     ],
     "vars": {},
     "prog": [
       {
+        "ith": 0,
+        "scale": 1.4
+      },
+      {
         "ith": 1,
         "stretch": {
-          "x": 1.4,
+          "x": 1,
           "y": 0.8
         }
       },
@@ -2147,15 +2148,15 @@
         "splice": {
           "dest": {
             "ith": 0,
-            "stroke": 1,
+            "stroke": 0,
             "curve": 0,
-            "r": 1
+            "r": 0.5
           },
           "self": {
             "ith": 1,
-            "stroke": 1,
+            "stroke": 0,
             "curve": 0,
-            "r": 0.22
+            "r": 0
           }
         }
       }
@@ -2622,7 +2623,7 @@
     "type": "Char",
     "desc": "Combo",
     "body": [
-      "木",
+      "木旁",
       "目"
     ],
     "vars": {},
@@ -3183,22 +3184,31 @@
     "type": "Char",
     "desc": "Combo",
     "body": [
-      "木",
+      "木旁",
       "木"
     ],
-    "vars": {},
+    "vars": {
+      "pie-stroke-width": {
+        "val": 0.491,
+        "range": {
+          "min": 0.1,
+          "max": 1
+        },
+        "exposeLevel": -3
+      }
+    },
     "prog": [
       {
         "place": {
           "dest": {
             "ith": 0,
-            "r": 0.51
+            "r": 0.65
           },
           "self": {
             "ith": 1,
-            "r": 0.53
+            "r": 0.68
           },
-          "spacing": 0.4,
+          "spacing": 0.44,
           "pos": 0
         }
       }
@@ -3233,6 +3243,22 @@
           "min": 0,
           "max": 5
         }
+      },
+      "strokeWidth": {
+        "val": 0.1,
+        "range": {
+          "min": 0.1,
+          "max": 1
+        },
+        "exposeLevel": -2
+      },
+      "globalStrokeWidth": {
+        "val": 1,
+        "range": {
+          "min": 0.5,
+          "max": 2
+        },
+        "global": 1
       }
     },
     "prog": [
@@ -4040,7 +4066,7 @@
     "type": "Char",
     "desc": "Combo",
     "body": [
-      "木",
+      "木旁",
       "反文"
     ],
     "vars": {},
@@ -4057,7 +4083,8 @@
           "pos": 0
         }
       }
-    ]
+    ],
+    "thumbnail": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFAAAABQCAYAAACOEfKtAAAFjklEQVR4Xu2cW+huQxTAf8f9kjiS64Nr0nEkEhIlJVFSlJI8iTo5b0dRR15ciuIJIY9SQqSURCIekMglD4jkrpAH91tLe05zxuw9a2bN7G/vr71f/v2/Pev2W2vN7L1nf98GlsNEYINJehFmnQD+0+XzR2DjWLldR4CjxtTamKsKKYiWth4Aru2qrqWd/xV2a2NjARzLztoDvBvYNtb817qtRP8YlbEH8Nsq2nddAI6RpN6iXoc50AH8Gdh3zPZdtwpsXQzR3LQ22rq9WutPFvS6APwKODwZbYMBcwZ4FvDqqlZfl4s5A1x5+859EXEAzweeb9CdKpVzrcBJVN+cK9ABlL+7qEql0aA5VuDDwJWrXjxKFhG/bRrl8z+1qaROpn01zvqgpgDwUuCJqVRfLsCjCsruE0/maKX8pwPjJlV9uQCV8e8Y9n2wN5FqzZT+y4FHp1R9rQGGLW8FONYUEktkr+/WoIaqpibAZ4CLUiXa8PzoAJ8CLgkCsiRrldU32KmWoHKqzzJdtFo4quidE8DfgT0rtqkDeB1wX6neFgA/Ao6NOFRiq0qV9MBxukv82qHSJJxwLGs1iwz+ADih+/xQ4JvSKonI3QNI5VmmFruwIrPh5P8scKESxBjVNzmAYdCx1VP2cf9IQGwJT0w7/Z8BRyoTGh1Wu4WdYz8ABwYb674DQ3Z9eH7r+nc2Vr+rzH/m8g1SciuwPZhXhioyBuFE4D1PbzjG6Tvb2w/JLaDHgctqzH+1AcbaLvzsHOBlBaA+32q0dg0dTVbhWFvEnP0T2LXz4OngjiXVWnJ5JJdJluQ7GzcCd+SWbzjeOpc4fX1Zzf1c9B0MfDsQmKWCZO/4C2MCdnKtNsDrgbs8C0PBloKwzGGlNnvzWQOgBVJpQFa5t4FTrO1rmUd82y6Yd4CTA6dSgT4EXN3J/O3NjanYfgL2y2xFud5zT7trFI5pIk7NfdrzMs6HfDrwRopedz6VnFBN7niVG9ZMOKe+BI6IWNQ6rR3nm/gF2CujCp2N273rVRWkoUEWgJqgNWNyqrW0qt4HNmXAVoOtAfAl4NweizkA5bZNXlNzh8a3F4DzFGBy/FDDsywiWoe045zTXwOHdP9Ii+6jiCZl4wBA7s0t8fa6oclyKLwZeLf7ULL/4kCQqeBior7MFuD+BMSTALkCkEO2Ph8Lxpf4oMhbeUZyHMoZ6zstcq8Acu+sOTTXoqcCb2mU5YzJrUC5VnMyGtlSgDkxuLExW83tayCEleH+18g2D8BzTuY5me/k2A34y7vGlG8vybeYqh8aCEMZTjk0JkDxxbfn+5YTZyqmnc5rFct3cPfvJOWv3EppjrEBxiDKG11PapwtGaMFWAqiVK4kFifzeXBXpI2xyKZGuQWCRbYoIOA1QO6pc+bqUlvN3wZdBcDYPKgplCKIQ4o/Bo7ptL4OnFFgYWyAvj15DcR9DVZcbwKxT6nceMsNuLUNxgQo+ysXdw7fBtzU7Z/4r5lUh9insMbmTbgiVnc+6Ii+ZPmfy/x4ZkEn9YqsKqiaMWgS5UO8AbizlgPrANCHszfwaw8cf9wFwHM1IM4doA/lQ+D4BBR/fOzJTTbTOQP8DjioYKHzId4C3JxNrcBoqY1Wq7BU23GGOHy/ZBPfPcTNjnOOFehvJlmu78IL7iIWRUIZaapdgVWC9vw365sTQHOwPYn3HxLLkN0BeQFKdcwB4BXAI0E0tf2+BnjQs6H+DZrajoRZs7ZwWHVXAfJ94VZHdpVPFeCoT1QGbgnl1OD26tQAxsDdC2xtVXI9euXFpfCp+2nAm+H4KQMUmCv9PQTNr89NEaC8nXDYyBWXMifJjLKaGsBUIJM7vwA0pmQBuAA0EjCKt65Ao3vTF18AGnO0AFwAGgkYxZcKNAL8F4yaGGAVn9FDAAAAAElFTkSuQmCC"
   },
   "又": {
     "type": "Radical",
@@ -5006,6 +5033,146 @@
             "r": 1.35
           }
         }
+      }
+    ]
+  },
+  "木旁": {
+    "body": [
+      "heng",
+      "shu",
+      "pie",
+      "dian"
+    ],
+    "type": "Radical",
+    "desc": "Radical",
+    "vars": {
+      "aspect": {
+        "val": 0.659,
+        "range": {
+          "min": 0,
+          "max": 1
+        }
+      },
+      "cross-pos": {
+        "val": 0.23,
+        "range": {
+          "min": 0.2,
+          "max": 0.25
+        }
+      },
+      "fanning": "(0.22-@'aspect'+(@'cross-pos'-0.2)*7.5)*20",
+      "stem-len": "0.8+0.5*@'aspect'",
+      "beam-len": "1-@'aspect'*0.4"
+    },
+    "prog": [
+      {
+        "scale": 1.55
+      },
+      {
+        "ith": 0,
+        "scale": "beam-len"
+      },
+      {
+        "ith": 1,
+        "scale": "stem-len"
+      },
+      {
+        "ith": 2,
+        "scale": 0.79,
+        "rotate": "fanning",
+        "curl": 0
+      },
+      {
+        "ith": 3,
+        "scale": 0.59,
+        "rotate": "0-@'fanning'",
+        "curl": -10
+      },
+      {
+        "cross": {
+          "dest": {
+            "ith": 0,
+            "curve": 0,
+            "r": 0.5
+          },
+          "self": {
+            "ith": 1,
+            "curve": 0,
+            "r": "cross-pos"
+          }
+        }
+      },
+      {
+        "cross": {
+          "dest": {
+            "ith": 1,
+            "curve": 0,
+            "r": "cross-pos"
+          },
+          "self": {
+            "ith": 2,
+            "curve": 0,
+            "r": 0
+          }
+        }
+      },
+      {
+        "cross": {
+          "dest": {
+            "ith": 1,
+            "curve": 0,
+            "r": 0.35
+          },
+          "self": {
+            "ith": 3,
+            "curve": 0,
+            "r": 0
+          }
+        }
+      },
+      {
+        "core": [
+          {
+            "ith": 0,
+            "curve": 0,
+            "r": 0.2
+          },
+          {
+            "ith": 0,
+            "curve": 0,
+            "r": 0.8
+          },
+          {
+            "ith": 1,
+            "curve": 0,
+            "r": 0.2
+          },
+          {
+            "ith": 1,
+            "curve": 0,
+            "r": 0.89
+          },
+          {
+            "ith": 2,
+            "curve": 0,
+            "r": 0
+          },
+          {
+            "ith": 2,
+            "curve": 0,
+            "r": 0.7
+          },
+          {
+            "ith": 3,
+            "curve": 0,
+            "r": 0
+          },
+          {
+            "ith": 3,
+            "curve": 0,
+            "r": 0.6
+          }
+        ]
       }
     ]
   }

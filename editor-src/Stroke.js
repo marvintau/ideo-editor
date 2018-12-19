@@ -51,7 +51,7 @@ export default class Stroke extends CurveStructureBase{
         }
     }
 
-    duringUpdate(){
+    postUpdate(){
         if (this.body.length > 1)
             for(let i = 1; i < this.body.length; i++){
                 if(this.body[i].body.length > 1 && this.body[i-1].body.length){
@@ -70,6 +70,13 @@ export default class Stroke extends CurveStructureBase{
     }
 
     draw(ctx, spec){
+
+        ctx.lineWidth = this.vars.strokeWidth ? this.vars.strokeWidth.val * 100 : 20;
+        ctx.lineWidth += this.vars.globalStrokeWidth.val * 10;
+        ctx.lineCap = "square";
+        ctx.lineJoin = "miter";
+        ctx.miterLimit = 3;
+        ctx.strokeStyle = "black";
 
         if(!this.hidden){
             ctx.beginPath();

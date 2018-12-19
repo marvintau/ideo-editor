@@ -94,12 +94,6 @@ export default class Radical extends CurveStructureBase{
 
 
     draw(ctx, spec){
-        console.log(spec.strokeWidth, "rad draw");
-
-        ctx.lineWidth = spec.strokeWidth;
-        ctx.lineJoin = "miter";
-        ctx.miterLimit = 3;
-        ctx.strokeStyle = "black";
 
         for (let component of this.body)
             component.draw(ctx, spec);

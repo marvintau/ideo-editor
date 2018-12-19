@@ -15,7 +15,6 @@ export default class CurveStructureBase{
 
         // console.log("CurveStructureBase", spec);
         this.type = "CurveStructureBase";
-        this.name = (spec=== undefined || spec.name === undefined) ? "" : spec.name;
         this.prog = (spec=== undefined || spec.prog === undefined) ? [] : spec.prog;
         this.vars = (spec=== undefined || spec.vars === undefined) ? {} : spec.vars;
         this.box  = new Box();
@@ -106,7 +105,7 @@ export default class CurveStructureBase{
                 }
                 else 
                     throw {
-                        error: "ValueError", 
+                        name: "ValueError", 
                         message: "item " + item + "is neither an existing variable or an expression" 
                     };
             case "object":
@@ -121,7 +120,7 @@ export default class CurveStructureBase{
                 }
 
             default :
-                console.error("Key not found", item, typeof item);
+                throw {name: "NotFound", message: "获取变量时遇到了一个不合适的值："+item}
         }
     }
 
@@ -150,13 +149,13 @@ export default class CurveStructureBase{
          *       or hook or postprocess or something, because only Char
          *       need this.
          */
-        for (let elem of this.body) {
-            elem.modify(undefined, vars);
-            if (elem.type == "Char") elem = elem.flattenToRadical();
-            console.log(elem.type, "modify children");
+        for (let i =0; i < this.body.length; i++) {
+            this.body[i].modify(undefined, vars);
+            if (this.body[i].type == "Char")
+                this.body[i] = this.body[i].flattenToRadical();
+            
         }
 
-        if (this.type == "Char") console.log(this.body.map(e => e.type));
         /**
          * Run the program of the current object. Make sure that all 
          * the children has been modified at this point.
@@ -181,7 +180,7 @@ export default class CurveStructureBase{
                     try{
                         instance[method](this.getVariable(instr[method]));
                     } catch (e){
-                        console.error(e);
+                        console.error(e, ith, method);
                     }
                 }else
                     instance.modify(instr[method]);
@@ -199,13 +198,6 @@ export default class CurveStructureBase{
     ith() {/*dummy*/}
 
     update(){        
-        // console.log(this.postUpdate, this.type);
-        if (this.preUpdate) this.preUpdate();
-        for (let elem of this.body)
-            elem.update();
-
-        if (this.duringUpdate) this.duringUpdate();
-        
         if(this.body.length > 0) this.box  = this.body[0].box;
         if(this.body.length > 1)
             for(let i = 1; i < this.body.length; i++)
