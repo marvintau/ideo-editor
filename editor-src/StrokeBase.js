@@ -170,7 +170,8 @@ export default class StrokeBase{
 
 
         var globalVariables = {
-            globalStrokeWidth : {val: 1, range: {min: 1, max:5}}
+            globalStrokeWidth : {val: 1, range: {min: 1, max:5}},
+            globalCompoundSpacing : {val: 0.3, range: {min: 0.1, max:0.5}}
         }
 
         var type = this.base[strokeName].type,

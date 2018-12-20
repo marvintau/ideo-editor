@@ -69,13 +69,15 @@ export default class Char extends CurveStructureBase{
                 dest = this.body[spec.dest.ith],
                 selfr = spec.self.r ? spec.self.r : 0.68,
                 destr = spec.dest.r ? spec.dest.r : 0.58,
-                selfCoreArea = self.corebound.area(),
-                destCoreArea = dest.corebound.area(),
-                spacing =   this.vars.spacing   ? this.vars.spacing.val   : 0.5,
+                selfCoreArea = self.corebound? self.corebound.area() : self.outline.area(),
+                destCoreArea = dest.corebound? dest.corebound.area() : dest.outline.area(),
+                spacing =   spec.spacing + this.vars.globalStrokeWidth.val*0.02,
                 outlying =  this.vars.outlying  ? this.vars.outlying.val  : 1.5,
                 shrinking = this.vars.shrinking ? this.vars.shrinking.val : 0.5,
                 maxRatio = Math.max(selfr, destr) / Math.min(selfr, destr);
             
+            console.log(spec.spacing, "placing spec spacing");
+
             var transVec = dest.massCenter;
             switch(spec.pos){
                 case 0:
@@ -91,7 +93,8 @@ export default class Char extends CurveStructureBase{
                         for (let curve of dest.outliers[k]){
                             if (k == "r") curve.scale(shrinking);
                         }
-                                
+                        
+                    console.log(dest, "place");
                     transVec.x += self.corebound.box.size().add(dest.corebound.box.size()).mult(spacing).x;
                     transVec = transVec.sub(self.massCenter);
                     break;
@@ -132,6 +135,7 @@ export default class Char extends CurveStructureBase{
         this.outline.convexHull();
         this.geomCenter = this.outline.massCenter();
 
+        console.log(this.corebound.box, "postUpdate");
     }
 
     flattenToRadical(){

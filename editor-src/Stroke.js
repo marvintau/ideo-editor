@@ -76,17 +76,15 @@ export default class Stroke extends CurveStructureBase{
         ctx.lineCap = "square";
         ctx.lineJoin = "miter";
         ctx.miterLimit = 3;
-        ctx.strokeStyle = "black";
+        ctx.strokeStyle = this.hidden ? "rgb(0, 0, 0, 0.1)" : "black";
 
-        if(!this.hidden){
-            ctx.beginPath();
-            ctx.moveToVec(this.body[0].body[0], spec.scale);
-    
-            for (let curve of this.body)
-                curve.draw(ctx, spec);
-    
-            ctx.stroke();
-        }
+        ctx.beginPath();
+        ctx.moveToVec(this.body[0].body[0], spec.scale);
+
+        for (let curve of this.body)
+            curve.draw(ctx, spec);
+
+        ctx.stroke();
     }
 
 }

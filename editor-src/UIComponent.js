@@ -32,8 +32,10 @@ export function addLabel(name){
 export function addInput(name, variable, func){
     var x = document.createElement("div");
     x.appendChild(addLabel(name));
-    if(variable.val != undefined){
+    if(variable.range != undefined){
         x.appendChild(addSlider(name, variable, func));
+        x.appendChild(addNumberIndicator(name, variable.val));
+    } else if (variable.val != undefined){
         x.appendChild(addNumberIndicator(name, variable.val));
     }
     return x;

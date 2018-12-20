@@ -13,19 +13,12 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 app.post('/save', function(req, res){
-    var filePath = path.join(__dirname, 'public/data/stroke-spec.json'),
-        destPath = path.join(__dirname, 'public/data/stroke-spec-'+ Date() +'.json');
 
-    var reader = fs.createReadStream(filePath);
-    reader.pipe(fs.createWriteStream(destPath), {end : false});
-    reader.on('end', function(){
-        console.log("original stroke data copied.");
-        fs.writeFile(filePath, JSON.stringify(req.body, null, 2), function(){
-        
-            console.log("written to local file.", Date());
-            res.end("yeah.");
-        })    
-    })
+    fs.writeFile(filePath, JSON.stringify(req.body, null, 2), function(){
+    
+        console.log("written to local file.", Date());
+        res.end("yeah.");
+    })    
     
 })
 

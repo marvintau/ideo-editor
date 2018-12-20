@@ -180,7 +180,7 @@ export default class CurveStructureBase{
                     try{
                         instance[method](this.getVariable(instr[method]));
                     } catch (e){
-                        console.error(e, ith, method);
+                        console.error(e, instr, method);
                     }
                 }else
                     instance.modify(instr[method]);

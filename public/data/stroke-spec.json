@@ -3,7 +3,7 @@
     "type": "Curve",
     "vars": {
       "strokeWidth": {
-        "val": 0.5,
+        "val": 0.2,
         "range": {
           "min": 0.1,
           "max": 1
@@ -201,11 +201,11 @@
     "type": "Curve",
     "body": [
       {
-        "len": 3,
+        "len": 5,
         "ang": 80
       },
       {
-        "len": 3,
+        "len": 1,
         "ang": 65
       },
       {
@@ -1555,7 +1555,7 @@
           {
             "ith": 3,
             "curve": 1,
-            "r": 0.8
+            "r": 0.3
           }
         ]
       }
@@ -2637,7 +2637,7 @@
             "ith": 1,
             "r": 0.78
           },
-          "spacing": 0.43,
+          "spacing": "globalCompoundSpacing",
           "pos": 0
         }
       }
@@ -2694,8 +2694,9 @@
       },
       {
         "ith": 2,
-        "rotate": 7,
-        "curl": -3
+        "rotate": 10,
+        "curl": -1,
+        "scale": 0.94
       },
       {
         "cross": {
@@ -2716,12 +2717,12 @@
           "self": {
             "ith": 2,
             "curve": 0,
-            "r": 0.05
+            "r": -0.05
           },
           "dest": {
-            "ith": 1,
+            "ith": 0,
             "curve": 0,
-            "r": 0.4
+            "r": 0.5
           }
         }
       },
@@ -4712,8 +4713,8 @@
       },
       {
         "ith": 0,
-        "rotate": -10,
-        "scale": 0.8
+        "rotate": -14,
+        "scale": 0.9
       },
       {
         "ith": 1,
@@ -4744,7 +4745,7 @@
           "dest": {
             "ith": 0,
             "curve": 0,
-            "r": 0.5
+            "r": 0.4
           }
         }
       },
@@ -4836,6 +4837,7 @@
   },
   "的": {
     "type": "Char",
+    "desc": "Combo",
     "body": [
       "白",
       "勺"
@@ -4860,6 +4862,7 @@
   },
   "是": {
     "type": "Char",
+    "desc": "Combo",
     "body": [
       "日",
       "正底"
@@ -4908,15 +4911,31 @@
       "pie",
       "dian"
     ],
-    "vars": {},
+    "vars": {
+      "beam-pos": {
+        "val": 0.28,
+        "range": {
+          "min": 0.1,
+          "max": 0.3
+        }
+      },
+      "beam-height": {
+        "val": 0.253,
+        "range": {
+          "min": 0.1,
+          "max": 0.3
+        }
+      }
+    },
     "prog": [
       {
         "scale": 1.4
       },
       {
         "ith": 0,
-        "rotate": 10,
-        "scale": 0.5
+        "rotate": 20,
+        "scale": 0.5,
+        "curl": -3
       },
       {
         "ith": 1,
@@ -4925,30 +4944,30 @@
       {
         "ith": 3,
         "rotate": -10,
-        "scale": 0.5
+        "scale": 0.7
       },
       {
         "ith": 4,
         "prog": [
           {
             "ith": 0,
-            "scale": 1.4,
-            "rotate": 12,
-            "curl": -9
+            "scale": 1.48,
+            "rotate": 10,
+            "curl": -7.2
           }
         ]
       },
       {
         "ith": 5,
-        "scale": 0.7,
-        "curl": -1,
+        "scale": 0.72,
+        "curl": 1,
         "rotate": 3
       },
       {
         "ith": 6,
-        "scale": 0.3,
+        "scale": 0.28,
         "curl": -3,
-        "rotate": 3
+        "rotate": 6
       },
       {
         "cross": {
@@ -4969,12 +4988,12 @@
           "self": {
             "ith": 1,
             "curve": 0,
-            "r": 0.25
+            "r": "beam-pos"
           },
           "dest": {
             "ith": 2,
             "curve": 0,
-            "r": 0.2
+            "r": "beam-height"
           }
         }
       },
@@ -4983,12 +5002,12 @@
           "self": {
             "ith": 3,
             "curve": 0,
-            "r": 0.55
+            "r": 0.5
           },
           "dest": {
             "ith": 2,
             "curve": 0,
-            "r": 0.55
+            "r": 0.58
           }
         }
       },
@@ -4997,12 +5016,12 @@
           "self": {
             "ith": 4,
             "curve": 0,
-            "r": 0.28
+            "r": "@'beam-height'*0.87+0.09"
           },
           "dest": {
             "ith": 1,
             "curve": 0,
-            "r": 0.55
+            "r": "@'beam-pos'+0.32"
           }
         }
       },
@@ -5011,12 +5030,12 @@
           "self": {
             "ith": 5,
             "curve": 0,
-            "r": 0.5
+            "r": 0.55
           },
           "dest": {
             "ith": 4,
             "curve": 0,
-            "r": 0.64
+            "r": 0.68
           }
         }
       },
@@ -5173,6 +5192,336 @@
             "r": 0.6
           }
         ]
+      }
+    ]
+  },
+  "戈部": {
+    "type": "Radical",
+    "body": [
+      "heng",
+      "xiegou",
+      "pie",
+      "dian"
+    ],
+    "vars": {
+      "beam-length": {
+        "val": 0.1,
+        "range": {
+          "min": 0.1,
+          "max": 1
+        },
+        "exposedLevel": 1
+      },
+      "draw-back": {
+        "val": 0,
+        "range": {
+          "min": 0,
+          "max": 1
+        },
+        "exposedLevel": 1
+      }
+    },
+    "prog": [
+      {
+        "scale": 1.3
+      },
+      {
+        "ith": 1,
+        "rotate": "4*@'draw-back'",
+        "scale": "1.500+@'draw-back'*0.1",
+        "prog": [
+          {
+            "ith": 0,
+            "curl": "-4-4*@'draw-back'"
+          }
+        ]
+      },
+      {
+        "ith": 0,
+        "rotate": -2,
+        "scale": "@'beam-length'+1"
+      },
+      {
+        "ith": 2,
+        "scale": 1.1,
+        "curl": 5,
+        "rotate": "-5*@'draw-back'"
+      },
+      {
+        "ith": 3,
+        "scale": 0.3
+      },
+      {
+        "cross": {
+          "self": {
+            "ith": 1,
+            "curve": 0,
+            "r": "0.230-@'draw-back'*0.03"
+          },
+          "dest": {
+            "ith": 0,
+            "curve": 0,
+            "r": "1-0.5/(@'beam-length'+1)"
+          }
+        }
+      },
+      {
+        "cross": {
+          "self": {
+            "ith": 2,
+            "curve": 0,
+            "r": 0.45
+          },
+          "dest": {
+            "ith": 1,
+            "curve": 0,
+            "r": 0.59
+          }
+        }
+      },
+      {
+        "cross": {
+          "self": {
+            "ith": 3,
+            "curve": 0,
+            "r": -1
+          },
+          "dest": {
+            "ith": 1,
+            "curve": 0,
+            "r": -0.1
+          }
+        }
+      },
+      {
+        "stretch": {
+          "x": "1/(@'beam-length'+1)",
+          "y": 1
+        }
+      }
+    ]
+  },
+  "戊": {
+    "type": "Char",
+    "desc": "Uniq",
+    "body": [
+      "shupie",
+      "戈部"
+    ],
+    "vars": {},
+    "prog": [
+      {
+        "ith": 0,
+        "scale": 0.66
+      },
+      {
+        "splice": {
+          "dest": {
+            "ith": 0,
+            "stroke": 0,
+            "curve": 0,
+            "r": 0
+          },
+          "self": {
+            "ith": 1,
+            "stroke": 0,
+            "curve": 0,
+            "r": 0
+          }
+        }
+      }
+    ]
+  },
+  "戌": {
+    "type": "Char",
+    "desc": "Uniq",
+    "body": [
+      "shupie",
+      "heng",
+      "戈部"
+    ],
+    "vars": {},
+    "prog": [
+      {
+        "ith": 0,
+        "scale": 0.66
+      },
+      {
+        "ith": 1,
+        "scale": 0.5,
+        "prog": [
+          {
+            "ith": 0,
+            "rotate": -2
+          }
+        ]
+      },
+      {
+        "splice": {
+          "dest": {
+            "ith": 0,
+            "stroke": 0,
+            "curve": 0,
+            "r": 0.55
+          },
+          "self": {
+            "ith": 1,
+            "stroke": 0,
+            "curve": 0,
+            "r": 0
+          }
+        }
+      },
+      {
+        "splice": {
+          "dest": {
+            "ith": 0,
+            "stroke": 0,
+            "curve": 0,
+            "r": 0
+          },
+          "self": {
+            "ith": 2,
+            "stroke": 0,
+            "curve": 0,
+            "r": 0
+          }
+        }
+      }
+    ]
+  },
+  "戍": {
+    "type": "Char",
+    "desc": "Uniq",
+    "body": [
+      "shupie",
+      "dian",
+      "戈部"
+    ],
+    "vars": {
+      "draw-back": {
+        "val": 0.9
+      }
+    },
+    "prog": [
+      {
+        "ith": 0,
+        "scale": 0.66
+      },
+      {
+        "ith": 1,
+        "scale": 0.5,
+        "prog": [
+          {
+            "ith": 0,
+            "rotate": -2
+          }
+        ]
+      },
+      {
+        "splice": {
+          "dest": {
+            "ith": 0,
+            "stroke": 0,
+            "curve": 0,
+            "r": 0.55
+          },
+          "self": {
+            "ith": 1,
+            "stroke": 0,
+            "curve": 0,
+            "r": 0
+          }
+        }
+      },
+      {
+        "splice": {
+          "dest": {
+            "ith": 0,
+            "stroke": 0,
+            "curve": 0,
+            "r": 0
+          },
+          "self": {
+            "ith": 2,
+            "stroke": 0,
+            "curve": 0,
+            "r": 0
+          }
+        }
+      }
+    ]
+  },
+  "左头": {
+    "type": "Radical",
+    "desc": "Radical",
+    "body": [
+      "heng",
+      "pie",
+      "heng",
+      "shu"
+    ],
+    "vars": {},
+    "prog": [
+      {
+        "ith": 0,
+        "scale": 1.4
+      },
+      {
+        "ith": 1,
+        "scale": 1.5,
+        "curl": 5,
+        "rotate": -10
+      },
+      {
+        "ith": 2,
+        "hide": 1
+      },
+      {
+        "ith": 3,
+        "hide": 1
+      },
+      {
+        "cross": {
+          "self": {
+            "ith": 1,
+            "curve": 0,
+            "r": 0.4
+          },
+          "dest": {
+            "ith": 0,
+            "curve": 0,
+            "r": 0.4
+          }
+        }
+      },
+      {
+        "cross": {
+          "self": {
+            "ith": 2,
+            "curve": 0,
+            "r": 0
+          },
+          "dest": {
+            "ith": 1,
+            "curve": 0,
+            "r": 0.6
+          }
+        }
+      },
+      {
+        "cross": {
+          "self": {
+            "ith": 3,
+            "curve": 0,
+            "r": 0
+          },
+          "dest": {
+            "ith": 1,
+            "curve": 0,
+            "r": 0.6
+          }
+        }
       }
     ]
   }
