@@ -14,7 +14,7 @@ app.use(cookieParser());
 
 app.post('/save', function(req, res){
 
-    fs.writeFile(filePath, JSON.stringify(req.body, null, 2), function(){
+    fs.writeFile('public/data/stroke-spec.json', JSON.stringify(req.body, null, 2), function(){
     
         console.log("written to local file.", Date());
         res.end("yeah.");

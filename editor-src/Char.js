@@ -71,7 +71,7 @@ export default class Char extends CurveStructureBase{
                 destr = spec.dest.r ? spec.dest.r : 0.58,
                 selfCoreArea = self.corebound? self.corebound.area() : self.outline.area(),
                 destCoreArea = dest.corebound? dest.corebound.area() : dest.outline.area(),
-                spacing =   spec.spacing + this.vars.globalStrokeWidth.val*0.02,
+                spacing =   spec.spacing + this.vars.globalStrokeWidth.val*0.014,
                 outlying =  this.vars.outlying  ? this.vars.outlying.val  : 1.5,
                 shrinking = this.vars.shrinking ? this.vars.shrinking.val : 0.5,
                 maxRatio = Math.max(selfr, destr) / Math.min(selfr, destr);

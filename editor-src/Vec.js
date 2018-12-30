@@ -2,8 +2,8 @@ export default class Vec{
     /**
      * Simple Vector class.
      * 
-     * @param {number} x x coordinate. When y is undefined, x denotes the angle (degree) of the desired vector.
-     * @param {number} y y coordinate.
+     * @param {any} x 
+     * @param {any} y 
      */
     constructor(x, y, attr){
         if(attr === undefined){
@@ -11,15 +11,27 @@ export default class Vec{
 
             if (y === undefined){
                 if(x === undefined) {
-                    // for nothing given.
+
+                    // For nothing given, new vec created
+                    
                     this.x = 0;
                     this.y = 0;
                 } else if (x.x !== undefined && x.y !== undefined){
-                    // if x is something like {x:1, y:1}
+
+                    // if argument given as {x:1, y:1}
+                    
                     this.x = x.x;
                     this.y = x.y;
+                } else if (x.len !== undefined && x.ang !== undefined){
+
+                    // if argument given as {len: 1, ang: 0}
+
+                    this.x = x.len * Math.cos(x.ang*Math.PI/180);
+                    this.y = x.len * Math.sin(x.ang*Math.PI/180);
                 } else if (typeof x === 'number'){
+
                     // if x is a number 
+
                     this.x = Math.cos(x*Math.PI/180);
                     this.y = Math.sin(x*Math.PI/180);
                 }
@@ -187,8 +199,13 @@ export default class Vec{
         return this.x > vec.x && this.y > vec.y;
     }
 
+ 
     mag(){
         return Math.hypot(this.x, this.y);
+    }
+
+    norm(){
+        return this.mult(1/this.mag())
     }
 
     angle(){

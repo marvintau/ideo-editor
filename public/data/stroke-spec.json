@@ -376,14 +376,13 @@
       },
       {
         "len": 1,
-        "ang": -102
+        "ang": -93
       },
       {
         "len": 1,
-        "ang": -101
+        "ang": -83
       }
-    ],
-    "text": "# type: Curve\n  body: @ # len: 1 ang: -103\n          # len: 1 ang: -102\n          # len: 1 ang: -101"
+    ]
   },
   "hengzhe-": {
     "type": "Stroke",
@@ -1110,7 +1109,7 @@
         }
       },
       "horizontal": {
-        "val": 0.6,
+        "val": 0.53,
         "range": {
           "min": 0.5,
           "max": 0.75
@@ -1148,7 +1147,7 @@
         "prog": [
           {
             "ith": 1,
-            "scale": 1.08
+            "scale": 1.18
           }
         ]
       },
@@ -1161,7 +1160,7 @@
           },
           {
             "ith": 1,
-            "scale": "@'vertical'*2"
+            "scale": "@'vertical'*2.05"
           }
         ]
       },
@@ -2637,7 +2636,7 @@
             "ith": 1,
             "r": 0.78
           },
-          "spacing": "globalCompoundSpacing",
+          "spacing": "@'globalCompoundSpacing'*0.1+0.35",
           "pos": 0
         }
       }
@@ -2660,13 +2659,13 @@
         "place": {
           "dest": {
             "ith": 0,
-            "r": 0.6
+            "r": 0.55
           },
           "self": {
             "ith": 1,
-            "r": 0.75
+            "r": 0.79
           },
-          "spacing": 0.45,
+          "spacing": "@'globalCompoundSpacing'*0.1+0.50",
           "pos": 0
         }
       }
@@ -4399,7 +4398,7 @@
     },
     "prog": [
       {
-        "scale": 1.38
+        "scale": 1.28
       },
       {
         "ith": 0,
@@ -4933,13 +4932,17 @@
       },
       {
         "ith": 0,
-        "rotate": 20,
+        "rotate": 30,
         "scale": 0.5,
         "curl": -3
       },
       {
         "ith": 1,
         "scale": 1.15
+      },
+      {
+        "ith": 2,
+        "scale": 1.05
       },
       {
         "ith": 3,
@@ -4951,8 +4954,8 @@
         "prog": [
           {
             "ith": 0,
-            "scale": 1.48,
-            "rotate": 10,
+            "scale": 1.43,
+            "rotate": 12,
             "curl": -7.2
           }
         ]
@@ -5021,7 +5024,7 @@
           "dest": {
             "ith": 1,
             "curve": 0,
-            "r": "@'beam-pos'+0.32"
+            "r": "@'beam-pos'+0.34"
           }
         }
       },
@@ -5233,12 +5236,16 @@
           {
             "ith": 0,
             "curl": "-4-4*@'draw-back'"
+          },
+          {
+            "ith": 1,
+            "scale": 0.8
           }
         ]
       },
       {
         "ith": 0,
-        "rotate": -2,
+        "rotate": 0,
         "scale": "@'beam-length'+1"
       },
       {
@@ -5351,8 +5358,7 @@
         "scale": 0.5,
         "prog": [
           {
-            "ith": 0,
-            "rotate": -2
+            "ith": 0
           }
         ]
       },
