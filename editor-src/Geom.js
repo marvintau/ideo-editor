@@ -1,4 +1,4 @@
-import {forSuccc, forSucc} from "./Supp.js";
+import {forSucc} from "./Supp.js";
 import Vec from "./Vec.js";
 
 export function intersectSegSeg(p1, p2, p3, p4){

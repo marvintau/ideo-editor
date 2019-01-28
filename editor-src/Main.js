@@ -2,6 +2,7 @@ import IONEditor from "ion-editor";
 import Vec from "./Vec.js";
 import Polygon from "./Polygon.js";
 import Stroke from "./Stroke.js";
+import Region from "./Region.js";
 
 // 程序的主入口
 // Main entrance of this project
@@ -19,50 +20,27 @@ document.getElementById('canvas-container').appendChild(canvas);
 ctx.translate(canvas.width/2, canvas.height/2);
 ctx.scale(dpr, dpr);
 
-function split(polygonDex, strokeDex){
-
-    const polygon = grandDex[polygonDex],
-          stroke  = grandDex[strokeDex];
-
-    const {innerSide, outerSide} = polygon.splitBy(stroke);
-
-    delete grandDex[polygonDex];
-    grandDex[polygonDex+"i"] = new Polygon(innerSide);
-    grandDex[polygonDex+"o"] = new Polygon(outerSide);
-}
-
 // the GrandDex handles all objects over the canvas. It's
 // initialized with a rectangle polygon, a.k.a. the root canvas.
 
-var grandDex = {root: new Polygon([
-    new Vec(1, 1),
-    new Vec(-1, 1),
-    new Vec(-1, -1),
-    new Vec(1, -1)
-])};
-grandDex.root.scale(200);
+var root = new Region(new Polygon([
+    new Vec( 200,  200),
+    new Vec(-200,  200),
+    new Vec(-200, -200),
+    new Vec( 200, -200)
+]));
 
-
-grandDex.stroke1 = new Stroke([
+let stroke =  new Stroke([
     new Vec(0, 2),
     new Vec(0.1, 0.5),
     new Vec(-0.1, -0.5),
     new Vec(0, -2)
 ]);
+stroke.scale(80);
 
-grandDex.stroke1.scale(80);
-
-function draw(ctx){
-    for (let key in grandDex) if (grandDex[key].type == "Polygon")
-        grandDex[key].draw(ctx);
-
-    for (let key in grandDex) if (grandDex[key].type == "Stroke")
-        grandDex[key].draw(ctx);
-}
-
-split("root", "stroke1");
-draw(ctx);
-console.log(grandDex.rooti.type);
+root.split(stroke);
+root.draw(ctx);
+// console.log(grandDex.rooti.type);
 document.addEventListener("interpret", function(e){
     console.log(e, "interpret");
 })
