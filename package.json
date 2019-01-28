@@ -8,16 +8,19 @@
   "dependencies": {
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.9",
-    "express": "~4.16.0",
-    "morgan": "~1.9.0"
+    "express": "^4.16.4",
+    "ion-editor": "^1.0.12",
+    "ion2": "^1.0.3",
+    "ione": "^1.0.0",
+    "morgan": "^1.9.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.1.2",
-    "@babel/preset-env": "^7.1.0",
-    "babel-loader": "^8.0.4",
-    "happypack": "^5.0.0",
+    "@babel/core": "^7.2.2",
+    "@babel/preset-env": "^7.2.3",
+    "babel-loader": "^8.0.5",
+    "happypack": "^5.0.1",
     "script-loader": "^0.7.2",
-    "webpack": "^4.22.0",
-    "webpack-cli": "^3.1.2"
+    "webpack": "^4.28.4",
+    "webpack-cli": "^3.2.1"
   }
 }

@@ -2,7 +2,7 @@
     <style>
 
 body{
-    background: #8abeb7;
+    /* background: #8abeb7; */
     text-align: left;
     overflow-x: scroll;
     font-family : "TheSansMono Office";
@@ -20,184 +20,45 @@ scroll-bar{
     display: none;
 }
 
-.new-group {
-    margin-left : 20px;
-}
-
-#canvas-wrap{
-    margin: 10px;
-}
-
-canvas {
-    margin-top:20px;
-}
-
-.text-stuff{
-    margin: 10px;
-    display: flex;
-    flex-direction : column;
-}
-.text{
-    position: relative;
-    margin: 10px;
-    width: 600px;
-    height : 600px;
-    overflow-y:scroll;
-}
-
-.text-gen{
-    margin: 10px;
-    position: relative;
-    top : 490px;
-}
-
 .main {
-    height: 440px;
+    /* height: 440px; */
     display:flex;
     flex-direction: row;
 }
 
-textarea, code{
-    position: absolute;
-    top: 0px;
-    left: 0;
-    width: 550px;
-    font-family : "TheSansMono Office";
-    font-size:12px;
-    letter-spacing: -0.05em;
-    line-height: 150%;
-    padding:10px;
-    resize: none;
-    border : none;
-    background: #fdf6e3;
-    border-radius: 5px;
-    overflow-x: scroll;
-    overflow-y: scroll;
-}
-	
-textarea{
-    background: transparent !important;
-    z-index: 2;
-    height: auto;
-    resize: none;
-    -webkit-text-fill-color: transparent;		
-    outline : none;
+.editor{
+    width: 400px ! important;
 }
 
-.var-bar{
-    margin : 20px;
-    font-family: 'TheSansMono Office';
-    font-size:13px;
-    letter-spacing: -0.05em;
+.editor-display{
+    padding: -1px ! important;
+    border: 1px solid ! important;
+    border-radius: 0px ! important;
+    background: rgb(0, 0, 0, 0.1) ! important;
 }
 
-.slider{
-    width : 200px;
-    height : 30px;
-    display : inline-block;
+.text{
+    display:block;
+    position: relative;
+    margin: 10px;
 }
 
-pre {
-    margin:10px;
-	white-space: pre-wrap;  
-	word-wrap: break-word;
-}
-
-code{
-    z-index: 1;
-}
-
-#char-list-wrapper{
-    margin : 10px;
-    width: 225px;
-    height: 450px;
-    border-radius: 5px;
-    overflow-y: scroll;
-}
-
-.char-button{
-    /* font-size: 200%; */
-    display: inline-block;
-    font-size: 1.2em;
-    margin : 10px;
-    cursor: pointer;
-    /* border-radius:5px; */
-}
-
-.key, .keyword{
-    /* color : #d8d8d8 !important; */
-    font-weight : bold;
-}
-
-#preview, #compare{
-    display: block;
-    border-radius: 5px;
-}
-
-#indicator{
-    display: inline-block;
-    letter-spacing: -0.08em;
-}
-
-label {
-    display : block;
-}
-
-.keyword {
-    color : #d33682;
-}
-
-canvas {
-    background-color: #ffffff;
+#canvas-container{
+    margin: 10px;
+    display:block;
+    position: relative;
+    border: 1px solid;
 }
 
     </style>
     <body>
-        <div class="new-group">
-            新建： <input id="new-char-name">
-            <button id="create">Create new Char</button>
-            <button id="toggle-code-param">Toggle Code/Parameter</button>
-            <button id="drawing-additional">Toggle drawing core</button>
-            <span id="indicator">就绪</span>    
-        </div>
-        
-
+       
         <div class="main">
-            <div id="char-list-wrapper">
-                <button id="toggle-stroke">Stroke</button>
-                <button id="toggle-radical">Radical</button>
-                <button id="toggle-uniq">Uniq</button>
-                <button id="toggle-combo">Combo</button>
-                <div id="char-list">
-                </div>
-            </div>
-            <div class="canvas-wrap">
-                <canvas id="preview" width="800" height="800" style="height: 400px; width: 400px"></canvas>
-                <canvas id="thumb" width="80" height="80" style="height: 40px; width: 40px"></canvas>
-            </div>
-    
-            <div class="text-stuff" id="code-list">
-                <div class="text">
-                    <textarea id="stroke-list" spellcheck="false" class="editor allow-tabs"></textarea>
-                    <pre><code id="code-display" class="syntax-highight html"></code></pre>            
-                </div>
-            </div>
-            <div id="var-bars" class="var-bar">
-                </div>
-            </div>
-        </div>
-
-        <datalist id="font-list">
-            <option>Adobe Kaiti Std</option>
-            <option>HYShouJinShuF</option>
-            <option>Adobe Fangsong Std</option>
-            <option>Adobe Song Std</option>
-            <option>Source Han Serif CN</option>
-            <option>CloudRuiSongGBK</option>
-        </datalist>
+            <div id="canvas-container"></div>
+            <div class="text" id="editor"></div>
+       </div>
 
     </body>
-    <script src="./javascripts/three.script.js"></script>
     <script src="./javascripts/Main.js"></script>
 
 </html>

@@ -162,43 +162,6 @@ export default class Vec{
     cross(that){
         return this.x * that.y - that.x * this.y;
     }
-
-    /**
-     * head: returns the most left-top vector between two.
-     * @param {Vec} vec another vector
-     * @returns {Vec}
-     */
-    head(vec){
-        return new Vec(Math.min(this.x, vec.x), Math.min(this.y, vec.y));
-    }
-
-    /**
-     * isHeaderTo: compare which vector should be the head between two
-     * @param {Vec} vec another vector
-     * @returns {boolean}
-     */
-    isHeaderTo(vec){
-        return (this.x < vec.x) && (this.y < vec.y);
-    }
-
-    /**
-     * tail: returns the most right-bottom vector between two.
-     * @param {Vec} vec another vector
-     * @returns {Vec}
-     */
-    tail(vec){
-        return new Vec(Math.max(this.x, vec.x), Math.max(this.y, vec.y));
-    }
-
-    /**
-     * isHeaderTo: compare which vector should be the tail between two.
-     * @param {Vec} vec another vector
-     * @returns {boolean}
-     */
-    isTailerTo(vec){
-        return this.x > vec.x && this.y > vec.y;
-    }
-
  
     mag(){
         return Math.hypot(this.x, this.y);
@@ -210,28 +173,6 @@ export default class Vec{
 
     angle(){
         return Math.atan2(this.y, this.x) / Math.PI * 180;
-    }
-
-    sampleTo(vec, resolution){
-        var lis = [],
-            off = vec.sub(this);
-
-        for (let i = 0; i < resolution; i++){
-            lis.push(this.add(off.mult((i+0.5)/resolution)));
-        }
-        return lis;
-    }
-
-    sampleStepTo(vec, step){
-        var lis = [],
-            off = vec.sub(this),
-            dis = off.mag();
-
-        for (let i = 0; i < dis; i+= step){
-            lis.push(this.add(off.mult(i/dis)));
-        }
-        lis.push(vec);
-        return lis;
     }
 
     isNaN(){
