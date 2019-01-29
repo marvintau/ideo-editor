@@ -1,5 +1,5 @@
 import Color from "./Color.js";
-import {intersectSegSeg, area, centroid} from "./Geom.js";
+import {intersectSegSeg, area, centroid, include} from "./Geom.js";
 import {forSucc} from "./Supp.js";
 
 
@@ -33,7 +33,8 @@ function splitStrokeIntersection(polygon, stroke){
 
     if (enter !== undefined && exit !== undefined){
         strokeIntersection.push(enter.inter.p);
-        for (let i = enter.stroEdge + 1; i <= exit.stroEdge; i++) strokeIntersection.push(stroke[i]);
+        for (let i = enter.stroEdge + 1; i <= exit.stroEdge; i++)
+            strokeIntersection.push(stroke[i]);
         strokeIntersection.push(exit.inter.p);
     }
 
@@ -50,7 +51,7 @@ export default class Polygon extends Array {
 
         this.area = area(this);
         this.centroid = centroid(this);
-
+        this.diameter = Math.sqrt(this.area / (2 / Math.PI));
         this.type = "Polygon";
     }
     
@@ -93,7 +94,7 @@ export default class Polygon extends Array {
         
         let points    = Array.from(this),
             innerSide = points.slice(polyEnter, polyExit+1).concat(strokeIntersection),
-            outerSide = points.slice(1, polyEnter).concat(strokeIntersection.reverse()).concat(points.slice(polyExit));
+            outerSide = points.slice(1, polyEnter+1).concat(strokeIntersection.reverse()).concat(points.slice(polyExit));
     
         return {innerSide, outerSide};
     }

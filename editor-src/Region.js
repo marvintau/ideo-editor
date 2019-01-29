@@ -1,13 +1,21 @@
 import Polygon from "./Polygon.js";
+import Stroke from "./Stroke.js";
 
 export default class Region {
     
     constructor(s){
-        this.poly = { s };
+        this.original = s;
         this.strokes = [];
+        
+        this.poly = { s };
     }
 
-    split(stroke){
+    addStroke(stroke){
+
+    }
+
+    split(){
+        for (let stroke of this.strokes)
         for (let polygonID in this.poly){
             const polygon = this.poly[polygonID];
         
@@ -18,7 +26,7 @@ export default class Region {
             this.poly[polygonID+"o"] = new Polygon(outerSide);
         }
 
-        this.strokes.push(stroke);
+        console.log(this);
     }
     
     draw(ctx){

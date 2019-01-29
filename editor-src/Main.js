@@ -31,14 +31,30 @@ var root = new Region(new Polygon([
 ]));
 
 let stroke =  new Stroke([
-    new Vec(0, 2),
-    new Vec(0.1, 0.5),
-    new Vec(-0.1, -0.5),
-    new Vec(0, -2)
+    new Vec(  0,  200),
+    new Vec( 10,   50),
+    new Vec(-10,  -50),
+    new Vec(  0, -200)
 ]);
-stroke.scale(80);
 
-root.split(stroke);
+let stroke2 =  new Stroke([
+    new Vec( 200, - 0),
+    new Vec(  50, -10),
+    new Vec( -50,  10),
+    new Vec(-200,   0)
+]);
+
+let stroke3 = new Stroke([
+    new Vec(-100, 300),
+    new Vec(-100, -100),
+    new Vec(100,  -100),
+    new Vec(100,  300)
+]);
+
+// root.addStroke(stroke);
+// root.addStroke(stroke2);
+root.addStroke(stroke3);
+root.split();
 root.draw(ctx);
 // console.log(grandDex.rooti.type);
 document.addEventListener("interpret", function(e){

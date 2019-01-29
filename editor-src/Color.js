@@ -45,4 +45,8 @@ export default class Color {
         this.g = 1- (1 - this.g) * ratio;
         this.b = 1- (1 - this.b) * ratio;
     }
+
+    copy(){
+        return new Color(this.r, this.g, this.b, this.a);
+    }
 }

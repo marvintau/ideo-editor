@@ -25,4 +25,17 @@ export default class Stroke extends Array {
         ctx.stroke();
     }
 
+    bezierize(){
+        
+    }
+
+    copy(){
+
+        let pointList = Array.from(this).map(p => p.copy()),
+            newStroke = new Stroke(pointList);
+        newStroke.color = this.color.copy();
+
+        return newStroke;
+    }
+
 }

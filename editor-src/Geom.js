@@ -50,3 +50,20 @@ export function centroid(polygon){
     }
 
 }
+
+export function include(polygon, point){
+    
+    const cross = (p, a, b) => a.sub(p).cross(b.sub(p)),
+            first = cross(p, points[0], points[1]);
+
+    let includeQ = true;
+
+    forSucc(polygon, function(pHead, pTail){
+        if (first * cross(p, points[i], points[i+1]) <= 0) {
+            includeQ = false;
+            return;
+        }
+    })
+    return includeQ;
+
+}
