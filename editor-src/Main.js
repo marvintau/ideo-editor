@@ -32,10 +32,13 @@ var root = new Region(new Polygon([
 
 let stroke =  new Stroke([
     new Vec(  0,  200),
-    new Vec( 10,   50),
-    new Vec(-10,  -50),
+    new Vec( 150,   0),
+    new Vec(-150,   0),
     new Vec(  0, -200)
 ]);
+
+stroke[0].setAttr({curveStart: true});
+stroke.bezierize(2);
 
 let stroke2 =  new Stroke([
     new Vec( 200, - 0),
@@ -45,15 +48,15 @@ let stroke2 =  new Stroke([
 ]);
 
 let stroke3 = new Stroke([
-    new Vec(-100, 300),
+    new Vec(-100,  200),
     new Vec(-100, -100),
     new Vec(100,  -100),
-    new Vec(100,  300)
+    new Vec(100,   200)
 ]);
 
-// root.addStroke(stroke);
+root.addStroke(stroke);
 // root.addStroke(stroke2);
-root.addStroke(stroke3);
+// root.addStroke(stroke3);
 root.split();
 root.draw(ctx);
 // console.log(grandDex.rooti.type);

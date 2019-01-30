@@ -12,6 +12,20 @@ export default class Region {
 
     addStroke(stroke){
 
+        if (stroke.angle){
+            let angle     = stroke.angle,
+                curlStart = stroke.curlStart,
+                curlEnd   = stroke.curlEnd;
+
+            // let centroid = this.original.centroid.copy(),
+            //     stroke 
+
+            this.strokes.push(new Stroke());
+
+        } else {
+            this.strokes.push(stroke);
+        }
+
     }
 
     split(){

@@ -6,6 +6,7 @@
     "start": "node-dev ./bin/www"
   },
   "dependencies": {
+    "adaptive-bezier-curve": "^1.0.3",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.9",
     "express": "^4.16.4",

@@ -1,4 +1,6 @@
 import Color from "./Color.js";
+import bezier from "adaptive-bezier-curve";
+import Vec from "./Vec.js";
 
 export default class Stroke extends Array {
 
@@ -25,8 +27,25 @@ export default class Stroke extends Array {
         ctx.stroke();
     }
 
-    bezierize(){
+    bezierize(level){
         
+        let subdivided = [];
+        for (let i = 0; i < this.length;){
+            if (this[i].attr.curveStart && i + 3 < this.length) {
+                let bPart = Array.from(this).slice(i, i+4).map(p => p.toArray());
+                bPart = bezier(...bPart, level);
+                bPart = bPart.map(p => new Vec(p[0], p[1]));
+                subdivided = subdivided.concat(bPart);
+                i+=4;
+            } else {
+                subdivided.push(this[i]);
+                i+=1;
+            }
+        }
+        this.length = 0;
+        for (let i = 0; i < subdivided.length; i++) this.push(subdivided[i]);
+        this[0].setAttr({head:true});
+        this[this.length-1].setAttr({tail:true});
     }
 
     copy(){

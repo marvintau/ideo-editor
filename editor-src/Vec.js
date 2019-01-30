@@ -203,4 +203,7 @@ export default class Vec{
         return new Vec(this.x, this.y, JSON.parse(JSON.stringify(this.attr)));
     }
 
+    toArray(){
+        return [this.x, this.y];
+    }
 }

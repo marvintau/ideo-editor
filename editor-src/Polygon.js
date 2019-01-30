@@ -29,6 +29,10 @@ function splitStrokeIntersection(polygon, stroke){
         if (enter && exit) return;
     })
     
+    if(enter === undefined && exit === undefined){
+        throw TypeError("splitStrokeIntersection: Stroke doesn't intersect with polygon.");
+    }
+
     let strokeIntersection = [];
 
     if (enter !== undefined && exit !== undefined){
