@@ -9,7 +9,7 @@ export default class Stroke extends Array {
         this[0].setAttr({head: true});
         this[this.length-1].setAttr({tail: true});
         this.color = new Color();
-        this.color.darken(0.3);
+        this.color.darken(0.1);
 
         this.type = "Stroke";
     }
@@ -20,11 +20,16 @@ export default class Stroke extends Array {
 
     draw(ctx){
         ctx.strokeStyle = this.color.toString();
-        ctx.lineWidth = 5;
+        // ctx.lineWidth = 5;
         ctx.beginPath();
         ctx.moveTo(this[0].x, this[0].y);
         for (let i = 0; i < this.length; i++) ctx.lineTo(this[i].x, this[i].y);
         ctx.stroke();
+
+        ctx.fillStyle = "rgb(0, 0, 0, 0.5)";
+        for (let i = 0; i < this.length; i++)
+            ctx.fillRect(this[i].x - 2, this[i].y - 2, 4, 4);
+
     }
 
     bezierize(level){

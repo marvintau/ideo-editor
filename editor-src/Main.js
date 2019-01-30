@@ -47,6 +47,9 @@ let stroke2 =  new Stroke([
     new Vec(-200,   0)
 ]);
 
+stroke2[0].setAttr({curveStart: true});
+stroke2.bezierize(2);
+
 let stroke3 = new Stroke([
     new Vec(-100,  200),
     new Vec(-100, -100),
@@ -54,9 +57,12 @@ let stroke3 = new Stroke([
     new Vec(100,   200)
 ]);
 
+// stroke3[0].setAttr({curveStart: true});
+// stroke3.bezierize(2);
+
 root.addStroke(stroke);
-// root.addStroke(stroke2);
-// root.addStroke(stroke3);
+root.addStroke(stroke2);
+root.addStroke(stroke3);
 root.split();
 root.draw(ctx);
 // console.log(grandDex.rooti.type);

@@ -69,17 +69,16 @@ export default class Polygon extends Array {
 
     draw(ctx){
         ctx.fillStyle = this.color.toString();
-        console.log(ctx.fillStyle);
         ctx.beginPath();
         ctx.moveTo(this[0].x, this[0].y);
         for (let i = 0; i < this.length; i++) ctx.lineTo(this[i].x, this[i].y);
         ctx.closePath();
         ctx.fill();
 
-        ctx.fillStyle = "black";
+        ctx.strokeStyle = "black";
         ctx.beginPath();
-        ctx.arc(this.centroid.x, this.centroid.y, 10, 0, 2*Math.PI);
-        ctx.fill();
+        ctx.arc(this.centroid.x, this.centroid.y, 3, 0, 2*Math.PI);
+        ctx.stroke();
     }
 
     splitBy(stroke){
