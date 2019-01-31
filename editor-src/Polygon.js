@@ -1,6 +1,8 @@
 import Color from "./Color.js";
 import {intersectSegSeg, area, centroid, include} from "./Geom.js";
 import {forSucc} from "./Supp.js";
+import Stroke from "./Stroke.js";
+import Vec from "./Vec.js";
 
 
 function splitStrokeIntersection(polygon, stroke){
@@ -12,10 +14,10 @@ function splitStrokeIntersection(polygon, stroke){
         forSucc(polygon, function(p, pHead, pTail){
             var inter           = intersectSegSeg(sHead, sTail, pHead, pTail);
             
-            let interPolyEdge   = inter.t > 0 && inter.t < 1,
-                interStrokeBody = inter.s < 1 && inter.s > 0,
-                interStrokeHead = inter.s < 1 && sHead.attr.head,
-                interStrokeTail = inter.s > 0 && sTail.attr.tail,
+            let interPolyEdge   = inter.t >= 0 && inter.t < 1,
+                interStrokeBody = inter.s >= 0 && inter.s < 1,
+                interStrokeHead = inter.s <= 1 && sHead.attr.head,
+                interStrokeTail = inter.s >= 0 && sTail.attr.tail,
                 interStroke     = interStrokeHead || interStrokeBody || interStrokeTail;
             
             if (interPolyEdge && interStroke){
@@ -45,6 +47,9 @@ function splitStrokeIntersection(polygon, stroke){
     return { enter, exit, strokeIntersection};
 }
 
+// Works to be done:
+// 1. the diameter with angle given. very important
+// 2. draw a stroke and split a polygon 
 
 export default class Polygon extends Array {
 
@@ -55,10 +60,34 @@ export default class Polygon extends Array {
 
         this.area = area(this);
         this.centroid = centroid(this);
-        this.diameter = Math.sqrt(this.area / (2 / Math.PI));
+        // this.diameter = Math.sqrt(this.area / (2 / Math.PI));
         this.type = "Polygon";
+
+        // There is a simple way to test whether this polygon is
+        // "well-formed". If the centroid is outside the polygon,
+        // then the polygon will be SERIOUSLY concave, which means
+        // "malformed". In this case, it's inappropriate to measure
+        // its diameter.
     }
     
+    diameter(angle){
+        let measureStroke = new Stroke([
+            this.centroid.sub(new Vec(angle)),
+            this.centroid.add(new Vec(angle))
+        ]);
+
+        console.log(measureStroke, "diameter");
+        let {enter, exit} = splitStrokeIntersection(this, measureStroke);
+
+        console.log(enter.inter.p, exit.inter.p);
+
+        return {
+            head :enter.inter.p.sub(this.centroid),
+            tail :exit.inter.p.sub(this.centroid)
+        };
+    }
+
+
     scale(ratio){
         for (let i = 0; i < this.length-1; i++) this[i].imult(ratio);
     }

@@ -4,14 +4,46 @@ import Vec from "./Vec.js";
 
 export default class Stroke extends Array {
 
-    constructor(args){
-        super(...args);
-        this[0].setAttr({head: true});
-        this[this.length-1].setAttr({tail: true});
+    constructor(strokeSpec, polygon){
+        super();        
+        if(Array.isArray(strokeSpec)){
+            super.push(...strokeSpec);
+            this[0].setAttr({head:true});
+            this.last().setAttr({tail:true});
+        } else{
+            this.appendStrokeSeg(strokeSpec, polygon);
+        }
+
         this.color = new Color();
         this.color.darken(0.1);
 
-        this.type = "Stroke";
+    }
+
+    appendStrokeSeg(strokeSpec, polygon){
+        let angle     = strokeSpec.angle,
+            offset    = strokeSpec.offset ? strokeSpec.offset : 0,
+            arcRatio  = strokeSpec.arcRatio ? strokeSpec.arcRatio: 1/6,
+            arcOffset = strokeSpec.arcOffset;
+
+        if (isNaN(offset))
+            throw TypeError("addStroke: offset is not a number");
+        if (offset > 0.5 || offset < -0.5)
+            throw TypeError("addStroke: offset should be within [-0.5, 0.5]");
+        if (isNaN(arcRatio))
+            throw TypeError("addStroke: arcRatio is not a number");
+
+        console.log(polygon);
+        let {head, tail} = polygon.diameter(angle);
+
+        head = head.mult(0.8).add(polygon.centroid);
+        tail = tail.mult(0.8).add(polygon.centroid);
+        head.setAttr({curveStart: true});
+
+        let half = tail.sub(head).mult(0.5).rotate(90),
+            c1 = tail.sub(head).mult(0.5-arcRatio).add(head).add(half.mult(offset)),
+            c2 = tail.sub(head).mult(0.5+arcRatio).add(head).add(half.mult(offset));
+
+        this.push(...[head, c1, c2, tail]);
     }
 
     scale(ratio){

@@ -129,14 +129,23 @@ export default class Vec{
      * @param {number} theta angle to rotate in degree.
      */
     rotate(theta){
-        let rad = theta / 180 * Math.PI,
-            sin = Math.sin(rad),
-            cos = Math.cos(rad);
 
-        return new Vec(
-            this.x * cos - this.y * sin,
-            this.x * sin + this.y * cos
-        )
+        switch(theta){
+            case 90     : return new Vec(-this.y, this.x);
+            case -90    : return new Vec(this.y, -this.x);
+            case 180    : 
+            case -180   : return new Vec(-this.x, -this.y);
+            default: 
+                let rad = theta / 180 * Math.PI,
+                sin = Math.sin(rad),
+                cos = Math.cos(rad);
+
+            return new Vec(
+                this.x * cos - this.y * sin,
+                this.x * sin + this.y * cos
+            )
+        }
+
     }
 
     irotate(theta){
