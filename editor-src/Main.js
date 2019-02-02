@@ -12,8 +12,9 @@ var editor = new IONEditor(document.getElementById("editor"));
 let canvas = document.createElement('canvas'),
     ctx = canvas.getContext('2d'),
     dpr = window.devicePixelRatio;
-canvas.width  = 800;
-canvas.height = 800;
+console.log("dpr", dpr);
+canvas.width  = 400 * dpr;
+canvas.height = 400 * dpr;
 canvas.style.width  = 400;
 canvas.style.height = 400;
 document.getElementById('canvas-container').appendChild(canvas);
@@ -33,8 +34,8 @@ var root = new Region(new Polygon([
 // let stroke =  new Stroke({angle: 124, offset: 0.2}, root.original);
 // console.log("stroke", stroke);
 // root.addStroke();
-root.addSimpleStroke({angle: 124, offset: 0.5});
-root.addSimpleStroke({angle: 1, offset: 0.5});
+root.addSimpleStroke({angle: 125, offset: 0.35});
+root.addSimpleStroke({angle: 0, offset: 0.01});
 
 root.split();
 root.draw(ctx);

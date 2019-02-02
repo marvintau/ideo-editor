@@ -70,7 +70,10 @@ export default class Polygon extends Array {
         // its diameter.
     }
     
-    diameter(angle){
+    diameter(angle, across){
+
+        across = across === undefined ? this.centroid : across;
+
         let measureStroke = new Stroke([
             this.centroid.sub(new Vec(angle)),
             this.centroid.add(new Vec(angle))
@@ -82,8 +85,9 @@ export default class Polygon extends Array {
         console.log(enter.inter.p, exit.inter.p);
 
         return {
-            head :enter.inter.p.sub(this.centroid),
-            tail :exit.inter.p.sub(this.centroid)
+            head :enter.inter.p.sub(across),
+            tail :exit.inter.p.sub(across),
+            cent: across
         };
     }
 

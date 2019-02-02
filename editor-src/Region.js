@@ -3,17 +3,33 @@ import Stroke from "./Stroke.js";
 
 export default class Region {
     
-    constructor(s){
+    constructor(s, parent){
         this.original = s;
         this.strokes = [];
         
+        this.parent = parent;
         this.children = {};
+        this.mass = this.original.area();
+    }
+
+    density(){
+        return this.mass / this.original.area();
     }
 
     addSimpleStroke(strokeSpec){
         let newStroke = new Stroke(strokeSpec, this.original);
         newStroke.bezierize(2);
         this.strokes.push(newStroke);
+
+        this.updateMass();
+    }
+
+    updateMassWith(mass){
+        let region = this;
+        while(region.parent !== undefined){
+            region.mass += mass;
+            region = region.parent;
+        }
     }
 
     diameter(angle){
@@ -48,6 +64,23 @@ export default class Region {
         console.log("split", this);
     }
     
+    updateChildrenMass(){
+        // .... after some magic;
+
+        let notReachedStableState = function(region){
+            allRegionChildren
+        }
+
+        while(notReachedStableState()){
+            nudgeStrokes();
+        }
+
+        this.mass = 0;
+        for (let key in this.children){
+            this.mass += this.children[key].mass;
+        }
+    }
+
     draw(ctx){
         if (Object.keys(this.children).length == 0){
             this.original.draw(ctx);

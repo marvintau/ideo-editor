@@ -11,7 +11,8 @@ export default class Stroke extends Array {
             this[0].setAttr({head:true});
             this.last().setAttr({tail:true});
         } else{
-            this.appendStrokeSeg(strokeSpec, polygon);
+            let diam = polygon.diameter(strokeSpec.angle);
+            this.appendStrokeSeg(strokeSpec, diam);
         }
 
         this.color = new Color();
@@ -19,11 +20,12 @@ export default class Stroke extends Array {
 
     }
 
-    appendStrokeSeg(strokeSpec, polygon){
-        let angle     = strokeSpec.angle,
-            offset    = strokeSpec.offset ? strokeSpec.offset : 0,
+    appendStrokeSeg(strokeSpec, diam){
+        let offset    = strokeSpec.offset ? strokeSpec.offset : 0,
             arcRatio  = strokeSpec.arcRatio ? strokeSpec.arcRatio: 1/6,
-            arcOffset = strokeSpec.arcOffset;
+            arcOffset = strokeSpec.arcOffset,
+            headAttached = strokeSpec.headAttached,
+            tailAttached = strokeSpec.tailAttached;
 
         if (isNaN(offset))
             throw TypeError("addStroke: offset is not a number");
@@ -32,11 +34,9 @@ export default class Stroke extends Array {
         if (isNaN(arcRatio))
             throw TypeError("addStroke: arcRatio is not a number");
 
-        console.log(polygon);
-        let {head, tail} = polygon.diameter(angle);
 
-        head = head.mult(0.8).add(polygon.centroid);
-        tail = tail.mult(0.8).add(polygon.centroid);
+        let head = diam.head.mult(headAttached ? 1 : 0.8).add(diam.cent),
+            tail = diam.tail.mult(tailAttached ? 1 : 0.8).add(diam.cent);
         head.setAttr({curveStart: true});
 
         let half = tail.sub(head).mult(0.5).rotate(90),
